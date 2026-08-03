@@ -7,7 +7,7 @@ export default function Jalus() {
       <div className="mx-auto max-w-[1360px] px-6 py-16 lg:px-10 lg:py-20">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
-            <p className="kuva text-3xl text-ink">Marta Raudsoo</p>
+            <p className="nimi text-3xl text-ink">Marta Raudsoo</p>
             <p className="mt-4 max-w-xs text-lg leading-relaxed text-ink-soft">
               Kohalolu, selgus ja stiil — et inimene võiks elada rohkem
               kooskõlas sellega, kelleks Jumal on ta loonud.
@@ -66,7 +66,7 @@ export default function Jalus() {
         </div>
 
         <div className="joon mt-14" />
-        <p className="mt-6 text-[0.9375rem] tracking-wide text-ink-faint">
+        <p className="mt-6 text-[0.9375rem] text-ink-faint">
           © {new Date().getFullYear()} Marta Raudsoo
         </p>
       </div>

@@ -8,17 +8,18 @@ export default function Avaleht() {
     <>
       {/* Hero — usuline alus kohe ja selgelt */}
       <section className="bg-bone">
-        <div className="mx-auto grid max-w-[1360px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-10 lg:py-24">
+        {/* Tihe vertikaalne rütm, et kogu hero koos nuppudega mahuks esimesse ekraanitäide */}
+        <div className="mx-auto grid max-w-[1360px] items-center gap-12 px-6 py-12 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-10 lg:py-14">
           <div>
             <p className="silt">Püha Kohalolu Kristuses</p>
-            <h1 className="kuva mt-6 text-[clamp(3rem,8vw,6rem)] text-ink">
+            <h1 className="kuva mt-5 text-[clamp(2.75rem,6vw,4.5rem)] text-ink">
               Püha Ruum
             </h1>
-            <p className="kuva mt-4 text-[clamp(1.4rem,3vw,2.1rem)] text-gold">
+            <p className="kuva mt-3 text-[clamp(1.3rem,2.6vw,1.9rem)] text-gold">
               Inimese terviklik korrastumine
             </p>
 
-            <div className="joon my-10 max-w-24" />
+            <div className="joon my-8 max-w-24" />
 
             <Tekst suur>
               Usun, et Jumal on loonud iga inimese ainulaadseks. Minu kutsumus
@@ -26,7 +27,7 @@ export default function Avaleht() {
               luua kooskõla sisemise olemuse ning välise väljenduse vahel.
             </Tekst>
 
-            <div className="mt-11 flex flex-wrap gap-4">
+            <div className="mt-9 flex flex-wrap gap-4">
               <Nupp href="/broneerimine">Broneeri aeg</Nupp>
               <Nupp href="/teenused" variant="aaris">
                 Vaata teenuseid

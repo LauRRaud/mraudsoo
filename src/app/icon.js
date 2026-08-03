@@ -3,11 +3,14 @@ import { ImageResponse } from "next/og";
 /*
   Brauseri vahekaardi ikoon — monogramm "MR".
 
-  Hele luuvalge taust tumeda kirjaga: nii on ikoon nähtav nii heleda kui
-  tumeda vahekaardiriba peal. Kuld tekstina jääks selles suuruses liiga
-  väikese kontrastiga (2.9:1) ja ähmastuks.
+  Mõõt on täpselt 32x32, sest brauser kasutab just seda suurust (või poolitab
+  selle puhtalt 16-ks). Suurema pildi vähendamine tegi tähed uduseks.
+
+  Tume taust heledate tähtedega: väikeses mõõdus loeb hele kiri tumedal
+  paremini kui vastupidi, ja ruut eristub nii heleda kui tumeda
+  vahekaardiriba peal.
 */
-export const size = { width: 64, height: 64 };
+export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
 export default function Icon() {
@@ -20,11 +23,10 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#EDEAE5",
-          color: "#2E2A26",
-          fontSize: 30,
-          fontWeight: 500,
-          letterSpacing: 1,
+          background: "#2E2A26",
+          color: "#EDEAE5",
+          fontSize: 19,
+          letterSpacing: -0.5,
         }}
       >
         MR

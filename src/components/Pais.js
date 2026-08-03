@@ -62,7 +62,7 @@ export default function Pais() {
       <div className="mx-auto flex max-w-[1360px] items-center justify-between px-6 py-5 lg:px-10">
         <Link
           href="/"
-          className="kuva text-2xl text-ink transition-colors hover:text-gold-deep sm:text-3xl"
+          className="nimi text-2xl text-ink transition-colors hover:text-gold-deep sm:text-3xl"
         >
           Marta Raudsoo
         </Link>
@@ -78,7 +78,7 @@ export default function Pais() {
                   <Link
                     href={punkt.tee}
                     aria-current={aktiivne ? "page" : undefined}
-                    className={`mikro tracking-[0.12em] transition-colors hover:text-gold-deep ${
+                    className={`mikro transition-colors hover:text-gold-deep ${
                       aktiivne ? "text-gold-deep" : "text-ink-soft"
                     }`}
                   >
