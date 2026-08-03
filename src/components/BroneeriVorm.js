@@ -174,7 +174,7 @@ export default function BroneeriVorm() {
                 aria-pressed={onValitud}
                 className={`border px-6 py-3 text-lg transition-colors ${
                   onValitud
-                    ? "border-gold-light bg-gold-light text-ink"
+                    ? "border-gold bg-gold-light text-ink"
                     : "border-gold/40 text-ink-soft hover:border-gold-deep hover:text-ink"
                 }`}
               >
@@ -208,7 +208,7 @@ export default function BroneeriVorm() {
       <div className="flex flex-wrap items-center gap-6">
         <button
           type="submit"
-          className="inline-block border border-transparent bg-ink px-9 py-4 mikro text-white transition-colors duration-300 hover:bg-gold-light hover:text-ink"
+          className="inline-block border border-ink bg-ink px-9 py-4 mikro text-white transition-colors duration-300 hover:border-gold hover:bg-gold-light hover:text-ink"
         >
           Saada soov
         </button>

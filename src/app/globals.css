@@ -24,7 +24,12 @@
     Kuld kolmes tugevuses. Hele on täidetud nuppudele — sellel peab tekst
     olema must (valge annaks ainult 3.2:1, must annab 6:1).
   */
-  --color-gold-light: #b08d1e; /* täidetud nupud (nupu serv valgel 3.2:1) */
+  /*
+    Metalne kuld täidetud nuppudele. Hele täidis üksi ei anna valge taustaga
+    piisavat piiri (2.1:1), seetõttu on nupul alati tumedam kuldne ääris,
+    mis annab piiri 3.5:1. Tekst kuldsel on must (8.9:1).
+  */
+  --color-gold-light: #d4af37;
   --color-gold: #a6862f; /* suured pealkirjad (3.5:1 valgel) */
   --color-gold-deep: #8a6f20; /* tekst, lingid, tsitaadid (4.8:1 valgel) */
   --color-brick: #8a6f20; /* varem punane aktsent — paletti ei kuulu, seega kuld */

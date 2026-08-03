@@ -49,12 +49,12 @@ export function Pealkiri({ silt, children, tase: Tase = "h2", className = "" }) 
 
 /* Peamine tegevusnupp */
 export function Nupp({ href, children, variant = "taidetud", className = "" }) {
-  /* Kuldsel täidisel on tekst must — valge jääks kontrastilt liiga nõrgaks */
+  /* Kuldsel täidisel on tekst must ja ääris tumekuldne — vt globals.css */
   const stiilid = {
     taidetud:
-      "border border-transparent bg-ink text-white hover:bg-gold-light hover:text-ink",
+      "border border-ink bg-ink text-white hover:border-gold hover:bg-gold-light hover:text-ink",
     aaris:
-      "border border-gold-light text-gold-deep hover:bg-gold-light hover:text-ink",
+      "border border-gold bg-gold-light text-ink hover:bg-gold hover:text-white",
   };
 
   return (
