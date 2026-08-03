@@ -89,7 +89,7 @@ export function Tekst({ children, suur = false, className = "" }) {
   return (
     <p
       className={`max-w-[60ch] ${
-        suur ? "text-[1.375rem] sm:text-2xl" : "text-lg sm:text-xl"
+        suur ? "text-xl sm:text-[1.375rem]" : "text-lg sm:text-xl"
       } leading-[1.75] text-ink-soft ${className}`}
     >
       {children}

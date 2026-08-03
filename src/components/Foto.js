@@ -47,7 +47,7 @@ export default function Foto({
       className={`${
         mahuEkraanile
           ? // Lahutame päise ja sektsiooni vahed, et pilt mahuks tervikuna ekraanile
-            "mx-auto h-auto max-h-[calc(100vh-13rem)] w-auto max-w-full"
+            "mx-auto h-auto max-h-[calc(100vh-10rem)] w-auto max-w-full"
           : "h-auto w-full"
       } ${className}`}
     />

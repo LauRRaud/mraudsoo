@@ -36,13 +36,13 @@ export default function Avaleht() {
           </div>
 
           {/* Piirame laiust, et lõikamata püstfoto ei kasvaks üle ekraani */}
-          <div className="w-full max-w-[540px] justify-self-center lg:justify-self-end">
+          <div className="w-full max-w-[620px] justify-self-center lg:justify-self-end">
             <Foto
               nimi="marta-portree"
               alt="Marta Raudsoo"
               priority
               mahuEkraanile
-              sizes="(max-width: 1024px) 100vw, 540px"
+              sizes="(max-width: 1024px) 100vw, 620px"
             />
           </div>
         </div>
@@ -137,11 +137,11 @@ export default function Avaleht() {
       {/* Minust */}
       <section className="bg-shell">
         <div className="mx-auto grid max-w-[1360px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-10 lg:py-24">
-          <div className="w-full max-w-[540px] justify-self-center lg:justify-self-start">
+          <div className="w-full max-w-[500px] justify-self-center lg:justify-self-start">
             <Foto
               nimi="marta-diivanil"
               alt="Marta Raudsoo"
-              sizes="(max-width: 1024px) 100vw, 540px"
+              sizes="(max-width: 1024px) 100vw, 500px"
             />
           </div>
 

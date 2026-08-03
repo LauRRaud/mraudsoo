@@ -12,12 +12,13 @@ export default function Minust() {
   return (
     <>
       <section className="bg-bone">
-        <div className="mx-auto grid max-w-[1360px] items-start gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1fr_1fr] lg:gap-20 lg:px-10 lg:py-24">
+        {/* items-center nagu avalehel — tekst tsentreeritakse pildi suhtes */}
+        <div className="mx-auto grid max-w-[1360px] items-center gap-12 px-6 py-12 sm:py-14 lg:grid-cols-[1fr_1fr] lg:gap-20 lg:px-10 lg:py-14">
           <div>
             <Pealkiri silt="Minust" tase="h1">
               Pakun ruumi, kus on võimalik peatuda
             </Pealkiri>
-            <div className="joon my-10 max-w-24" />
+            <div className="joon my-8 max-w-24" />
             <Tekst suur>
               Pakun inimestele ruumi, kus on võimalik peatuda, olla kuuldud ja
               märgata uuesti seda, mis on elus oluline.
@@ -25,13 +26,13 @@ export default function Minust() {
           </div>
 
           {/* Piirame laiust, et lõikamata püstfoto ei kasvaks üle ekraani */}
-          <div className="w-full max-w-[540px] justify-self-center lg:justify-self-end">
+          <div className="w-full max-w-[620px] justify-self-center lg:justify-self-end">
             <Foto
               nimi="marta-seistes"
               alt="Marta Raudsoo"
               priority
               mahuEkraanile
-              sizes="(max-width: 1024px) 100vw, 540px"
+              sizes="(max-width: 1024px) 100vw, 620px"
             />
           </div>
         </div>

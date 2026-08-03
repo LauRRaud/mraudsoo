@@ -70,11 +70,15 @@
       .mikro  0.14em   nupud, noolelingid, menüü
   */
 
-  /* Suur kuvakiri — Cormorant, kerge kaal, lai reavahe */
+  /*
+    Kuvakiri — Cormorant. Kaal 500, mitte 300: Cormorant on loomu poolest
+    peenike ja väiksemates pealkirjades (nt annid, teenuste nimed) kadus
+    kerge kaal ära. Suurtes pealkirjades püsib 500 endiselt elegantne.
+  */
   .kuva {
     font-family: var(--font-display);
-    font-weight: 300;
-    line-height: 1.12;
+    font-weight: 500;
+    line-height: 1.15;
     letter-spacing: -0.005em;
   }
 
