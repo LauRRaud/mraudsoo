@@ -2,32 +2,33 @@
 
 /*
   Marta Raudsoo — disainisüsteem
-  Värvid ja tüpograafia on võetud Marta olemasolevast visuaalsest keelest
-  (Instagrami postitused, fotod): soe luuvalge, krohvroosa, salvei, kuld ja telliskivipunane.
-  Tegemist on teadlikult ainult heleda teemaga — bränd ise on soe ja hele.
+
+  Palett on kolm värvi: MUST, VALGE ja KULD. Muud toonid puuduvad.
+  Sektsioonide eristamiseks kasutame musta ja valge vahepealseid neutraalseid
+  halle — need on värvitud, mitte soojad, et palett püsiks puhas.
+
+  Kuld on toonilt ~45 kraadi ehk päris kuld, mitte pruun. Kaks tugevust:
+  hele suurtele pealkirjadele, tume tekstisuuruses kasutuseks.
 */
 
 @theme inline {
-  /* Pinnad */
-  --color-bone: #edeae5; /* lehe põhitaust */
-  --color-linen: #f6f4f1; /* heledam paneel */
-  --color-shell: #e3ddd5; /* tumedam paneel */
+  /* Pinnad — valgest tumedama halli suunas */
+  --color-bone: #ffffff; /* lehe põhitaust: valge */
+  --color-linen: #f7f6f4; /* vaevumärgatav paneel */
+  --color-shell: #efeeeb; /* pisut tumedam paneel */
+  --color-clay: #e9e7e3; /* rahulik hall paneel */
+  --color-clay-soft: #f2f1ee;
+  --color-sage: #e3e1dd; /* tumedaim hele paneel */
 
-  /* Brändivärvid */
-  --color-clay: #c9afa4; /* krohvroosa */
-  --color-clay-soft: #dbc6bd;
-  --color-sage: #c6c3b2;
-  --color-gold: #9c8340; /* suured pealkirjad (3.1:1) — kollasem toon, mitte pruun */
-  --color-gold-deep: #7a6733; /* tekst, lingid, tsitaadid (4.6:1) */
-  --color-brick: #8e2318; /* haruldane, tugevaim aktsent (7.3:1) */
+  /* Kuld */
+  --color-gold: #a6862f; /* suured pealkirjad (3.5:1 valgel) */
+  --color-gold-deep: #8a6f20; /* tekst, lingid, tsitaadid (4.8:1 valgel) */
+  --color-brick: #8a6f20; /* varem punane aktsent — paletti ei kuulu, seega kuld */
 
-  /*
-    Tekst. Heledal taustal jäi varasem hele hall liiga nõrgaks —
-    kõik toonid on tumedamad ja vastavad WCAG AA nõuetele.
-  */
-  --color-ink: #2e2a26; /* pealkirjad ja tugev tekst */
-  --color-ink-soft: #4a423b; /* põhitekst (8.2:1) */
-  --color-ink-faint: #6b6259; /* meta-tekst, sildid (4.7:1) */
+  /* Must ja hallid */
+  --color-ink: #121212; /* pealkirjad ja tugev tekst */
+  --color-ink-soft: #3b3b3b; /* põhitekst (11:1 valgel) */
+  --color-ink-faint: #6e6e6e; /* meta-tekst, sildid (5.1:1 valgel) */
 
   --font-display: var(--font-cormorant);
   --font-sans: var(--font-poppins);
