@@ -43,7 +43,7 @@ export default function Teenused() {
                     <h2 className="kuva text-[clamp(1.7rem,3.4vw,2.6rem)] text-ink transition-colors group-hover:text-gold-deep">
                       {teenus.nimi}
                     </h2>
-                    <p className="mt-1 text-sm italic text-ink-faint">
+                    <p className="mt-1 text-base italic text-ink-faint">
                       {teenus.alapealkiri}
                     </p>
                   </div>
@@ -52,7 +52,7 @@ export default function Teenused() {
                     <p className="max-w-[48ch] text-base leading-relaxed text-ink-soft">
                       {teenus.luhike}
                     </p>
-                    <span className="mt-5 inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.22em] text-gold-deep">
+                    <span className="mt-5 inline-flex items-center gap-3 mikro text-gold-deep">
                       Loe lähemalt
                       <span
                         aria-hidden="true"

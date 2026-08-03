@@ -68,7 +68,7 @@ export default function Minust() {
               <dt className="kuva text-[clamp(1.35rem,2.5vw,1.75rem)] text-ink">
                 {and.nimi}
               </dt>
-              <dd className="mt-2 text-sm leading-relaxed text-ink-soft">
+              <dd className="mt-2 text-base leading-relaxed text-ink-soft">
                 {and.kirjeldus}
               </dd>
             </div>

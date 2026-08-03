@@ -66,13 +66,27 @@
     letter-spacing: -0.005em;
   }
 
-  /* Väike hõredalt tähestatud silt sektsioonide kohal */
+  /*
+    Hõredalt tähestatud silt sektsioonide kohal.
+    Suurus hoitakse siin ühes kohas — kogu lehe sildid muutuvad korraga.
+  */
   .silt {
-    font-size: 0.6875rem;
+    font-size: 0.875rem;
     font-weight: 400;
-    letter-spacing: 0.28em;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--color-gold-deep);
+  }
+
+  /*
+    Nuppude ja noolelinkide silt. Sama suur kui .silt, aga ilma värvita,
+    et iga kasutuskoht saaks ise värvi määrata.
+  */
+  .mikro {
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
   }
 
   /* Juuksekarva peenusega joon — asendab kaarte ja varje */

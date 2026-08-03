@@ -55,7 +55,7 @@ export function Nupp({ href, children, variant = "taidetud", className = "" }) {
   return (
     <Link
       href={href}
-      className={`inline-block px-9 py-4 text-[0.7rem] uppercase tracking-[0.22em] transition-colors duration-300 ${stiilid[variant]} ${className}`}
+      className={`inline-block px-9 py-4 mikro transition-colors duration-300 ${stiilid[variant]} ${className}`}
     >
       {children}
     </Link>
@@ -67,7 +67,7 @@ export function NooleLink({ href, children, className = "" }) {
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.22em] text-gold-deep transition-colors hover:text-ink ${className}`}
+      className={`group inline-flex items-center gap-3 mikro text-gold-deep transition-colors hover:text-ink ${className}`}
     >
       {children}
       <span
@@ -85,7 +85,7 @@ export function Tekst({ children, suur = false, className = "" }) {
   return (
     <p
       className={`max-w-[62ch] ${
-        suur ? "text-lg sm:text-xl" : "text-base"
+        suur ? "text-xl sm:text-[1.375rem]" : "text-[1.0625rem]"
       } leading-[1.9] text-ink-soft ${className}`}
     >
       {children}

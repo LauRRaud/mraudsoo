@@ -82,7 +82,7 @@ export default function Avaleht() {
               key={rida.millest}
               className="grid grid-cols-[1fr_auto_1fr] items-baseline gap-4 border-t border-ink/15 py-6 last:border-b sm:gap-10"
             >
-              <span className="text-right text-sm uppercase tracking-[0.18em] text-ink/60 sm:text-base">
+              <span className="text-right mikro text-ink/60 sm:text-base">
                 {rida.millest}
               </span>
               <span aria-hidden="true" className="text-lg text-ink/40">
@@ -119,11 +119,11 @@ export default function Avaleht() {
                   <h3 className="kuva text-[clamp(1.5rem,3vw,2.15rem)] text-ink transition-colors group-hover:text-gold-deep">
                     {teenus.nimi}
                   </h3>
-                  <p className="mt-1 text-sm italic text-ink-faint">
+                  <p className="mt-1 text-base italic text-ink-faint">
                     {teenus.alapealkiri}
                   </p>
                 </div>
-                <p className="max-w-[46ch] text-sm leading-relaxed text-ink-soft">
+                <p className="max-w-[46ch] text-base leading-relaxed text-ink-soft">
                   {teenus.luhike}
                 </p>
               </Link>

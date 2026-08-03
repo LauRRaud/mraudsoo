@@ -67,7 +67,7 @@ export default function BroneeriVorm() {
   const valjaStiil =
     "w-full border-b border-gold/40 bg-transparent px-1 py-3 text-base text-ink transition-colors placeholder:text-ink-faint focus:border-gold-deep focus:outline-none";
   const siltStiil =
-    "block text-[0.7rem] uppercase tracking-[0.22em] text-gold-deep";
+    "block mikro text-gold-deep";
 
   return (
     <form onSubmit={saada} className="space-y-14">
@@ -149,7 +149,7 @@ export default function BroneeriVorm() {
             (vabatahtlik)
           </span>
         </legend>
-        <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-ink-soft">
+        <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-ink-soft">
           Vali kuni kolm sobivat kuupäeva. Need ei ole kinnitatud ajad — Marta
           vaatab need üle ja kinnitab sulle sobiva.
         </p>
@@ -176,7 +176,7 @@ export default function BroneeriVorm() {
                 type="button"
                 onClick={() => lylitaKellaaeg(aeg.vaartus)}
                 aria-pressed={onValitud}
-                className={`border px-6 py-3 text-sm transition-colors ${
+                className={`border px-6 py-3 text-base transition-colors ${
                   onValitud
                     ? "border-ink bg-ink text-bone"
                     : "border-gold/40 text-ink-soft hover:border-gold-deep hover:text-ink"
@@ -212,11 +212,11 @@ export default function BroneeriVorm() {
       <div className="flex flex-wrap items-center gap-6">
         <button
           type="submit"
-          className="inline-block border border-transparent bg-ink px-9 py-4 text-[0.7rem] uppercase tracking-[0.22em] text-bone transition-colors duration-300 hover:bg-gold-deep"
+          className="inline-block border border-transparent bg-ink px-9 py-4 mikro text-bone transition-colors duration-300 hover:bg-gold-deep"
         >
           Saada soov
         </button>
-        <p className="text-xs leading-relaxed text-ink-faint">
+        <p className="text-sm leading-relaxed text-ink-faint">
           Vorm avab sinu e-posti programmi, et saaksid kirja enne saatmist üle
           vaadata.
         </p>

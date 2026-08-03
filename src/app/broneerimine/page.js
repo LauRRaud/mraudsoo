@@ -51,7 +51,7 @@ export default function Broneerimine() {
                   href={kontakt.instagram}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm text-ink-soft transition-colors hover:text-gold-deep"
+                  className="text-base text-ink-soft transition-colors hover:text-gold-deep"
                 >
                   Instagram {kontakt.instagramNimi}
                 </a>
@@ -61,7 +61,7 @@ export default function Broneerimine() {
                   href={kontakt.facebook}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm text-ink-soft transition-colors hover:text-gold-deep"
+                  className="text-base text-ink-soft transition-colors hover:text-gold-deep"
                 >
                   Facebook
                 </a>
@@ -70,7 +70,7 @@ export default function Broneerimine() {
 
             <div className="joon my-10" />
 
-            <p className="text-sm leading-relaxed text-ink-soft">
+            <p className="text-base leading-relaxed text-ink-soft">
               Vastan ise ja võimalikult kiiresti. Kui sul on küsimus, mille
               kohta sa pole kindel, kas see üldse sobib — küsi ikkagi.
             </p>

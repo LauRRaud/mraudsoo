@@ -37,7 +37,7 @@ export default async function Postitus({ params }) {
       <Sektsioon taust="bone" laius="kitsas">
         <time
           dateTime={postitus.kuupaev}
-          className="text-xs uppercase tracking-[0.18em] text-ink-faint"
+          className="mikro text-ink-faint"
         >
           {vormindaKuupaev(postitus.kuupaev)}
         </time>
@@ -61,7 +61,7 @@ export default async function Postitus({ params }) {
         <div className="joon mt-16" />
         <Link
           href="/blogi"
-          className="group mt-8 inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.22em] text-gold-deep transition-colors hover:text-ink"
+          className="group mt-8 inline-flex items-center gap-3 mikro text-gold-deep transition-colors hover:text-ink"
         >
           <span
             aria-hidden="true"

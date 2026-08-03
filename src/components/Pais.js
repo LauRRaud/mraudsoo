@@ -43,7 +43,7 @@ export default function Pais() {
                   <Link
                     href={punkt.tee}
                     aria-current={aktiivne ? "page" : undefined}
-                    className={`text-[0.7rem] uppercase tracking-[0.22em] transition-colors hover:text-gold-deep ${
+                    className={`mikro transition-colors hover:text-gold-deep ${
                       aktiivne ? "text-gold-deep" : "text-ink-soft"
                     }`}
                   >

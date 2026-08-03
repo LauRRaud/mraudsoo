@@ -103,10 +103,10 @@ export default async function TeenuseLeht({ params }) {
               <h2 className="kuva text-[clamp(1.7rem,3.4vw,2.4rem)] text-ink transition-colors group-hover:text-gold-deep">
                 {jargmine.nimi}
               </h2>
-              <p className="mt-3 max-w-[42ch] text-sm leading-relaxed text-ink-soft">
+              <p className="mt-3 max-w-[42ch] text-base leading-relaxed text-ink-soft">
                 {jargmine.luhike}
               </p>
-              <span className="mt-5 inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.22em] text-gold-deep">
+              <span className="mt-5 inline-flex items-center gap-3 mikro text-gold-deep">
                 Loe lähemalt
                 <span
                   aria-hidden="true"

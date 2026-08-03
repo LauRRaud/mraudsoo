@@ -120,7 +120,7 @@ export default function Kalender({ valitud, onMuuda }) {
           <div
             key={p}
             aria-hidden="true"
-            className="py-2 text-center text-[0.65rem] uppercase tracking-[0.18em] text-ink-faint"
+            className="py-2 text-center mikro text-ink-faint"
           >
             {p}
           </div>
@@ -149,7 +149,7 @@ export default function Kalender({ valitud, onMuuda }) {
               disabled={keelatud}
               aria-pressed={onValitud}
               aria-label={vormindaKuupaev(voti)}
-              className={`relative flex aspect-square items-center justify-center text-sm transition-colors ${
+              className={`relative flex aspect-square items-center justify-center text-base transition-colors ${
                 onValitud
                   ? "bg-ink text-bone"
                   : minevikus
@@ -173,14 +173,14 @@ export default function Kalender({ valitud, onMuuda }) {
 
       {/* Valitud kuupäevad */}
       <div className="mt-6 flex flex-wrap items-baseline justify-between gap-3">
-        <p className="text-xs text-ink-faint">
+        <p className="text-sm text-ink-faint">
           Valitud {valitud.length}/{MAX_KUUPAEVI}
         </p>
         {valitud.length > 0 && (
           <button
             type="button"
             onClick={() => onMuuda([])}
-            className="text-xs text-ink-soft underline underline-offset-4 transition-colors hover:text-gold-deep"
+            className="text-sm text-ink-soft underline underline-offset-4 transition-colors hover:text-gold-deep"
           >
             Tühjenda
           </button>
@@ -192,7 +192,7 @@ export default function Kalender({ valitud, onMuuda }) {
           {valitud.map((voti) => (
             <li
               key={voti}
-              className="flex items-center justify-between gap-4 border-t border-gold/25 pt-3 text-sm text-ink-soft"
+              className="flex items-center justify-between gap-4 border-t border-gold/25 pt-3 text-base text-ink-soft"
             >
               <span>{vormindaKuupaev(voti)}</span>
               <button

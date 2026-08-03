@@ -40,7 +40,7 @@ export default function Hinnakiri() {
                   <h2 className="kuva text-[clamp(1.4rem,2.8vw,2rem)] text-ink">
                     {rida.nimi}
                   </h2>
-                  <p className="mt-2 max-w-[52ch] text-sm leading-relaxed text-ink-soft">
+                  <p className="mt-2 max-w-[52ch] text-base leading-relaxed text-ink-soft">
                     {rida.kirjeldus}
                   </p>
                 </div>
@@ -49,7 +49,7 @@ export default function Hinnakiri() {
                   <p className="kuva text-[clamp(1.3rem,2.5vw,1.75rem)] text-gold-deep">
                     {rida.hind}
                   </p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.18em] text-ink-faint">
+                  <p className="mt-1 mikro text-ink-faint">
                     {rida.kestus}
                   </p>
                 </div>
@@ -75,7 +75,7 @@ export default function Hinnakiri() {
               <span className="kuva text-[clamp(1.6rem,3vw,2.25rem)] text-ink">
                 {teekond.hind}
               </span>
-              <span className="text-sm text-ink/55 line-through">
+              <span className="text-base text-ink/55 line-through">
                 {teekond.vordlus}
               </span>
             </p>
@@ -92,7 +92,7 @@ export default function Hinnakiri() {
                   <span aria-hidden="true" className="text-ink/40">
                     —
                   </span>
-                  <span className="text-sm leading-relaxed text-ink/75">
+                  <span className="text-base leading-relaxed text-ink/75">
                     {punkt}
                   </span>
                 </li>

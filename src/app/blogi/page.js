@@ -52,7 +52,7 @@ export default function Blogi() {
               href={kontakt.substack}
               target="_blank"
               rel="noreferrer"
-              className="group mt-10 inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.22em] text-gold-deep transition-colors hover:text-ink"
+              className="group mt-10 inline-flex items-center gap-3 mikro text-gold-deep transition-colors hover:text-ink"
             >
               Loe Substackis
               <span
@@ -73,7 +73,7 @@ export default function Blogi() {
                 >
                   <time
                     dateTime={postitus.kuupaev}
-                    className="text-xs uppercase tracking-[0.18em] text-ink-faint sm:pt-3"
+                    className="mikro text-ink-faint sm:pt-3"
                   >
                     {vormindaKuupaev(postitus.kuupaev)}
                   </time>
