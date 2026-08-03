@@ -17,8 +17,8 @@
   --color-clay: #c9afa4; /* krohvroosa */
   --color-clay-soft: #dbc6bd;
   --color-sage: #c6c3b2;
-  --color-gold: #967e4c; /* ainult suured pealkirjad (kontrast 3.2:1) */
-  --color-gold-deep: #7a6740; /* tekstisuuruses aktsendid, lingid (4.6:1) */
+  --color-gold: #9c8340; /* suured pealkirjad (3.1:1) — kollasem toon, mitte pruun */
+  --color-gold-deep: #7a6733; /* tekst, lingid, tsitaadid (4.6:1) */
   --color-brick: #8e2318; /* haruldane, tugevaim aktsent (7.3:1) */
 
   /*

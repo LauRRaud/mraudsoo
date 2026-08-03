@@ -87,7 +87,7 @@ export default function Minust() {
             sizes="(max-width: 1000px) 100vw, 1000px"
           />
 
-          <blockquote className="kuva mt-12 text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.45] text-ink">
+          <blockquote className="kuva mt-12 text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.45] text-gold-deep">
             „Need ei ole minu saavutused. Need on Jumala armu kingitused, mida
             soovin kasutada ustavalt teiste teenimiseks.”
           </blockquote>
