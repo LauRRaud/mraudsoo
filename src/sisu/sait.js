@@ -1,0 +1,223 @@
+/*
+  Kogu lehe tekstiline sisu on koondatud siia ühte faili, et seda saaks muuta
+  ilma komponentide koodi puutumata.
+
+  TÄPSUSTAMIST VAJAB (märgitud ka allpool kommentaarides):
+  - kontakt.email — praegu kohatäide, vaja Marta päris e-posti aadress
+  - hinnakiri — hinnad on ettepanek, vajavad Marta kinnitust
+*/
+
+export const kontakt = {
+  // TODO: asenda Marta päris e-posti aadressiga
+  email: "marta@martaraudsoo.com",
+  instagram: "https://www.instagram.com/martaraudsoo/",
+  instagramNimi: "@martaraudsoo",
+  facebook: "https://www.facebook.com/marta.raudsoo",
+  substack: "https://substack.com/@martaraudsoo",
+};
+
+export const navi = [
+  { nimi: "Minust", tee: "/minust" },
+  { nimi: "Teenused", tee: "/teenused" },
+  { nimi: "Hinnakiri", tee: "/hinnakiri" },
+  { nimi: "Blogi", tee: "/blogi" },
+  { nimi: "Broneerimine", tee: "/broneerimine" },
+];
+
+/* Marta enda sõnastus liikumisest — lehe kõige tugevam sõnum */
+export const liikumine = [
+  { millest: "Kaosest", milleks: "selgusesse" },
+  { millest: "Raskusest", milleks: "kergusesse" },
+  { millest: "Killustatusest", milleks: "tasakaalu" },
+  { millest: "Rahutusest", milleks: "rahusse" },
+  { millest: "Lõksust", milleks: "vabadusse" },
+];
+
+/* Annid — Marta enda sõnastus, 1. Korintlastele 12 põhjal */
+export const annid = [
+  {
+    nimi: "Tarkuse jagamine",
+    kirjeldus: "aidata näha olukordi laiemalt ja mõista järgmisi samme",
+  },
+  {
+    nimi: "Tunnetus",
+    kirjeldus: "märgata seda, mis vajab tähelepanu või korrastumist",
+  },
+  {
+    nimi: "Usu julgustamine",
+    kirjeldus: "tuletada meelde lootust ja usaldust Jumala vastu",
+  },
+  {
+    nimi: "Kuulamine ja kohalolu",
+    kirjeldus:
+      "luua turvaline ruum, kus inimene võib olla aus ning kogeda selgust",
+  },
+];
+
+export const teenused = [
+  {
+    slug: "puha-ruum",
+    nimi: "Püha Ruum",
+    alapealkiri: "Püha Kohalolu Kristuses",
+    luhike:
+      "Turvaline ruum kuulamiseks, peegelduseks, palveks ja selguse leidmiseks.",
+    sissejuhatus:
+      "Pakun inimestele ruumi, kus on võimalik peatuda, olla kuuldud ja märgata uuesti seda, mis on elus oluline.",
+    loigud: [
+      "Usun, et Jumal kasutab erinevaid inimesi erineval viisil. Minu südames on saanud oluliseks luua keskkond, kus võivad sündida kuulamine, selgus, korrastumine, julgustus ja järgmiste sammude eristamine.",
+      "Kõik see sünnib usus, palves ja sooviga anda kogu au Jumalale.",
+    ],
+    nimekirjaPealkiri: "Selles ruumis võib sündida",
+    nimekiri: [
+      "kuulamine",
+      "selgus",
+      "korrastumine",
+      "julgustus",
+      "järgmiste sammude eristamine",
+    ],
+    toon: "sygav",
+  },
+  {
+    slug: "stiiliselgus",
+    nimi: "Stiiliselgus",
+    alapealkiri: "Nähtavaks saanud olemus",
+    luhike:
+      "Aitan luua selguse, mis väljendab inimese olemust, väärtusi ja eluhooaega.",
+    sissejuhatus:
+      "Esimene samm sinu isikliku stiili essentsi, garderoobi inventuuri ja teadlikumate valikute suunas.",
+    loigud: [
+      "Stiil ei ole ainult välimus. See on viis, kuidas inimene väljendab seda, kes ta on.",
+      "Riided, kodu, välimus ja valikud kannavad sageli inimese sisemist seisundit. Seepärast ei vaata me ainult riideid, vaid ka seda, mis on nende taga.",
+    ],
+    nimekirjaPealkiri: "Saad selgust",
+    nimekiri: [
+      "milline on sinu põhiline stiiliessents ja millised lisaessentsid annavad sinu stiilile sügavust",
+      "milline on sinu energeetiline kohalolu",
+      "millised toonid, lõiked, materjalid ja detailid sind toetavad",
+      "millises riietuses tunned end päriselt nähtuna",
+      "milline stiilisuund aitab sul liikuda lähemale iseendale",
+    ],
+    toon: "soe",
+  },
+  {
+    slug: "garderoobi-korrastus",
+    nimi: "Garderoobi korrastus",
+    alapealkiri: "Kergus · Rahu · Tasakaal · Rõõm",
+    luhike:
+      "Loome koos korra ja lihtsuse, et igapäevased valikud toetaksid sinu elu.",
+    sissejuhatus:
+      "Tulemuseks on garderoob, mis loob rohkem kergust, selgust ja rahu — ning on kooskõlas sinu elu, keha ja olemusega.",
+    loigud: [
+      "Garderoobi korrastades ei korrasta me ainult riideid. Vaatame koos, mis sobib, mis teenib sinu praegust eluhooaega ja millest on aeg lahti lasta.",
+    ],
+    nimekirjaPealkiri: "Vaatame koos",
+    nimekiri: [
+      "milline garderoob teenib sinu praegust eluhooaega",
+      "millest on aeg loobuda",
+      "mis on puudu ja mis on juba olemas",
+      "kuidas hoida kord püsivana",
+    ],
+    toon: "soe",
+  },
+  {
+    slug: "teadlik-ostlemine",
+    nimi: "Teadlik ostlemine",
+    alapealkiri: "Valikud, mis lähtuvad vajadusest",
+    luhike:
+      "Kogemus teha läbimõeldud valikuid, mis lähtuvad vajadusest, mitte survest või emotsioonist.",
+    sissejuhatus:
+      "Ostlemine muutub rahulikuks, kui tead, mida otsid ja miks.",
+    loigud: [
+      "Käime koos poes või veebis ja teeme valikuid, mis on kooskõlas sinu stiiliessentsi, eluhooaja ja tegeliku vajadusega.",
+    ],
+    nimekirjaPealkiri: "Õpid",
+    nimekiri: [
+      "eristama vajadust survest ja hetkeemotsioonist",
+      "märkama, mis päriselt sobib",
+      "tegema valikuid, mida hiljem ei kahetse",
+      "ostma vähem, aga paremini",
+    ],
+    toon: "soe",
+  },
+  {
+    slug: "fotograafia",
+    nimi: "Fotograafia",
+    alapealkiri: "Must-valge",
+    luhike:
+      "Loomulikud ja ehedad hetked, mis jäädvustavad inimese sellisena, nagu ta on.",
+    sissejuhatus:
+      "Portreed, mis ei püüa kedagi kellekski teiseks teha.",
+    loigud: [
+      "Must-valge jätab alles selle, mis on oluline: valguse, kohalolu ja inimese enda.",
+    ],
+    nimekirjaPealkiri: null,
+    nimekiri: [],
+    toon: "sygav",
+  },
+];
+
+export function leiaTeenus(slug) {
+  return teenused.find((t) => t.slug === slug);
+}
+
+/*
+  HINNAKIRI — ETTEPANEK, vajab Marta kinnitust.
+  Numbrid on siin ühes kohas, et neid oleks lihtne muuta.
+  Kui hind ei ole veel paigas, kirjuta hinna asemele "Kokkuleppel".
+*/
+export const hinnakiri = [
+  {
+    nimi: "Püha Ruum | Püha Kohalolu",
+    kestus: "1 tund",
+    hind: "Kokkuleppel",
+    kirjeldus:
+      "Vestlus, kuulamine, peegeldus ja palve. Kohtume kas kohapeal või veebis.",
+  },
+  {
+    nimi: "Stiiliselgus",
+    kestus: "2–3 tundi",
+    hind: "Kokkuleppel",
+    kirjeldus:
+      "Sinu stiiliessentsi kaardistamine: toonid, lõiked, materjalid ja see, mis sind päriselt toetab.",
+  },
+  {
+    nimi: "Garderoobi korrastus",
+    kestus: "3–4 tundi",
+    hind: "Kokkuleppel",
+    kirjeldus:
+      "Käime garderoobi koos läbi. Jääb kord, selgus ja arusaam sellest, mis on olemas ja mis puudu.",
+  },
+  {
+    nimi: "Teadlik ostlemine",
+    kestus: "3 tundi",
+    hind: "Kokkuleppel",
+    kirjeldus:
+      "Koos poes või veebis. Praktiline kogemus, mis jääb sind edaspidi teenima.",
+  },
+  {
+    nimi: "Fotograafia",
+    kestus: "Kokkuleppel",
+    hind: "Kokkuleppel",
+    kirjeldus: "Must-valge portreesessioon.",
+  },
+];
+
+export const teekond = {
+  nimi: "Kuuajaline teekond",
+  hind: "Kokkuleppel",
+  kirjeldus:
+    "Kuu aega koos: kohtumised, vahepealne tugi ja praktilised sammud. Sisemine ja väline korrastumine käivad käsikäes, seepärast saab teekonda kokku panna just sinu vajadusest lähtuvalt.",
+  sisaldab: [
+    "esimene pikem kohtumine ja kaardistus",
+    "kokkulepitud jätkukohtumised",
+    "praktilised sammud kohtumiste vahel",
+    "kirjalik kokkuvõte ja suund edasiseks",
+  ],
+};
+
+/*
+  BLOGI — postitused lisatakse siia.
+  Iga postitus: { slug, pealkiri, kuupaev (ISO), sissejuhatus, loigud: [] }
+  Praegu tühi: Marta kirjutab hetkel Substackis, esimesed postitused tulevad siia hiljem.
+*/
+export const postitused = [];

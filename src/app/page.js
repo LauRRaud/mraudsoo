@@ -1,65 +1,185 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Nupp, NooleLink, Pealkiri, Sektsioon, Tekst } from "@/components/ui";
+import { liikumine, teenused } from "@/sisu/sait";
 
-export default function Home() {
+export default function Avaleht() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <>
+      {/* Hero — usuline alus kohe ja selgelt */}
+      <section className="bg-bone">
+        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-10 lg:py-28">
+          <div>
+            <p className="silt">Püha Kohalolu Kristuses</p>
+            <h1 className="kuva mt-6 text-[clamp(3rem,8vw,6rem)] text-ink">
+              Püha Ruum
+            </h1>
+            <p className="kuva mt-4 text-[clamp(1.4rem,3vw,2.1rem)] text-gold">
+              Inimese terviklik korrastumine
+            </p>
+
+            <div className="joon my-10 max-w-24" />
+
+            <Tekst suur>
+              Usun, et Jumal on loonud iga inimese ainulaadseks. Minu kutsumus
+              on aidata inimesel taas märgata oma väärtust, tuua ellu selgust ja
+              luua kooskõla sisemise olemuse ning välise väljenduse vahel.
+            </Tekst>
+
+            <div className="mt-11 flex flex-wrap gap-4">
+              <Nupp href="/broneerimine">Broneeri aeg</Nupp>
+              <Nupp href="/teenused" variant="aaris">
+                Vaata teenuseid
+              </Nupp>
+            </div>
+          </div>
+
+          <div className="relative aspect-[3/4] w-full overflow-hidden lg:aspect-[4/5]">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/pildid/marta-portree.jpg"
+              alt="Marta Raudsoo"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 45vw"
+              className="object-cover object-top"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Kutsumus — miks teenused ei ole eraldi maailmad */}
+      <Sektsioon taust="linen" laius="kitsas">
+        <p className="silt">Kutsumus</p>
+        <blockquote className="kuva mt-8 text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[1.35] text-ink">
+          „Usun, et Jumal on kutsunud mind looma ruumi, kus inimene võib
+          peatuda, olla kuuldud ning kogeda selgust.”
+        </blockquote>
+        <div className="mt-10 space-y-6">
+          <Tekst>
+            Mõnikord sünnib see vestluses ja palves. Mõnikord garderoobi
+            korrastades, teadlikke valikuid tehes või fotosessioonil. Välised
+            sammud saavad sageli peegeldada seda, mida Jumal teeb inimese
+            südames.
+          </Tekst>
+          <Tekst>
+            Minu teenused ei ole eraldi maailmad. Need on kõik ühe ja sama
+            kutsumuse erinevad väljendusviisid. Väline ja sisemine ei ole lahus
+            — riided, kodu, välimus ja valikud kannavad sageli inimese sisemist
+            seisundit.
+          </Tekst>
+        </div>
+      </Sektsioon>
+
+      {/* Liikumine — Marta enda tugevaim sõnastus */}
+      <Sektsioon taust="clay">
+        <Pealkiri silt="Liikumine" className="max-w-2xl">
+          Ma ei aita sul valida riideid. Ma aitan sul liikuda.
+        </Pealkiri>
+
+        <ul className="mt-16">
+          {liikumine.map((rida) => (
+            <li
+              key={rida.millest}
+              className="grid grid-cols-[1fr_auto_1fr] items-baseline gap-4 border-t border-ink/15 py-6 last:border-b sm:gap-10"
+            >
+              <span className="text-right text-sm uppercase tracking-[0.18em] text-ink/60 sm:text-base">
+                {rida.millest}
+              </span>
+              <span aria-hidden="true" className="text-lg text-ink/40">
+                →
+              </span>
+              <span className="kuva text-[clamp(1.5rem,3.5vw,2.5rem)] text-ink">
+                {rida.milleks}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </Sektsioon>
+
+      {/* Teenused */}
+      <Sektsioon taust="bone">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <Pealkiri silt="Teenused" className="max-w-xl">
+            Viis viisi, kuidas sama kutsumus praktikas väljendub
+          </Pealkiri>
+          <NooleLink href="/teenused">Kõik teenused</NooleLink>
+        </div>
+
+        <ul className="mt-16">
+          {teenused.map((teenus, i) => (
+            <li key={teenus.slug}>
+              <Link
+                href={`/teenused/${teenus.slug}`}
+                className="group grid grid-cols-1 items-baseline gap-x-8 gap-y-3 border-t border-gold/25 py-8 transition-colors hover:bg-linen sm:grid-cols-[auto_1fr_1.2fr] sm:py-10"
+              >
+                <span className="silt !text-ink-faint">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="kuva text-[clamp(1.5rem,3vw,2.15rem)] text-ink transition-colors group-hover:text-gold-deep">
+                    {teenus.nimi}
+                  </h3>
+                  <p className="mt-1 text-sm italic text-ink-faint">
+                    {teenus.alapealkiri}
+                  </p>
+                </div>
+                <p className="max-w-[46ch] text-sm leading-relaxed text-ink-soft">
+                  {teenus.luhike}
+                </p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="joon" />
+      </Sektsioon>
+
+      {/* Minust */}
+      <section className="bg-shell">
+        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 py-20 sm:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-10 lg:py-32">
+          <div className="relative aspect-[4/5] w-full overflow-hidden">
+            <Image
+              src="/pildid/marta-diivanil.jpg"
+              alt="Marta Raudsoo"
+              fill
+              sizes="(max-width: 1024px) 100vw, 42vw"
+              className="object-cover"
+            />
+          </div>
+
+          <div>
+            <Pealkiri silt="Minust">
+              Kõik, mis minus on head, on Jumala kingitus
+            </Pealkiri>
+            <div className="mt-8 space-y-6">
+              <Tekst>
+                Pakun inimestele ruumi, kus on võimalik peatuda, olla kuuldud ja
+                märgata uuesti seda, mis on elus oluline.
+              </Tekst>
+              <Tekst>
+                Minu soov ei ole juhtida inimesi enda juurde, vaid aidata neil
+                kasvada oma suhtes Jumalaga.
+              </Tekst>
+            </div>
+            <NooleLink href="/minust" className="mt-10">
+              Loe minust
+            </NooleLink>
+          </div>
+        </div>
+      </section>
+
+      {/* Kutse */}
+      <Sektsioon taust="linen" laius="kitsas" className="text-center">
+        <p className="silt">Alustame</p>
+        <p className="kuva mx-auto mt-7 max-w-2xl text-[clamp(1.8rem,4vw,3rem)] leading-[1.25] text-ink">
+          Kui miski siin kõnetas, siis on see hea koht, kust alustada.
+        </p>
+        <div className="mt-11 flex flex-wrap justify-center gap-4">
+          <Nupp href="/broneerimine">Broneeri aeg</Nupp>
+          <Nupp href="/hinnakiri" variant="aaris">
+            Vaata hinnakirja
+          </Nupp>
+        </div>
+      </Sektsioon>
+    </>
   );
 }

@@ -1,26 +1,98 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  Marta Raudsoo — disainisüsteem
+  Värvid ja tüpograafia on võetud Marta olemasolevast visuaalsest keelest
+  (Instagrami postitused, fotod): soe luuvalge, krohvroosa, salvei, kuld ja telliskivipunane.
+  Tegemist on teadlikult ainult heleda teemaga — bränd ise on soe ja hele.
+*/
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Pinnad */
+  --color-bone: #edeae5; /* lehe põhitaust */
+  --color-linen: #f6f4f1; /* heledam paneel */
+  --color-shell: #e3ddd5; /* tumedam paneel */
+
+  /* Brändivärvid */
+  --color-clay: #c9afa4; /* krohvroosa */
+  --color-clay-soft: #dbc6bd;
+  --color-sage: #c6c3b2;
+  --color-gold: #967e4c; /* ainult suured pealkirjad (kontrast 3.2:1) */
+  --color-gold-deep: #7a6740; /* tekstisuuruses aktsendid, lingid (4.6:1) */
+  --color-brick: #8e2318; /* haruldane, tugevaim aktsent (7.3:1) */
+
+  /* Tekst */
+  --color-ink: #2e2a26; /* põhitekst — soe, mitte kunagi puhas must */
+  --color-ink-soft: #6b6259; /* teisene tekst (4.7:1) */
+  --color-ink-faint: #a39a90; /* ainult dekoratiivne */
+
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-poppins);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bone);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-clay);
+    color: var(--color-ink);
+  }
+
+  /* Fookus on nähtav kõikjal — klaviatuuriga navigeerimine peab töötama */
+  :focus-visible {
+    outline: 2px solid var(--color-gold-deep);
+    outline-offset: 3px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Suur kuvakiri — Cormorant, kerge kaal, lai reavahe */
+  .kuva {
+    font-family: var(--font-display);
+    font-weight: 300;
+    line-height: 1.12;
+    letter-spacing: -0.005em;
+  }
+
+  /* Väike hõredalt tähestatud silt sektsioonide kohal */
+  .silt {
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-gold-deep);
+  }
+
+  /* Juuksekarva peenusega joon — asendab kaarte ja varje */
+  .joon {
+    height: 1px;
+    background-color: color-mix(in srgb, var(--color-gold) 28%, transparent);
+  }
+}
+
+/* Austa kasutaja eelistust liikumise osas */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
