@@ -149,7 +149,7 @@ export default function Kalender({ valitud, onMuuda }) {
               disabled={keelatud}
               aria-pressed={onValitud}
               aria-label={vormindaKuupaev(voti)}
-              className={`relative flex aspect-square items-center justify-center text-base transition-colors ${
+              className={`relative flex aspect-square items-center justify-center text-lg transition-colors ${
                 onValitud
                   ? "bg-ink text-bone"
                   : minevikus
@@ -192,7 +192,7 @@ export default function Kalender({ valitud, onMuuda }) {
           {valitud.map((voti) => (
             <li
               key={voti}
-              className="flex items-center justify-between gap-4 border-t border-gold/25 pt-3 text-base text-ink-soft"
+              className="flex items-center justify-between gap-4 border-t border-gold/25 pt-3 text-lg text-ink-soft"
             >
               <span>{vormindaKuupaev(voti)}</span>
               <button

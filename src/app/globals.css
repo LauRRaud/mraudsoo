@@ -21,10 +21,13 @@
   --color-gold-deep: #7a6740; /* tekstisuuruses aktsendid, lingid (4.6:1) */
   --color-brick: #8e2318; /* haruldane, tugevaim aktsent (7.3:1) */
 
-  /* Tekst */
-  --color-ink: #2e2a26; /* põhitekst — soe, mitte kunagi puhas must */
-  --color-ink-soft: #6b6259; /* teisene tekst (4.7:1) */
-  --color-ink-faint: #a39a90; /* ainult dekoratiivne */
+  /*
+    Tekst. Heledal taustal jäi varasem hele hall liiga nõrgaks —
+    kõik toonid on tumedamad ja vastavad WCAG AA nõuetele.
+  */
+  --color-ink: #2e2a26; /* pealkirjad ja tugev tekst */
+  --color-ink-soft: #4a423b; /* põhitekst (8.2:1) */
+  --color-ink-faint: #6b6259; /* meta-tekst, sildid (4.7:1) */
 
   --font-display: var(--font-cormorant);
   --font-sans: var(--font-poppins);
@@ -39,9 +42,10 @@
     background-color: var(--color-bone);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-weight: 300;
-    line-height: 1.85;
-    letter-spacing: 0.01em;
+    /* Kaal 400, mitte 300 — peenike kiri kadus heledal taustal ära */
+    font-weight: 400;
+    line-height: 1.8;
+    letter-spacing: 0.005em;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -71,9 +75,9 @@
     Suurus hoitakse siin ühes kohas — kogu lehe sildid muutuvad korraga.
   */
   .silt {
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 400;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--color-gold-deep);
   }
@@ -83,9 +87,9 @@
     et iga kasutuskoht saaks ise värvi määrata.
   */
   .mikro {
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 400;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
   }
 

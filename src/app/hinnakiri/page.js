@@ -25,7 +25,7 @@ export default function Hinnakiri() {
 
       {/* Üksikteenused */}
       <section className="bg-linen">
-        <div className="mx-auto max-w-6xl px-6 pb-20 sm:pb-24 lg:px-10 lg:pb-32">
+        <div className="mx-auto max-w-[1360px] px-6 pb-20 sm:pb-24 lg:px-10 lg:pb-32">
           <div className="pt-20 sm:pt-24 lg:pt-32">
             <p className="silt">Üksikteenused</p>
           </div>
@@ -40,7 +40,7 @@ export default function Hinnakiri() {
                   <h2 className="kuva text-[clamp(1.4rem,2.8vw,2rem)] text-ink">
                     {rida.nimi}
                   </h2>
-                  <p className="mt-2 max-w-[52ch] text-base leading-relaxed text-ink-soft">
+                  <p className="mt-2 max-w-[52ch] text-lg leading-relaxed text-ink-soft">
                     {rida.kirjeldus}
                   </p>
                 </div>
@@ -68,14 +68,14 @@ export default function Hinnakiri() {
             <h2 className="kuva mt-6 text-[clamp(1.9rem,4vw,3.1rem)] text-ink">
               {teekond.nimi}
             </h2>
-            <p className="mt-7 max-w-[55ch] text-base leading-[1.9] text-ink/75">
+            <p className="mt-7 max-w-[55ch] text-lg leading-[1.75] text-ink/85">
               {teekond.kirjeldus}
             </p>
             <p className="mt-8 flex flex-wrap items-baseline gap-3">
               <span className="kuva text-[clamp(1.6rem,3vw,2.25rem)] text-ink">
                 {teekond.hind}
               </span>
-              <span className="text-base text-ink/55 line-through">
+              <span className="text-lg text-ink/55 line-through">
                 {teekond.vordlus}
               </span>
             </p>
@@ -92,7 +92,7 @@ export default function Hinnakiri() {
                   <span aria-hidden="true" className="text-ink/40">
                     —
                   </span>
-                  <span className="text-base leading-relaxed text-ink/75">
+                  <span className="text-lg leading-relaxed text-ink/75">
                     {punkt}
                   </span>
                 </li>

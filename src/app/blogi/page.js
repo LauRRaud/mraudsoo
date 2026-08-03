@@ -82,7 +82,7 @@ export default function Blogi() {
                     <h2 className="kuva text-[clamp(1.6rem,3.2vw,2.4rem)] text-ink transition-colors group-hover:text-gold-deep">
                       {postitus.pealkiri}
                     </h2>
-                    <p className="mt-3 max-w-[58ch] text-base leading-relaxed text-ink-soft">
+                    <p className="mt-3 max-w-[58ch] text-lg leading-relaxed text-ink-soft">
                       {postitus.sissejuhatus}
                     </p>
                   </div>

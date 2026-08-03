@@ -52,7 +52,7 @@ export default async function Postitus({ params }) {
       <Sektsioon taust="linen" laius="kitsas">
         <div className="space-y-7">
           {postitus.loigud.map((loik) => (
-            <p key={loik} className="text-base leading-[1.95] text-ink-soft">
+            <p key={loik} className="text-lg leading-[1.95] text-ink-soft">
               {loik}
             </p>
           ))}

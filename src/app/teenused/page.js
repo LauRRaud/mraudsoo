@@ -27,7 +27,7 @@ export default function Teenused() {
       </Sektsioon>
 
       <section className="bg-linen">
-        <div className="mx-auto max-w-6xl px-6 pb-20 sm:pb-24 lg:px-10 lg:pb-32">
+        <div className="mx-auto max-w-[1360px] px-6 pb-20 sm:pb-24 lg:px-10 lg:pb-32">
           <ul className="pt-20 sm:pt-24 lg:pt-32">
             {teenused.map((teenus, i) => (
               <li key={teenus.slug}>
@@ -43,13 +43,13 @@ export default function Teenused() {
                     <h2 className="kuva text-[clamp(1.7rem,3.4vw,2.6rem)] text-ink transition-colors group-hover:text-gold-deep">
                       {teenus.nimi}
                     </h2>
-                    <p className="mt-1 text-base italic text-ink-faint">
+                    <p className="mt-1 text-lg italic text-ink-faint">
                       {teenus.alapealkiri}
                     </p>
                   </div>
 
                   <div>
-                    <p className="max-w-[48ch] text-base leading-relaxed text-ink-soft">
+                    <p className="max-w-[48ch] text-lg leading-relaxed text-ink-soft">
                       {teenus.luhike}
                     </p>
                     <span className="mt-5 inline-flex items-center gap-3 mikro text-gold-deep">

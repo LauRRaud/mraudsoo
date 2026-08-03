@@ -26,7 +26,7 @@ export default function Broneerimine() {
       </Sektsioon>
 
       <section className="bg-linen">
-        <div className="mx-auto grid max-w-6xl gap-16 px-6 py-20 sm:py-24 lg:grid-cols-[1.3fr_0.7fr] lg:gap-24 lg:px-10 lg:py-32">
+        <div className="mx-auto grid max-w-[1360px] gap-16 px-6 py-20 sm:py-24 lg:grid-cols-[1.3fr_0.7fr] lg:gap-24 lg:px-10 lg:py-32">
           <div>
             <p className="silt">Saada soov</p>
             <div className="mt-10">
@@ -51,7 +51,7 @@ export default function Broneerimine() {
                   href={kontakt.instagram}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-base text-ink-soft transition-colors hover:text-gold-deep"
+                  className="text-lg text-ink-soft transition-colors hover:text-gold-deep"
                 >
                   Instagram {kontakt.instagramNimi}
                 </a>
@@ -61,7 +61,7 @@ export default function Broneerimine() {
                   href={kontakt.facebook}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-base text-ink-soft transition-colors hover:text-gold-deep"
+                  className="text-lg text-ink-soft transition-colors hover:text-gold-deep"
                 >
                   Facebook
                 </a>
@@ -70,7 +70,7 @@ export default function Broneerimine() {
 
             <div className="joon my-10" />
 
-            <p className="text-base leading-relaxed text-ink-soft">
+            <p className="text-lg leading-relaxed text-ink-soft">
               Vastan ise ja võimalikult kiiresti. Kui sul on küsimus, mille
               kohta sa pole kindel, kas see üldse sobib — küsi ikkagi.
             </p>

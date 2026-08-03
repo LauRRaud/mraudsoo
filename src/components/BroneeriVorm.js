@@ -65,12 +65,17 @@ export default function BroneeriVorm() {
   }
 
   const valjaStiil =
-    "w-full border-b border-gold/40 bg-transparent px-1 py-3 text-base text-ink transition-colors placeholder:text-ink-faint focus:border-gold-deep focus:outline-none";
+    "w-full border-b border-gold/40 bg-transparent px-1 py-3 text-lg text-ink transition-colors placeholder:text-ink-faint focus:border-gold-deep focus:outline-none";
   const siltStiil =
     "block mikro text-gold-deep";
 
   return (
     <form onSubmit={saada} className="space-y-14">
+      <p className="text-lg leading-relaxed text-ink-soft">
+        Täida ainult nimi, e-post ja sõnum — ülejäänu on abiks, aga pole
+        vajalik.
+      </p>
+
       {/* Kontaktandmed */}
       <div className="grid gap-10 sm:grid-cols-2">
         <div>
@@ -105,10 +110,7 @@ export default function BroneeriVorm() {
 
         <div>
           <label htmlFor="telefon" className={siltStiil}>
-            Telefon{" "}
-            <span className="normal-case tracking-normal text-ink-faint">
-              (vabatahtlik)
-            </span>
+            Telefon
           </label>
           <input
             id="telefon"
@@ -116,7 +118,7 @@ export default function BroneeriVorm() {
             type="tel"
             autoComplete="tel"
             className={`${valjaStiil} mt-3`}
-            placeholder="+372"
+            placeholder="Kui eelistad, et helistan"
           />
         </div>
 
@@ -143,15 +145,11 @@ export default function BroneeriVorm() {
 
       {/* Kalender */}
       <fieldset>
-        <legend className={siltStiil}>
-          Millal sulle sobiks?{" "}
-          <span className="normal-case tracking-normal text-ink-faint">
-            (vabatahtlik)
-          </span>
-        </legend>
-        <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-ink-soft">
-          Vali kuni kolm sobivat kuupäeva. Need ei ole kinnitatud ajad — Marta
-          vaatab need üle ja kinnitab sulle sobiva.
+        <legend className={siltStiil}>Millal sulle sobiks?</legend>
+        <p className="mt-3 max-w-[52ch] text-lg leading-relaxed text-ink-soft">
+          Kui sul on mõni päev juba mõttes, vali kuni kolm. Kui ei ole, jäta
+          vahele — lepime aja kokku kirja teel. Valitud päevad ei ole
+          kinnitatud ajad; Marta vaatab need üle ja kinnitab sulle sobiva.
         </p>
 
         <div className="mt-8 max-w-md border border-gold/25 bg-bone p-5 sm:p-7">
@@ -161,13 +159,11 @@ export default function BroneeriVorm() {
 
       {/* Kellaaeg */}
       <fieldset>
-        <legend className={siltStiil}>
-          Sobiv kellaaeg{" "}
-          <span className="normal-case tracking-normal text-ink-faint">
-            (vabatahtlik)
-          </span>
-        </legend>
-        <div className="mt-5 flex flex-wrap gap-3">
+        <legend className={siltStiil}>Mis kellaaeg sulle sobib?</legend>
+        <p className="mt-3 max-w-[52ch] text-lg leading-relaxed text-ink-soft">
+          Võid valida mitu või jätta valimata.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
           {KELLAAJAD.map((aeg) => {
             const onValitud = kellaajad.includes(aeg.vaartus);
             return (
@@ -176,7 +172,7 @@ export default function BroneeriVorm() {
                 type="button"
                 onClick={() => lylitaKellaaeg(aeg.vaartus)}
                 aria-pressed={onValitud}
-                className={`border px-6 py-3 text-base transition-colors ${
+                className={`border px-6 py-3 text-lg transition-colors ${
                   onValitud
                     ? "border-ink bg-ink text-bone"
                     : "border-gold/40 text-ink-soft hover:border-gold-deep hover:text-ink"

@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import Foto from "@/components/Foto";
 import { Nupp, NooleLink, Pealkiri, Sektsioon, Tekst } from "@/components/ui";
 import { liikumine, teenused } from "@/sisu/sait";
 
@@ -8,7 +8,7 @@ export default function Avaleht() {
     <>
       {/* Hero — usuline alus kohe ja selgelt */}
       <section className="bg-bone">
-        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-10 lg:py-28">
+        <div className="mx-auto grid max-w-[1360px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-10 lg:py-24">
           <div>
             <p className="silt">Püha Kohalolu Kristuses</p>
             <h1 className="kuva mt-6 text-[clamp(3rem,8vw,6rem)] text-ink">
@@ -34,14 +34,13 @@ export default function Avaleht() {
             </div>
           </div>
 
-          <div className="relative aspect-[3/4] w-full overflow-hidden lg:aspect-[4/5]">
-            <Image
-              src="/pildid/marta-portree.jpg"
+          {/* Piirame laiust, et lõikamata püstfoto ei kasvaks üle ekraani */}
+          <div className="w-full max-w-[470px] justify-self-center lg:justify-self-end">
+            <Foto
+              nimi="marta-portree"
               alt="Marta Raudsoo"
-              fill
               priority
-              sizes="(max-width: 1024px) 100vw, 45vw"
-              className="object-cover object-top"
+              sizes="(max-width: 1024px) 100vw, 470px"
             />
           </div>
         </div>
@@ -82,7 +81,7 @@ export default function Avaleht() {
               key={rida.millest}
               className="grid grid-cols-[1fr_auto_1fr] items-baseline gap-4 border-t border-ink/15 py-6 last:border-b sm:gap-10"
             >
-              <span className="text-right mikro text-ink/60 sm:text-base">
+              <span className="text-right mikro text-ink/60 sm:text-lg">
                 {rida.millest}
               </span>
               <span aria-hidden="true" className="text-lg text-ink/40">
@@ -119,11 +118,11 @@ export default function Avaleht() {
                   <h3 className="kuva text-[clamp(1.5rem,3vw,2.15rem)] text-ink transition-colors group-hover:text-gold-deep">
                     {teenus.nimi}
                   </h3>
-                  <p className="mt-1 text-base italic text-ink-faint">
+                  <p className="mt-1 text-lg italic text-ink-faint">
                     {teenus.alapealkiri}
                   </p>
                 </div>
-                <p className="max-w-[46ch] text-base leading-relaxed text-ink-soft">
+                <p className="max-w-[46ch] text-lg leading-relaxed text-ink-soft">
                   {teenus.luhike}
                 </p>
               </Link>
@@ -135,14 +134,12 @@ export default function Avaleht() {
 
       {/* Minust */}
       <section className="bg-shell">
-        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 py-20 sm:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-10 lg:py-32">
-          <div className="relative aspect-[4/5] w-full overflow-hidden">
-            <Image
-              src="/pildid/marta-diivanil.jpg"
+        <div className="mx-auto grid max-w-[1360px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-10 lg:py-24">
+          <div className="w-full max-w-[470px] justify-self-center lg:justify-self-start">
+            <Foto
+              nimi="marta-diivanil"
               alt="Marta Raudsoo"
-              fill
-              sizes="(max-width: 1024px) 100vw, 42vw"
-              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 470px"
             />
           </div>
 

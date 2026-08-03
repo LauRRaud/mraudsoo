@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Foto from "@/components/Foto";
 import { Nupp, Pealkiri, Sektsioon, Tekst } from "@/components/ui";
 import { annid } from "@/sisu/sait";
 
@@ -12,7 +12,7 @@ export default function Minust() {
   return (
     <>
       <section className="bg-bone">
-        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1fr_1fr] lg:gap-20 lg:px-10 lg:py-28">
+        <div className="mx-auto grid max-w-[1360px] items-start gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1fr_1fr] lg:gap-20 lg:px-10 lg:py-24">
           <div>
             <Pealkiri silt="Minust" tase="h1">
               Pakun ruumi, kus on võimalik peatuda
@@ -24,14 +24,13 @@ export default function Minust() {
             </Tekst>
           </div>
 
-          <div className="relative aspect-[4/5] w-full overflow-hidden">
-            <Image
-              src="/pildid/marta-lamades.jpg"
+          {/* Piirame laiust, et lõikamata püstfoto ei kasvaks üle ekraani */}
+          <div className="w-full max-w-[460px] justify-self-center lg:justify-self-end">
+            <Foto
+              nimi="marta-seistes"
               alt="Marta Raudsoo"
-              fill
               priority
-              sizes="(max-width: 1024px) 100vw, 45vw"
-              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 460px"
             />
           </div>
         </div>
@@ -68,7 +67,7 @@ export default function Minust() {
               <dt className="kuva text-[clamp(1.35rem,2.5vw,1.75rem)] text-ink">
                 {and.nimi}
               </dt>
-              <dd className="mt-2 text-base leading-relaxed text-ink-soft">
+              <dd className="mt-2 text-lg leading-relaxed text-ink-soft">
                 {and.kirjeldus}
               </dd>
             </div>
@@ -81,19 +80,30 @@ export default function Minust() {
         </blockquote>
       </Sektsioon>
 
+      {/* Horisontaalne foto oma loomulikus 3:2 kuvasuhtes */}
+      <div className="bg-bone px-6 pb-16 sm:pb-20 lg:px-10 lg:pb-24">
+        <div className="mx-auto max-w-[1000px]">
+          <Foto
+            nimi="marta-lamades"
+            alt="Marta Raudsoo"
+            sizes="(max-width: 1000px) 100vw, 1000px"
+          />
+        </div>
+      </div>
+
       {/* Terviklik inimene */}
       <section className="bg-clay">
-        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 py-20 sm:py-24 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:px-10 lg:py-32">
+        <div className="mx-auto grid max-w-[1360px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:px-10 lg:py-24">
           <div>
             <Pealkiri silt="Terviklikkus">
               Jumal hoolib terviklikust inimesest
             </Pealkiri>
             <div className="mt-8 space-y-6">
-              <p className="max-w-[62ch] text-base leading-[1.9] text-ink/75">
+              <p className="max-w-[62ch] text-lg leading-[1.75] text-ink/85">
                 Seepärast kohtuvad minu töös sisemine ja väline — kuulamine ja
                 praktilised sammud, kohalolu ja korrastumine.
               </p>
-              <p className="max-w-[62ch] text-base leading-[1.9] text-ink/75">
+              <p className="max-w-[62ch] text-lg leading-[1.75] text-ink/85">
                 Kui südames sünnib selgus, saab see hakata peegelduma ka
                 igapäevases elus: valikutes, garderoobis, kodus, eneseväljenduses
                 ja suhetes.
@@ -101,13 +111,11 @@ export default function Minust() {
             </div>
           </div>
 
-          <div className="relative aspect-[4/5] w-full overflow-hidden">
-            <Image
-              src="/pildid/marta-tutrega.jpg"
+          <div className="w-full max-w-[460px] justify-self-center lg:justify-self-end">
+            <Foto
+              nimi="marta-tutrega"
               alt="Marta Raudsoo koos tütrega"
-              fill
-              sizes="(max-width: 1024px) 100vw, 40vw"
-              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 460px"
             />
           </div>
         </div>

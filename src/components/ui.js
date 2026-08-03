@@ -10,14 +10,14 @@ export function Sektsioon({ children, taust = "bone", laius = "lai", className =
     sage: "bg-sage",
   };
   const laiused = {
-    lai: "max-w-6xl",
-    kitsas: "max-w-3xl",
+    lai: "max-w-[1360px]",
+    kitsas: "max-w-4xl",
   };
 
   return (
     <section className={`${taustad[taust]} ${className}`}>
       <div
-        className={`mx-auto ${laiused[laius]} px-6 py-20 sm:py-24 lg:px-10 lg:py-32`}
+        className={`mx-auto ${laiused[laius]} px-6 py-16 sm:py-20 lg:px-10 lg:py-24`}
       >
         {children}
       </div>
@@ -84,9 +84,9 @@ export function NooleLink({ href, children, className = "" }) {
 export function Tekst({ children, suur = false, className = "" }) {
   return (
     <p
-      className={`max-w-[62ch] ${
-        suur ? "text-xl sm:text-[1.375rem]" : "text-[1.0625rem]"
-      } leading-[1.9] text-ink-soft ${className}`}
+      className={`max-w-[60ch] ${
+        suur ? "text-[1.375rem] sm:text-2xl" : "text-lg sm:text-xl"
+      } leading-[1.75] text-ink-soft ${className}`}
     >
       {children}
     </p>

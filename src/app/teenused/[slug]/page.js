@@ -38,7 +38,7 @@ export default async function TeenuseLeht({ params }) {
           <h1 className="kuva mt-6 text-[clamp(2.5rem,7vw,5rem)] text-ink">
             {teenus.nimi}
           </h1>
-          <p className="mt-8 max-w-[55ch] text-lg leading-[1.8] text-ink/75 sm:text-xl">
+          <p className="mt-8 max-w-[55ch] text-xl leading-[1.7] text-ink/85 sm:text-2xl">
             {teenus.luhike}
           </p>
         </div>
@@ -71,7 +71,7 @@ export default async function TeenuseLeht({ params }) {
                 <span aria-hidden="true" className="text-gold">
                   —
                 </span>
-                <span className="text-base leading-relaxed text-ink-soft">
+                <span className="text-lg leading-relaxed text-ink-soft">
                   {punkt}
                 </span>
               </li>
@@ -103,7 +103,7 @@ export default async function TeenuseLeht({ params }) {
               <h2 className="kuva text-[clamp(1.7rem,3.4vw,2.4rem)] text-ink transition-colors group-hover:text-gold-deep">
                 {jargmine.nimi}
               </h2>
-              <p className="mt-3 max-w-[42ch] text-base leading-relaxed text-ink-soft">
+              <p className="mt-3 max-w-[42ch] text-lg leading-relaxed text-ink-soft">
                 {jargmine.luhike}
               </p>
               <span className="mt-5 inline-flex items-center gap-3 mikro text-gold-deep">
