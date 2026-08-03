@@ -174,13 +174,13 @@ export default function BroneeriVorm() {
                 aria-pressed={onValitud}
                 className={`border px-6 py-3 text-lg transition-colors ${
                   onValitud
-                    ? "border-ink bg-ink text-bone"
+                    ? "border-gold-light bg-gold-light text-ink"
                     : "border-gold/40 text-ink-soft hover:border-gold-deep hover:text-ink"
                 }`}
               >
                 {aeg.vaartus}{" "}
                 <span
-                  className={onValitud ? "text-bone/60" : "text-ink-faint"}
+                  className={onValitud ? "text-ink/60" : "text-ink-faint"}
                 >
                   {aeg.vihje}
                 </span>
@@ -208,7 +208,7 @@ export default function BroneeriVorm() {
       <div className="flex flex-wrap items-center gap-6">
         <button
           type="submit"
-          className="inline-block border border-transparent bg-ink px-9 py-4 mikro text-bone transition-colors duration-300 hover:bg-gold-deep"
+          className="inline-block border border-transparent bg-ink px-9 py-4 mikro text-white transition-colors duration-300 hover:bg-gold-light hover:text-ink"
         >
           Saada soov
         </button>

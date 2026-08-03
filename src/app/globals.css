@@ -20,7 +20,11 @@
   --color-clay-soft: #f2f1ee;
   --color-sage: #e3e1dd; /* tumedaim hele paneel */
 
-  /* Kuld */
+  /*
+    Kuld kolmes tugevuses. Hele on täidetud nuppudele — sellel peab tekst
+    olema must (valge annaks ainult 3.2:1, must annab 6:1).
+  */
+  --color-gold-light: #b08d1e; /* täidetud nupud (nupu serv valgel 3.2:1) */
   --color-gold: #a6862f; /* suured pealkirjad (3.5:1 valgel) */
   --color-gold-deep: #8a6f20; /* tekst, lingid, tsitaadid (4.8:1 valgel) */
   --color-brick: #8a6f20; /* varem punane aktsent — paletti ei kuulu, seega kuld */
