@@ -1,6 +1,6 @@
 import Foto from "@/components/Foto";
 import { Nupp, Pealkiri, Sektsioon, Tekst } from "@/components/ui";
-import { annid } from "@/sisu/sait";
+import { annid, leiaTeenus } from "@/sisu/sait";
 
 export const metadata = {
   title: "Minust",
@@ -38,17 +38,45 @@ export default function Minust() {
         </div>
       </section>
 
-      <Sektsioon taust="linen" laius="kitsas">
-        <div className="space-y-6">
-          <Tekst>
-            Usun, et Jumal kasutab erinevaid inimesi erineval viisil. Minu
-            südames on saanud oluliseks luua keskkond, kus võivad sündida
-            kuulamine, selgus, korrastumine, julgustus ja järgmiste sammude
-            eristamine.
-          </Tekst>
-          <Tekst>
-            Kõik see sünnib usus, palves ja sooviga anda kogu au Jumalale.
-          </Tekst>
+      {/*
+        Keskkond — loetelu oli varem lõigu sisse peidetud. Nüüd on viis asja
+        nähtavad, mis annab sektsioonile rütmi ja pidepunkti.
+      */}
+      <Sektsioon taust="linen">
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
+          <div>
+            <p className="silt">Keskkond</p>
+            <p className="kuva mt-5 text-[clamp(1.6rem,3vw,2.35rem)] leading-[1.3] text-ink">
+              Usun, et Jumal kasutab erinevaid inimesi erineval viisil.
+            </p>
+            <div className="joon my-9 max-w-24" />
+            <Tekst>
+              Kõik see sünnib usus, palves ja sooviga anda kogu au Jumalale.
+            </Tekst>
+          </div>
+
+          <div>
+            <p className="text-lg text-ink-soft sm:text-xl">
+              Minu südames on saanud oluliseks luua keskkond, kus võivad
+              sündida:
+            </p>
+
+            <ul className="mt-8">
+              {leiaTeenus("puha-ruum").nimekiri.map((punkt, i) => (
+                <li
+                  key={punkt}
+                  className="grid grid-cols-[auto_1fr] items-baseline gap-6 border-t border-gold/25 py-5 last:border-b"
+                >
+                  <span className="mikro text-ink-faint">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="kuva text-[clamp(1.35rem,2.6vw,1.9rem)] text-ink">
+                    {punkt}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </Sektsioon>
 
