@@ -2,14 +2,13 @@
   Kogu lehe tekstiline sisu on koondatud siia ühte faili, et seda saaks muuta
   ilma komponentide koodi puutumata.
 
-  TÄPSUSTAMIST VAJAB (märgitud ka allpool kommentaarides):
-  - kontakt.email — praegu kohatäide, vaja Marta päris e-posti aadress
-  - hinnakiri — hinnad on ettepanek, vajavad Marta kinnitust
+  HINNAD on ettepanek ja vajavad Marta lõplikku kinnitust.
+  Lähtekoht: Stiiliteekond (kolm stiiliteenust koos) 400–500 € vahemikus.
+  Üksikteenused on hinnastatud nii, et koos ostes jääb väike sääst.
 */
 
 export const kontakt = {
-  // TODO: asenda Marta päris e-posti aadressiga
-  email: "marta@martaraudsoo.com",
+  email: "martaraudsoo@gmail.com",
   instagram: "https://www.instagram.com/martaraudsoo/",
   instagramNimi: "@martaraudsoo",
   facebook: "https://www.facebook.com/marta.raudsoo",
@@ -162,55 +161,56 @@ export function leiaTeenus(slug) {
 
 /*
   HINNAKIRI — ETTEPANEK, vajab Marta kinnitust.
-  Numbrid on siin ühes kohas, et neid oleks lihtne muuta.
-  Kui hind ei ole veel paigas, kirjuta hinna asemele "Kokkuleppel".
+  Üksikteenused kokku 490 €, Stiiliteekonnana koos 450 € (sääst 40 €).
 */
 export const hinnakiri = [
   {
     nimi: "Püha Ruum | Püha Kohalolu",
     kestus: "1 tund",
-    hind: "Kokkuleppel",
+    hind: "60 €",
     kirjeldus:
       "Vestlus, kuulamine, peegeldus ja palve. Kohtume kas kohapeal või veebis.",
   },
   {
     nimi: "Stiiliselgus",
     kestus: "2–3 tundi",
-    hind: "Kokkuleppel",
+    hind: "150 €",
     kirjeldus:
       "Sinu stiiliessentsi kaardistamine: toonid, lõiked, materjalid ja see, mis sind päriselt toetab.",
   },
   {
     nimi: "Garderoobi korrastus",
     kestus: "3–4 tundi",
-    hind: "Kokkuleppel",
+    hind: "180 €",
     kirjeldus:
       "Käime garderoobi koos läbi. Jääb kord, selgus ja arusaam sellest, mis on olemas ja mis puudu.",
   },
   {
     nimi: "Teadlik ostlemine",
     kestus: "3 tundi",
-    hind: "Kokkuleppel",
+    hind: "160 €",
     kirjeldus:
       "Koos poes või veebis. Praktiline kogemus, mis jääb sind edaspidi teenima.",
   },
   {
     nimi: "Fotograafia",
-    kestus: "Kokkuleppel",
-    hind: "Kokkuleppel",
-    kirjeldus: "Must-valge portreesessioon.",
+    kestus: "1–2 tundi",
+    hind: "180 €",
+    kirjeldus: "Must-valge portreesessioon ja töödeldud pildid.",
   },
 ];
 
+/* Stiiliteekond — kolm stiiliteenust ühe teekonnana */
 export const teekond = {
-  nimi: "Kuuajaline teekond",
-  hind: "Kokkuleppel",
+  nimi: "Stiiliteekond",
+  hind: "450 €",
+  vordlus: "eraldi 490 €",
   kirjeldus:
-    "Kuu aega koos: kohtumised, vahepealne tugi ja praktilised sammud. Sisemine ja väline korrastumine käivad käsikäes, seepärast saab teekonda kokku panna just sinu vajadusest lähtuvalt.",
+    "Kolm sammu ühe teekonnana: esmalt selgus selles, kes sa oled ja mis sind toetab, seejärel garderoobi korrastus ning lõpuks praktiline kogemus teadlikust ostlemisest. Teekonna tempo lepime kokku sinu elu järgi.",
   sisaldab: [
-    "esimene pikem kohtumine ja kaardistus",
-    "kokkulepitud jätkukohtumised",
-    "praktilised sammud kohtumiste vahel",
+    "Stiiliselgus — sinu stiiliessents ja see, mis sind toetab",
+    "Garderoobi korrastus — kord, selgus ja lihtsus",
+    "Teadlik ostlemine — praktiline kogemus koos",
     "kirjalik kokkuvõte ja suund edasiseks",
   ],
 };

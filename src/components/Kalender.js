@@ -1,0 +1,214 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+const KUUD = [
+  "jaanuar",
+  "veebruar",
+  "märts",
+  "aprill",
+  "mai",
+  "juuni",
+  "juuli",
+  "august",
+  "september",
+  "oktoober",
+  "november",
+  "detsember",
+];
+
+/* Eesti nädal algab esmaspäevast */
+const NADALAPAEVAD = ["E", "T", "K", "N", "R", "L", "P"];
+
+export const MAX_KUUPAEVI = 3;
+
+/* Mitmes veerus on kuu 1. kuupäev, kui nädal algab esmaspäevast */
+function algusNihe(aasta, kuu) {
+  const paev = new Date(aasta, kuu, 1).getDay(); // 0 = pühapäev
+  return (paev + 6) % 7;
+}
+
+function paevadeArv(aasta, kuu) {
+  return new Date(aasta, kuu + 1, 0).getDate();
+}
+
+/* Võti kujul 2026-08-14 — sorditav ja üheselt mõistetav */
+export function teeVoti(aasta, kuu, paev) {
+  return `${aasta}-${String(kuu + 1).padStart(2, "0")}-${String(paev).padStart(
+    2,
+    "0"
+  )}`;
+}
+
+export function vormindaKuupaev(voti) {
+  const [a, k, p] = voti.split("-").map(Number);
+  return new Date(a, k - 1, p).toLocaleDateString("et-EE", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+export default function Kalender({ valitud, onMuuda }) {
+  const tana = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
+
+  const [aasta, setAasta] = useState(tana.getFullYear());
+  const [kuu, setKuu] = useState(tana.getMonth());
+
+  /* Varasemasse kuusse ei saa liikuda — mineviku aegu ei broneerita */
+  const saabTagasi =
+    aasta > tana.getFullYear() ||
+    (aasta === tana.getFullYear() && kuu > tana.getMonth());
+
+  function liigu(samm) {
+    const uus = new Date(aasta, kuu + samm, 1);
+    setAasta(uus.getFullYear());
+    setKuu(uus.getMonth());
+  }
+
+  function lyliti(voti, keelatud) {
+    if (keelatud) return;
+    if (valitud.includes(voti)) {
+      onMuuda(valitud.filter((v) => v !== voti));
+    } else if (valitud.length < MAX_KUUPAEVI) {
+      onMuuda([...valitud, voti].sort());
+    }
+  }
+
+  const nihe = algusNihe(aasta, kuu);
+  const paevi = paevadeArv(aasta, kuu);
+  const taisArv = nihe + paevi;
+
+  return (
+    <div>
+      {/* Kuu valik */}
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => liigu(-1)}
+          disabled={!saabTagasi}
+          className="flex h-10 w-10 items-center justify-center text-lg text-ink-soft transition-colors hover:text-gold-deep disabled:cursor-not-allowed disabled:text-ink-faint/40"
+        >
+          <span className="sr-only">Eelmine kuu</span>
+          <span aria-hidden="true">←</span>
+        </button>
+
+        <p aria-live="polite" className="kuva text-xl text-ink sm:text-2xl">
+          {KUUD[kuu]} {aasta}
+        </p>
+
+        <button
+          type="button"
+          onClick={() => liigu(1)}
+          className="flex h-10 w-10 items-center justify-center text-lg text-ink-soft transition-colors hover:text-gold-deep"
+        >
+          <span className="sr-only">Järgmine kuu</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      <div className="joon mt-5" />
+
+      {/* Nädalapäevad */}
+      <div className="mt-5 grid grid-cols-7 gap-1">
+        {NADALAPAEVAD.map((p) => (
+          <div
+            key={p}
+            aria-hidden="true"
+            className="py-2 text-center text-[0.65rem] uppercase tracking-[0.18em] text-ink-faint"
+          >
+            {p}
+          </div>
+        ))}
+      </div>
+
+      {/* Kuupäevad */}
+      <div className="mt-1 grid grid-cols-7 gap-1">
+        {Array.from({ length: taisArv }, (_, i) => {
+          if (i < nihe) return <div key={`tyhi-${i}`} aria-hidden="true" />;
+
+          const paev = i - nihe + 1;
+          const kuupaev = new Date(aasta, kuu, paev);
+          const voti = teeVoti(aasta, kuu, paev);
+          const minevikus = kuupaev < tana;
+          const onValitud = valitud.includes(voti);
+          const onTana = kuupaev.getTime() === tana.getTime();
+          const taisTais = valitud.length >= MAX_KUUPAEVI && !onValitud;
+          const keelatud = minevikus || taisTais;
+
+          return (
+            <button
+              key={voti}
+              type="button"
+              onClick={() => lyliti(voti, keelatud)}
+              disabled={keelatud}
+              aria-pressed={onValitud}
+              aria-label={vormindaKuupaev(voti)}
+              className={`relative flex aspect-square items-center justify-center text-sm transition-colors ${
+                onValitud
+                  ? "bg-ink text-bone"
+                  : minevikus
+                    ? "cursor-not-allowed text-ink-faint/40"
+                    : taisTais
+                      ? "cursor-not-allowed text-ink-faint"
+                      : "text-ink hover:bg-clay-soft"
+              }`}
+            >
+              {paev}
+              {onTana && !onValitud && (
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-1.5 h-1 w-1 rounded-full bg-gold"
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Valitud kuupäevad */}
+      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-3">
+        <p className="text-xs text-ink-faint">
+          Valitud {valitud.length}/{MAX_KUUPAEVI}
+        </p>
+        {valitud.length > 0 && (
+          <button
+            type="button"
+            onClick={() => onMuuda([])}
+            className="text-xs text-ink-soft underline underline-offset-4 transition-colors hover:text-gold-deep"
+          >
+            Tühjenda
+          </button>
+        )}
+      </div>
+
+      {valitud.length > 0 && (
+        <ul className="mt-4 space-y-2" aria-live="polite">
+          {valitud.map((voti) => (
+            <li
+              key={voti}
+              className="flex items-center justify-between gap-4 border-t border-gold/25 pt-3 text-sm text-ink-soft"
+            >
+              <span>{vormindaKuupaev(voti)}</span>
+              <button
+                type="button"
+                onClick={() => onMuuda(valitud.filter((v) => v !== voti))}
+                className="text-ink-faint transition-colors hover:text-brick"
+              >
+                <span className="sr-only">
+                  Eemalda {vormindaKuupaev(voti)}
+                </span>
+                <span aria-hidden="true">×</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}

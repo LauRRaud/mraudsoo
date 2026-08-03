@@ -1,18 +1,34 @@
 "use client";
 
 import { useState } from "react";
+import Kalender, { vormindaKuupaev } from "@/components/Kalender";
 import { kontakt, teenused } from "@/sisu/sait";
 
+const KELLAAJAD = [
+  { vaartus: "Hommik", vihje: "9–12" },
+  { vaartus: "Pärastlõuna", vihje: "12–17" },
+  { vaartus: "Õhtu", vihje: "17–20" },
+];
+
 /*
-  Vorm koostab praegu e-kirja ja avab selle kasutaja e-posti programmis.
+  Vorm koostab e-kirja ja avab selle kasutaja e-posti programmis.
   See töötab kohe ja ilma lisateenusteta.
 
-  Kui Marta soovib hiljem päris broneerimissüsteemi (nt kalender või
-  automaatne kirjasaatmine), tuleb välja vahetada ainult funktsioon saada() —
-  ülejäänud vorm jääb samaks.
+  Kalender ei näita Marta tegelikke vabu aegu — külastaja pakub omalt poolt
+  sobivad ajad ja Marta kinnitab. Kui hiljem tuleb päris broneerimissüsteem,
+  tuleb välja vahetada ainult funktsioon saada().
 */
 export default function BroneeriVorm() {
-  const [teenus, setTeenus] = useState("");
+  const [kuupaevad, setKuupaevad] = useState([]);
+  const [kellaajad, setKellaajad] = useState([]);
+
+  function lylitaKellaaeg(vaartus) {
+    setKellaajad((eelmine) =>
+      eelmine.includes(vaartus)
+        ? eelmine.filter((k) => k !== vaartus)
+        : [...eelmine, vaartus]
+    );
+  }
 
   function saada(sundmus) {
     sundmus.preventDefault();
@@ -31,9 +47,16 @@ export default function BroneeriVorm() {
       telefon ? `Telefon: ${telefon}` : null,
       valitud ? `Teenus: ${valitud}` : null,
       "",
+      kuupaevad.length
+        ? `Sobivad kuupäevad:\n${kuupaevad
+            .map((k) => `  - ${vormindaKuupaev(k)}`)
+            .join("\n")}`
+        : null,
+      kellaajad.length ? `Sobiv kellaaeg: ${kellaajad.join(", ")}` : null,
+      kuupaevad.length || kellaajad.length ? "" : null,
       sonum,
     ]
-      .filter(Boolean)
+      .filter((rida) => rida !== null)
       .join("\n");
 
     window.location.href = `mailto:${kontakt.email}?subject=${encodeURIComponent(
@@ -47,7 +70,8 @@ export default function BroneeriVorm() {
     "block text-[0.7rem] uppercase tracking-[0.22em] text-gold-deep";
 
   return (
-    <form onSubmit={saada} className="space-y-10">
+    <form onSubmit={saada} className="space-y-14">
+      {/* Kontaktandmed */}
       <div className="grid gap-10 sm:grid-cols-2">
         <div>
           <label htmlFor="nimi" className={siltStiil}>
@@ -81,7 +105,10 @@ export default function BroneeriVorm() {
 
         <div>
           <label htmlFor="telefon" className={siltStiil}>
-            Telefon <span className="normal-case tracking-normal text-ink-faint">(vabatahtlik)</span>
+            Telefon{" "}
+            <span className="normal-case tracking-normal text-ink-faint">
+              (vabatahtlik)
+            </span>
           </label>
           <input
             id="telefon"
@@ -100,8 +127,7 @@ export default function BroneeriVorm() {
           <select
             id="teenus"
             name="teenus"
-            value={teenus}
-            onChange={(e) => setTeenus(e.target.value)}
+            defaultValue=""
             className={`${valjaStiil} mt-3 cursor-pointer`}
           >
             <option value="">Ei tea veel / räägime</option>
@@ -110,10 +136,65 @@ export default function BroneeriVorm() {
                 {t.nimi}
               </option>
             ))}
+            <option value="Stiiliteekond">Stiiliteekond (kolm sammu)</option>
           </select>
         </div>
       </div>
 
+      {/* Kalender */}
+      <fieldset>
+        <legend className={siltStiil}>
+          Millal sulle sobiks?{" "}
+          <span className="normal-case tracking-normal text-ink-faint">
+            (vabatahtlik)
+          </span>
+        </legend>
+        <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-ink-soft">
+          Vali kuni kolm sobivat kuupäeva. Need ei ole kinnitatud ajad — Marta
+          vaatab need üle ja kinnitab sulle sobiva.
+        </p>
+
+        <div className="mt-8 max-w-md border border-gold/25 bg-bone p-5 sm:p-7">
+          <Kalender valitud={kuupaevad} onMuuda={setKuupaevad} />
+        </div>
+      </fieldset>
+
+      {/* Kellaaeg */}
+      <fieldset>
+        <legend className={siltStiil}>
+          Sobiv kellaaeg{" "}
+          <span className="normal-case tracking-normal text-ink-faint">
+            (vabatahtlik)
+          </span>
+        </legend>
+        <div className="mt-5 flex flex-wrap gap-3">
+          {KELLAAJAD.map((aeg) => {
+            const onValitud = kellaajad.includes(aeg.vaartus);
+            return (
+              <button
+                key={aeg.vaartus}
+                type="button"
+                onClick={() => lylitaKellaaeg(aeg.vaartus)}
+                aria-pressed={onValitud}
+                className={`border px-6 py-3 text-sm transition-colors ${
+                  onValitud
+                    ? "border-ink bg-ink text-bone"
+                    : "border-gold/40 text-ink-soft hover:border-gold-deep hover:text-ink"
+                }`}
+              >
+                {aeg.vaartus}{" "}
+                <span
+                  className={onValitud ? "text-bone/60" : "text-ink-faint"}
+                >
+                  {aeg.vihje}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      {/* Sõnum */}
       <div>
         <label htmlFor="sonum" className={siltStiil}>
           Mis sind praegu kõige rohkem puudutab?

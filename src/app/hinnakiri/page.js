@@ -64,15 +64,20 @@ export default function Hinnakiri() {
       <Sektsioon taust="clay">
         <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
           <div>
-            <p className="silt !text-ink/70">Pikem teekond</p>
+            <p className="silt !text-ink/70">Kolm sammu koos</p>
             <h2 className="kuva mt-6 text-[clamp(1.9rem,4vw,3.1rem)] text-ink">
               {teekond.nimi}
             </h2>
             <p className="mt-7 max-w-[55ch] text-base leading-[1.9] text-ink/75">
               {teekond.kirjeldus}
             </p>
-            <p className="kuva mt-8 text-[clamp(1.3rem,2.5vw,1.75rem)] text-ink">
-              {teekond.hind}
+            <p className="mt-8 flex flex-wrap items-baseline gap-3">
+              <span className="kuva text-[clamp(1.6rem,3vw,2.25rem)] text-ink">
+                {teekond.hind}
+              </span>
+              <span className="text-sm text-ink/55 line-through">
+                {teekond.vordlus}
+              </span>
             </p>
           </div>
 
