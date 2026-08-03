@@ -75,7 +75,7 @@
     Suurus hoitakse siin ühes kohas — kogu lehe sildid muutuvad korraga.
   */
   .silt {
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 400;
     letter-spacing: 0.22em;
     text-transform: uppercase;
@@ -87,7 +87,7 @@
     et iga kasutuskoht saaks ise värvi määrata.
   */
   .mikro {
-    font-size: 1rem;
+    font-size: 1.0625rem;
     font-weight: 400;
     letter-spacing: 0.16em;
     text-transform: uppercase;

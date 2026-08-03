@@ -19,6 +19,12 @@ export default function Foto({
   alt,
   sizes = "100vw",
   priority = false,
+  /*
+    Esimese ekraanitäie pildid: lisaks laiusele piirame ka kõrgust, muidu
+    kasvab lõikamata püstfoto vaateaknast pikemaks ja "jääb liiga alla".
+    Kuvasuhe säilib — pilt lihtsalt kahaneb, midagi ei lõigata.
+  */
+  mahuEkraanile = false,
   className = "",
 }) {
   const moot = MOODUD[nimi];
@@ -38,7 +44,12 @@ export default function Foto({
       quality={90}
       priority={priority}
       sizes={sizes}
-      className={`h-auto w-full ${className}`}
+      className={`${
+        mahuEkraanile
+          ? // Lahutame päise ja sektsiooni vahed, et pilt mahuks tervikuna ekraanile
+            "mx-auto h-auto max-h-[calc(100vh-13rem)] w-auto max-w-full"
+          : "h-auto w-full"
+      } ${className}`}
     />
   );
 }

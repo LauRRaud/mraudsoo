@@ -25,12 +25,13 @@ export default function Minust() {
           </div>
 
           {/* Piirame laiust, et lõikamata püstfoto ei kasvaks üle ekraani */}
-          <div className="w-full max-w-[460px] justify-self-center lg:justify-self-end">
+          <div className="w-full max-w-[540px] justify-self-center lg:justify-self-end">
             <Foto
               nimi="marta-seistes"
               alt="Marta Raudsoo"
               priority
-              sizes="(max-width: 1024px) 100vw, 460px"
+              mahuEkraanile
+              sizes="(max-width: 1024px) 100vw, 540px"
             />
           </div>
         </div>
@@ -74,13 +75,9 @@ export default function Minust() {
           ))}
         </dl>
 
-        <blockquote className="kuva mt-16 max-w-3xl text-[clamp(1.3rem,2.6vw,1.9rem)] leading-[1.4] text-gold-deep">
-          „Need ei ole minu saavutused. Need on Jumala armu kingitused, mida
-          soovin kasutada ustavalt teiste teenimiseks.”
-        </blockquote>
       </Sektsioon>
 
-      {/* Horisontaalne foto oma loomulikus 3:2 kuvasuhtes */}
+      {/* Horisontaalne foto oma loomulikus 3:2 kuvasuhtes, tsitaat selle all */}
       <div className="bg-bone px-6 pb-16 sm:pb-20 lg:px-10 lg:pb-24">
         <div className="mx-auto max-w-[1000px]">
           <Foto
@@ -88,22 +85,28 @@ export default function Minust() {
             alt="Marta Raudsoo"
             sizes="(max-width: 1000px) 100vw, 1000px"
           />
+
+          <blockquote className="kuva mt-12 text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.45] text-ink">
+            „Need ei ole minu saavutused. Need on Jumala armu kingitused, mida
+            soovin kasutada ustavalt teiste teenimiseks.”
+          </blockquote>
         </div>
       </div>
 
       {/* Terviklik inimene */}
       <section className="bg-clay">
-        <div className="mx-auto grid max-w-[1360px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:px-10 lg:py-24">
+        <div className="mx-auto grid max-w-[1360px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1fr_1fr] lg:gap-20 lg:px-10 lg:py-24">
           <div>
             <Pealkiri silt="Terviklikkus">
               Jumal hoolib terviklikust inimesest
             </Pealkiri>
-            <div className="mt-8 space-y-6">
-              <p className="max-w-[62ch] text-lg leading-[1.75] text-ink/85">
+            {/* Suurem kiri ja hõredam vahe, et tekstiveerg ei jääks pildi kõrval kokkusurutuks */}
+            <div className="mt-9 space-y-7">
+              <p className="max-w-[52ch] text-xl leading-[1.7] text-ink/85">
                 Seepärast kohtuvad minu töös sisemine ja väline — kuulamine ja
                 praktilised sammud, kohalolu ja korrastumine.
               </p>
-              <p className="max-w-[62ch] text-lg leading-[1.75] text-ink/85">
+              <p className="max-w-[52ch] text-xl leading-[1.7] text-ink/85">
                 Kui südames sünnib selgus, saab see hakata peegelduma ka
                 igapäevases elus: valikutes, garderoobis, kodus, eneseväljenduses
                 ja suhetes.
@@ -111,11 +114,11 @@ export default function Minust() {
             </div>
           </div>
 
-          <div className="w-full max-w-[460px] justify-self-center lg:justify-self-end">
+          <div className="w-full max-w-[440px] justify-self-center lg:justify-self-end">
             <Foto
               nimi="marta-tutrega"
               alt="Marta Raudsoo koos tütrega"
-              sizes="(max-width: 1024px) 100vw, 460px"
+              sizes="(max-width: 1024px) 100vw, 440px"
             />
           </div>
         </div>

@@ -30,12 +30,16 @@ export function Pealkiri({ silt, children, tase: Tase = "h2", className = "" }) 
   return (
     <div className={className}>
       {silt && <p className="silt">{silt}</p>}
+      {/*
+        Alamlehtede h1 on terve lause, mitte paar sõna — 80px lükkas
+        ülejäänud sisu ekraanilt välja. 54px on endiselt tugev, aga mahub.
+      */}
       <Tase
         className={`kuva text-ink ${
           Tase === "h1"
-            ? "text-[clamp(2.5rem,6.5vw,5rem)]"
-            : "text-[clamp(1.9rem,4vw,3.1rem)]"
-        } ${silt ? "mt-5" : ""}`}
+            ? "text-[clamp(2.1rem,4.2vw,3.375rem)]"
+            : "text-[clamp(1.8rem,3.4vw,2.75rem)]"
+        } ${silt ? "mt-4" : ""}`}
       >
         {children}
       </Tase>
