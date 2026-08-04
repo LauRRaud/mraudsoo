@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Nupp, Pealkiri, Sektsioon, Tekst } from "@/components/ui";
+import Ilmub from "@/components/Ilmub";
+import { Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu, laeSisuSync } from "@/sisu/lae";
 
 /* Teenuse otsimine slugi järgi — massiiv võib admini kaudu olla asendatud */
@@ -90,22 +91,25 @@ export default async function TeenuseLeht({ params }) {
     loeLahemalt,
   } = sisu.teenuseLeht;
 
-  const jargmine =
-    teenused[(teenused.findIndex((t) => t.slug === slug) + 1) % teenused.length];
+  const jrk = teenused.findIndex((t) => t.slug === slug);
+  const jargmine = teenused[(jrk + 1) % teenused.length];
 
   /* Massiivid kindlustatud: admin võib teenuse ilma mõne väljata salvestada */
   const loigud = Array.isArray(teenus.loigud) ? teenus.loigud : [];
   const plokid = Array.isArray(teenus.plokid) ? teenus.plokid : [];
   const nimekiri = Array.isArray(teenus.nimekiri) ? teenus.nimekiri : [];
 
-  /* Sügavama tooniga teenused (Püha Ruum, 1:1 teekond, fotograafia) saavad rahulikuma tausta */
-  const rohelineToon = teenus.toon === "sygav";
+  /*
+    Sügavama tooniga teenused (Püha Ruum, 1:1 teekond, fotograafia) saavad
+    tumeda metsarohelise heero — lehe kõige vaiksema ja sügavama pinna.
+  */
+  const tume = teenus.toon === "sygav";
 
   /*
     Alapealkiri on enamasti paar sõna ("Must-valge") ja seisab hõredalt
     tähestatud sildina. 1:1 teekonna oma on terve lause — suurtähtedes ja
-    0.2em tähevahega muutuks see karjuvaks kolmerealiseks plokiks, seega
-    laseme lausel jääda lauseks.
+    laia tähevahega muutuks see karjuvaks plokiks, seega laseme lausel
+    jääda lauseks (kaldkirjas kuvakiri).
   */
   const alapealkiriOnLause =
     typeof teenus.alapealkiri === "string" && teenus.alapealkiri.length > 34;
@@ -123,106 +127,101 @@ export default async function TeenuseLeht({ params }) {
   /*
     Kutseploki taust sõltub sellest, mis tegelikult eelnes: plokkide ja
     nimekirja sektsioonid on tingimuslikud. Ilma selleta jääks nt
-    /teenused/fotograafia peal kaks bone-sektsiooni järjest ühte pikka
-    valgesse alasse sulama.
+    /teenused/fotograafia peal kaks ühesugust sektsiooni järjest ühte
+    pikka alasse sulama.
   */
   const eelnevTaust =
-    nimekiri.length > 0 ? "linen" : plokid.length > 0 ? "shell" : "bone";
+    nimekiri.length > 0 ? "shell" : plokid.length > 0 ? "linen" : "bone";
   const kutseTaust = eelnevTaust === "bone" ? "linen" : "bone";
 
   return (
     <>
-      <Sektsioon taust={rohelineToon ? "sage" : "clay"}>
-        <div className="max-w-3xl">
-          {/* Kaldkirja siin ei ole: Cormorant laetakse ainult püstises lõikes */}
+      {/* Heero — sügav toon saab tumeda pinna, soe toon rahuliku savi */}
+      <Sektsioon taust={tume ? "mets" : "clay"} polsterdus="ohuke">
+        <div className="max-w-3xl pt-6 sm:pt-10">
           {alapealkiriOnLause ? (
-            <p className="kuva max-w-[34ch] text-[clamp(1.15rem,2.2vw,1.5rem)] leading-[1.45] text-ink/70">
+            <p
+              className={`sisene kuva max-w-[36ch] italic text-[clamp(1.2rem,2.3vw,1.6rem)] leading-[1.4] ${
+                tume ? "text-luu/80" : "text-ink/70"
+              }`}
+            >
               {teenus.alapealkiri}
             </p>
           ) : (
-            <p className="silt !text-ink/70">{teenus.alapealkiri}</p>
+            <p className={`sisene silt ${tume ? "silt-tume" : "!text-ink/70"}`}>
+              {teenus.alapealkiri}
+            </p>
           )}
-          <h1 className="kuva mt-6 text-[clamp(2.5rem,7vw,5rem)] text-ink">
+
+          <h1
+            className={`sisene kuva mt-5 text-[clamp(2.75rem,7.5vw,5.5rem)] leading-[1.02] ${
+              tume ? "text-luu" : "text-ink"
+            }`}
+            style={{ "--viive": "90ms" }}
+          >
             {teenus.nimi}
           </h1>
-          <p className="mt-8 max-w-[55ch] text-xl leading-[1.7] text-ink/85 sm:text-2xl">
+
+          <p
+            className={`sisene mt-8 max-w-[55ch] text-xl leading-[1.75] sm:text-2xl ${
+              tume ? "text-luu/95" : "text-ink/85"
+            }`}
+            style={{ "--viive": "200ms" }}
+          >
             {teenus.luhike}
           </p>
         </div>
       </Sektsioon>
 
+      {/* Sissejuhatus — kuldne juhtmõte ja lõigud */}
       <Sektsioon taust="bone" laius="kitsas">
-        <p className="kuva text-[clamp(1.5rem,3.2vw,2.3rem)] leading-[1.35] text-gold-deep">
-          {teenus.sissejuhatus}
-        </p>
+        <Ilmub>
+          <p className="kuva text-[clamp(1.55rem,3.2vw,2.3rem)] leading-[1.35] text-gold-deep">
+            {teenus.sissejuhatus}
+          </p>
+        </Ilmub>
 
         {loigud.length > 0 && (
-          <div className="mt-10 space-y-6">
+          <Ilmub ruhm className="mt-10 space-y-6">
             {loigud.map((loik) => (
               <Tekst key={loik}>{loik}</Tekst>
             ))}
-          </div>
+          </Ilmub>
         )}
       </Sektsioon>
 
       {/*
         Plokid — teenuse pikem sisu osadeks jaotatuna.
 
-        Proosaplokk: pealkiri vasakule, lõigud paremale, plokid lahku üle
-        veeru ulatuva kuldjoonega.
-
-        Kirjakohaplokk: tsentreeritud, viide sildina ja salm kuvakirjas —
-        sama vaikne käsitlus, mis kannab lehte "Minust". Nii ei ole Püha Ruumi
-        kaksteist plokki üks pikk tekstivall, vaid proosa ja salmid vahelduvad
-        ning salme piirab lühike joon, proosat pikk. Ilma plokkideta
-        sektsiooni ei renderdata.
+        Proosaplokk: pealkiri vasakule, lõigud paremale, ees üle veeru ulatuv
+        kuldjoon. Kirjakohaplokk: Salm oma püstjoonega — salm toob eraldaja
+        ise kaasa, seega tema ette joont ei panda. Nii vahelduvad proosa ja
+        salmid ning Püha Ruumi kaksteist plokki ei ole üks pikk tekstivall.
       */}
       {plokid.length > 0 && (
-        <Sektsioon taust="shell" laius="kitsas">
+        <Sektsioon taust="linen" laius="kitsas">
           {plokid.map((plokk, i) => {
             const plokiLoigud = Array.isArray(plokk.loigud) ? plokk.loigud : [];
             const salm = salmid[i] ? kirjakohaOsad(plokk) : null;
-            /* Salmi kõrval seisev eraldaja on lühike, proosa oma üle veeru */
-            const luhikeJoon = salmid[i] || salmid[i - 1];
 
             return (
               <div key={`${plokk.pealkiri}-${i}`}>
-                {i > 0 && (
-                  <div
-                    className={`joon ${plokiVahe} ${
-                      luhikeJoon ? "mx-auto max-w-24" : ""
-                    }`}
-                  />
-                )}
+                {i > 0 && !salmid[i] && <div className={`joon ${plokiVahe}`} />}
+                {i > 0 && salmid[i] && <div className={plokiVahe} />}
 
                 {salm ? (
-                  <article className="text-center">
-                    <p className="silt">{salm.viide}</p>
-                    <blockquote
-                      className={`kuva mx-auto mt-6 max-w-2xl leading-[1.3] text-ink ${
-                        salm.tekst.length > 120
-                          ? "text-[clamp(1.25rem,2.6vw,1.7rem)]"
-                          : "text-[clamp(1.5rem,3.4vw,2.25rem)]"
-                      }`}
-                    >
-                      {salm.tekst}
-                    </blockquote>
-
-                    {salm.selgitus.length > 0 && (
-                      <div className="mx-auto mt-9 max-w-[54ch] space-y-4">
-                        {salm.selgitus.map((loik) => (
-                          <p
-                            key={loik}
-                            className="text-lg leading-[1.75] text-ink-soft"
-                          >
-                            {loik}
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                  </article>
+                  <Ilmub>
+                    <Salm
+                      viide={salm.viide}
+                      tekst={salm.tekst}
+                      selgitus={salm.selgitus}
+                    />
+                  </Ilmub>
                 ) : (
-                  <article className="grid gap-5 sm:grid-cols-[1fr_1.65fr] sm:gap-12">
+                  <Ilmub
+                    as="article"
+                    className="grid gap-5 sm:grid-cols-[1fr_1.65fr] sm:gap-12"
+                  >
                     <h2 className="kuva text-[clamp(1.35rem,2.8vw,1.9rem)] leading-[1.25] text-gold-deep sm:pt-1">
                       {plokk.pealkiri}
                     </h2>
@@ -232,7 +231,7 @@ export default async function TeenuseLeht({ params }) {
                         <Tekst key={loik}>{loik}</Tekst>
                       ))}
                     </div>
-                  </article>
+                  </Ilmub>
                 )}
               </div>
             );
@@ -241,12 +240,14 @@ export default async function TeenuseLeht({ params }) {
       )}
 
       {nimekiri.length > 0 && (
-        <Sektsioon taust="linen">
-          <Pealkiri silt={nimekirjaSilt} className="max-w-2xl">
-            {teenus.nimekirjaPealkiri}
-          </Pealkiri>
+        <Sektsioon taust="shell">
+          <Ilmub>
+            <Pealkiri silt={nimekirjaSilt} className="max-w-2xl">
+              {teenus.nimekirjaPealkiri}
+            </Pealkiri>
+          </Ilmub>
 
-          <ul className="mt-14 max-w-4xl">
+          <Ilmub ruhm as="ul" className="mt-14 max-w-4xl">
             {nimekiri.map((punkt) => (
               <li
                 key={punkt}
@@ -255,54 +256,59 @@ export default async function TeenuseLeht({ params }) {
                 <span aria-hidden="true" className="text-gold">
                   —
                 </span>
-                <span className="text-lg leading-relaxed text-ink-soft">
+                <span className="text-lg leading-relaxed text-ink-soft sm:text-xl">
                   {punkt}
                 </span>
               </li>
             ))}
-          </ul>
+          </Ilmub>
           <div className="joon max-w-4xl" />
         </Sektsioon>
       )}
 
       {/* Kutse + järgmine teenus */}
       <Sektsioon taust={kutseTaust}>
-        <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
-          <div>
+        <div className="grid gap-14 lg:grid-cols-2 lg:gap-24">
+          <Ilmub>
             <Pealkiri silt={kutseSilt}>{kutsePealkiri}</Pealkiri>
             <Tekst className="mt-7">{kutseTekst}</Tekst>
             <div className="mt-10 flex flex-wrap gap-4">
-              <Nupp href="/broneerimine">{nuppEsmane}</Nupp>
+              <Nupp href="/broneerimine" nool>
+                {nuppEsmane}
+              </Nupp>
               <Nupp href="/hinnakiri" variant="aaris">
                 {nuppTeine}
               </Nupp>
             </div>
-          </div>
+          </Ilmub>
 
           {jargmine && (
-            <div className="lg:border-l lg:border-gold/25 lg:pl-20">
+            <Ilmub
+              viive={150}
+              className="lg:border-l lg:border-gold/25 lg:pl-24"
+            >
               <p className="silt">{jargmineSilt}</p>
               <Link
                 href={`/teenused/${jargmine.slug}`}
                 className="group mt-6 block"
               >
-                <h2 className="kuva text-[clamp(1.7rem,3.4vw,2.4rem)] text-ink transition-colors group-hover:text-gold-deep">
+                <h2 className="kuva text-[clamp(1.75rem,3.4vw,2.5rem)] text-ink transition-all duration-500 group-hover:translate-x-1.5 group-hover:text-gold-deep">
                   {jargmine.nimi}
                 </h2>
                 <p className="mt-3 max-w-[42ch] text-lg leading-relaxed text-ink-soft">
                   {jargmine.luhike}
                 </p>
-                <span className="mt-5 inline-flex items-center gap-3 mikro text-gold-deep">
+                <span className="mikro mt-6 inline-flex items-center gap-3 text-gold-deep">
                   {loeLahemalt}
                   <span
                     aria-hidden="true"
-                    className="inline-block transition-transform duration-300 group-hover:translate-x-1"
+                    className="inline-block transition-transform duration-300 group-hover:translate-x-1.5"
                   >
                     →
                   </span>
                 </span>
               </Link>
-            </div>
+            </Ilmub>
           )}
         </div>
       </Sektsioon>

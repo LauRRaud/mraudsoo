@@ -6,12 +6,15 @@
 
   Kuju määratakse siin: tundmatud võtmed failist jäetakse tähelepanuta, nii ei
   lähe leht katki, kui kujundus hiljem täieneb.
+
+  TÄHELEPANU: väärtused peavad olema samad, mis globals.css @theme plokis —
+  muidu näeb „Lähtesta” teistsugune välja kui värske leht.
 */
 
 export const vaikimisiKujundus = {
   fondid: {
     kuva: "cormorant",
-    tekst: "poppins",
+    tekst: "worksans",
   },
 
   /*
@@ -19,34 +22,38 @@ export const vaikimisiKujundus = {
     sidekriipsuks (goldDeep -> --color-gold-deep). Vt kujundusCss().
   */
   varvid: {
-    bone: "#ffffff",
-    linen: "#f7f6f4",
-    shell: "#efeeeb",
-    clay: "#e9e7e3",
-    claySoft: "#f2f1ee",
-    sage: "#e3e1dd",
+    bone: "#fdfcf9",
+    linen: "#f7f5ef",
+    shell: "#f0ede5",
+    clay: "#e8e4d9",
+    claySoft: "#f3f1ea",
+    sage: "#e4e3d7",
     rohe: "#4a5a46",
     roheHele: "#5c6e57",
     gold: "#a6862f",
     goldDeep: "#8a6f20",
-    ink: "#121212",
-    inkSoft: "#3b3b3b",
-    inkFaint: "#6e6e6e",
+    mets: "#46543f",
+    metsSyva: "#3c4936",
+    kuldHele: "#dcc27a",
+    luu: "#f4f1e8",
+    ink: "#161613",
+    inkSoft: "#3d3c37",
+    inkFaint: "#6e6c64",
   },
 
   /* Suurused pikslites — admin-lehel on need liugurid */
   suurused: {
-    silt: 18,
-    mikro: 17,
+    silt: 15,
+    mikro: 15,
     tekst: 18,
-    tekstSuur: 20,
+    tekstSuur: 21,
   },
 
   /* Tähevahed em-ühikutes */
   tahevahed: {
-    silt: 0.2,
-    mikro: 0.14,
-    nimi: 0.06,
+    silt: 0.28,
+    mikro: 0.16,
+    nimi: 0.05,
   },
 };
 
@@ -62,6 +69,10 @@ export const VARVI_NIMED = {
   roheHele: "Nupud (hiirega peal)",
   gold: "Kuld — suured pealkirjad",
   goldDeep: "Kuld — sildid ja lingid",
+  mets: "Tume sektsioon",
+  metsSyva: "Jalus ja mobiilimenüü",
+  kuldHele: "Kuld tumedal taustal",
+  luu: "Tekst tumedal taustal",
   ink: "Tekst — pealkirjad",
   inkSoft: "Tekst — põhitekst",
   inkFaint: "Tekst — kõrvaline",

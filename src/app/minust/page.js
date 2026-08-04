@@ -1,5 +1,6 @@
 import Foto from "@/components/Foto";
-import { Nupp, Pealkiri, Sektsioon, Tekst } from "@/components/ui";
+import Ilmub from "@/components/Ilmub";
+import { NooleLink, Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
 
 /* Metaandmed tulevad samast sisupuust, mis leht ise */
@@ -12,6 +13,13 @@ export async function generateMetadata() {
   };
 }
 
+/*
+  MINUST.
+
+  Lehe kaar: hele algus (kes ma olen) → vaikne salm → TUME pöördumislugu
+  (lehe kõige isiklikum osa metsarohelisel) → salmid loo juurde → annid →
+  foto ja tsitaat → terviklikkus → lõpetus.
+*/
 export default async function Minust() {
   const sisu = await laeSisu();
   const {
@@ -27,86 +35,107 @@ export default async function Minust() {
 
   return (
     <>
-      {/* Sissejuhatus — items-center nagu avalehel, tekst tsentreeritakse pildi suhtes */}
-      <section className="bg-bone">
-        <div className="mx-auto grid max-w-[1360px] items-center gap-12 px-6 py-12 sm:py-14 lg:grid-cols-[1fr_1fr] lg:gap-20 lg:px-10 lg:py-14">
-          <div>
-            <Pealkiri silt={hero.silt} tase="h1">
+      {/*
+        Sissejuhatus. Tekstiveerg algab ülevalt nagu avalehelgi (mitte foto
+        keskkohast) ja lõpeb viitega loo juurde — nii on veerg fotoga
+        tasakaalus ega jää „alla rippuma”.
+      */}
+      <section className="overflow-hidden bg-bone">
+        <div className="mx-auto grid max-w-[1400px] items-start gap-14 px-6 pb-16 pt-10 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
+          <div className="lg:pt-14">
+            <p className="sisene silt">{hero.silt}</p>
+            <h1
+              className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
+              style={{ "--viive": "90ms" }}
+            >
               {hero.pealkiri}
-            </Pealkiri>
-            <div className="joon my-8 max-w-24" />
-            <Tekst suur>{hero.tekst}</Tekst>
+            </h1>
+            <div
+              className="sisene joon mb-9 mt-9 max-w-28"
+              style={{ "--viive": "200ms" }}
+            />
+            <div className="sisene" style={{ "--viive": "300ms" }}>
+              <Tekst suur>{hero.tekst}</Tekst>
+            </div>
+            <div className="sisene" style={{ "--viive": "400ms" }}>
+              {/* Sõnastus on loo sektsiooni enda silt (lugu.silt) */}
+              <NooleLink href="#lugu" className="mt-10">
+                {lugu.silt}
+              </NooleLink>
+            </div>
           </div>
 
-          {/* Piirame laiust, et lõikamata püstfoto ei kasvaks üle ekraani */}
-          <div className="w-full max-w-[620px] justify-self-center lg:justify-self-end">
+          {/* Foto on paigal ja ilma tekke-efektita */}
+          <div className="w-full max-w-[460px] justify-self-center lg:justify-self-end">
             <Foto
               nimi="marta-seistes"
               alt="Marta Raudsoo"
               priority
-              mahuEkraanile
-              sizes="(max-width: 1024px) 100vw, 620px"
+              kaar
+              sizes="(max-width: 1024px) 92vw, 460px"
             />
           </div>
         </div>
       </section>
 
       {/*
-        Minu lugu — lehe kõige isiklikum osa.
-        Pealkiri jääb laial ekraanil vasakule püsima, lugu voolab kõrval
-        ühes kitsas veerus, et lõikude vahel oleks õhku ja lugemisrütmi.
+        Minu lugu — pealkiri jääb laial ekraanil vasakule püsima, lugu voolab
+        kõrval ühes kitsas veerus, et lõikude vahel oleks õhku ja lugemisrütmi.
       */}
-      <Sektsioon taust="linen">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-24">
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <Pealkiri silt={lugu.silt}>{lugu.pealkiri}</Pealkiri>
-            <div className="joon mt-8 max-w-24" />
+      <Sektsioon taust="linen" id="lugu">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-28">
+          <div className="lg:sticky lg:top-32 lg:self-start">
+            <Ilmub>
+              <Pealkiri silt={lugu.silt}>{lugu.pealkiri}</Pealkiri>
+              <div className="joon mt-9 max-w-28" />
+            </Ilmub>
           </div>
 
-          <div className="max-w-[62ch] space-y-8">
+          <Ilmub ruhm className="max-w-[62ch] space-y-8">
             {lugu.loigud.map((loik, jrk) => (
               <p
                 key={loik}
                 /* Esimene lõik on loo sissejuhatus — pisut suurem ja tumedam */
                 className={
                   jrk === 0
-                    ? "text-xl leading-[1.7] text-ink sm:text-[1.375rem]"
-                    : "text-lg leading-[1.8] text-ink-soft sm:text-xl"
+                    ? "text-xl leading-[1.75] text-ink sm:text-[1.4rem]"
+                    : "text-lg leading-[1.85] text-ink-soft sm:text-xl"
                 }
               >
                 {loik}
               </p>
             ))}
-          </div>
+          </Ilmub>
         </div>
       </Sektsioon>
 
-      {/*
-        Kirjakoht — kogu lehe vaikseim hetk.
-        Viide sildina, salm suure kuvakirjaga, Marta selgitus joone all.
-      */}
-      <Sektsioon taust="sage" laius="kitsas" className="text-center">
-        <p className="silt">{kirjakoht.viide}</p>
-        <blockquote className="kuva mx-auto mt-8 max-w-3xl text-[clamp(1.9rem,4.4vw,3rem)] leading-[1.25] text-ink">
-          {kirjakoht.tekst}
-        </blockquote>
-        <div className="joon mx-auto my-12 max-w-24" />
-        <Tekst className="mx-auto">{kirjakoht.selgitus}</Tekst>
+      {/* Kirjakoht — kogu lehe vaikseim hetk */}
+      <Sektsioon taust="sage" laius="kitsas">
+        <Ilmub>
+          <Salm
+            viide={kirjakoht.viide}
+            tekst={kirjakoht.tekst}
+            selgitus={kirjakoht.selgitus}
+          />
+        </Ilmub>
       </Sektsioon>
 
       {/*
-        Pöördumine — Marta usu- ja pöördumislugu.
-        Lehe kõige isiklikum osa, seepärast on pealkiri keskel ja lugu voolab
-        ühes kitsas veerus hõreda rütmiga. Viimane lõik on kutsumuse kokkuvõte
-        ja seisab kuvakirjas kullas, et lugu lõppeks kõlaga, mitte poolel sõnal.
+        Pöördumine — Marta usu- ja pöördumislugu. Lehe kõige isiklikum osa
+        seisab lehe kõige sügavamal pinnal: metsarohelisel, kuldse valgusega.
+        Viimane lõik on kutsumuse kokkuvõte ja seisab kuvakirjas heledas
+        kullas, et lugu lõppeks kõlaga, mitte poolel sõnal.
       */}
-      <Sektsioon taust="shell">
-        <div className="mx-auto max-w-3xl text-center">
-          <Pealkiri silt={pooordumine.silt}>{pooordumine.pealkiri}</Pealkiri>
-          <div className="joon mx-auto mt-10 max-w-24" />
-        </div>
+      <Sektsioon taust="mets">
+        <Ilmub className="mx-auto max-w-3xl text-center">
+          <div aria-hidden="true" className="pystjoon pystjoon-tume" />
+          <p className="silt silt-tume mt-7">{pooordumine.silt}</p>
+          <h2 className="kuva mt-6 text-[clamp(2rem,4.2vw,3.2rem)] text-luu">
+            {pooordumine.pealkiri}
+          </h2>
+        </Ilmub>
 
-        <div className="mx-auto mt-14 max-w-[60ch] space-y-9 sm:mt-16">
+        <Ilmub ruhm className="mx-auto mt-14 max-w-[60ch] space-y-9 sm:mt-16">
           {pooordumine.loigud.map((loik, jrk) => {
             const viimane = jrk === pooordumine.loigud.length - 1;
 
@@ -115,116 +144,126 @@ export default async function Minust() {
                 key={loik}
                 className={
                   viimane
-                    ? "kuva pt-4 text-[clamp(1.3rem,2.6vw,1.85rem)] leading-[1.45] text-gold-deep"
+                    ? "kuva pt-5 text-[clamp(1.35rem,2.7vw,1.9rem)] leading-[1.45] text-kuld-hele"
                     : jrk === 0
-                      ? "text-xl leading-[1.7] text-ink sm:text-[1.375rem]"
-                      : "text-lg leading-[1.8] text-ink-soft sm:text-xl"
+                      ? "text-xl leading-[1.75] text-luu sm:text-[1.4rem]"
+                      : "text-lg leading-[1.85] text-luu/95 sm:text-xl"
                 }
               >
                 {loik}
               </p>
             );
           })}
-        </div>
+        </Ilmub>
       </Sektsioon>
 
       {/*
-        Loo juurde kuuluvad kirjakohad — sama käsitlus mis üleval üksiku
-        kirjakoha juures: viide sildina, salm kuvakirjaga, Marta selgitus all.
+        Loo juurde kuuluvad kirjakohad — iga salm oma vaikse hetkena.
         Mõne salmi juures pildil selgitust ei olnud, siis jääb see lihtsalt ära.
       */}
-      <Sektsioon taust="linen">
-        <div className="mx-auto max-w-[62ch] space-y-14">
+      <Sektsioon taust="linen" laius="kitsas">
+        <div className="space-y-20 sm:space-y-24">
           {pooordumine.kirjakohad.map((koht) => (
-            <div key={koht.viide} className="border-t border-gold/25 pt-8">
-              <p className="silt">{koht.viide}</p>
-              <blockquote className="kuva mt-6 text-[clamp(1.3rem,2.8vw,1.9rem)] leading-[1.35] text-ink">
-                {koht.tekst}
-              </blockquote>
-              {koht.selgitus && (
-                <p className="mt-6 text-lg leading-[1.8] text-ink-soft">
-                  {koht.selgitus}
-                </p>
-              )}
-            </div>
+            <Ilmub key={koht.viide}>
+              <Salm
+                viide={koht.viide}
+                tekst={koht.tekst}
+                selgitus={koht.selgitus}
+              />
+            </Ilmub>
           ))}
         </div>
       </Sektsioon>
 
       {/* Annid */}
       <Sektsioon taust="bone">
-        <Pealkiri silt={annid.silt} className="max-w-2xl">
-          {annid.pealkiri}
-        </Pealkiri>
-        <Tekst className="mt-8">{annid.sissejuhatus}</Tekst>
+        <Ilmub>
+          <Pealkiri silt={annid.silt} className="max-w-2xl">
+            {annid.pealkiri}
+          </Pealkiri>
+          <Tekst className="mt-8">{annid.sissejuhatus}</Tekst>
+        </Ilmub>
 
-        <dl className="mt-14 grid gap-x-14 gap-y-10 sm:grid-cols-2">
+        {/* Ilma ülajoonteta — kuvakirjas nimed kannavad plokke ise */}
+        <Ilmub ruhm as="dl" className="mt-12 grid gap-x-16 gap-y-10 sm:grid-cols-2">
           {annid.loend.map((and) => (
-            <div key={and.nimi} className="border-t border-gold/25 pt-6">
-              <dt className="kuva text-[clamp(1.35rem,2.5vw,1.75rem)] text-ink">
+            <div key={and.nimi}>
+              <dt className="kuva text-[clamp(1.4rem,2.6vw,1.85rem)] text-ink">
                 {and.nimi}
               </dt>
-              <dd className="mt-2 text-lg leading-relaxed text-ink-soft">
+              <dd className="mt-3 text-lg leading-relaxed text-ink-soft">
                 {and.kirjeldus}
               </dd>
             </div>
           ))}
-        </dl>
+        </Ilmub>
       </Sektsioon>
 
-      {/* Horisontaalne foto oma loomulikus 3:2 kuvasuhtes, tsitaat selle all */}
-      <div className="bg-bone px-6 pb-16 sm:pb-20 lg:px-10 lg:pb-24">
-        <div className="mx-auto max-w-[1000px]">
-          <Foto
-            nimi="marta-lamades"
-            alt="Marta Raudsoo"
-            sizes="(max-width: 1000px) 100vw, 1000px"
-          />
+      {/* Horisontaalne foto oma loomulikus kuvasuhtes, tsitaat selle all */}
+      <section className="overflow-hidden bg-shell">
+        <div className="mx-auto max-w-[1400px] px-6 py-20 sm:py-28 lg:px-12 lg:py-36">
+          <div className="mx-auto max-w-[1000px]">
+            <Foto
+              nimi="marta-lamades"
+              alt="Marta Raudsoo"
+              sizes="(max-width: 1024px) 100vw, 1000px"
+            />
 
-          <blockquote className="kuva mt-12 text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.45] text-gold-deep">
-            {tsitaat.tekst}
-          </blockquote>
+            <Ilmub viive={150}>
+              <blockquote className="kuva mt-12 max-w-4xl text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.4] text-gold-deep">
+                {tsitaat.tekst}
+              </blockquote>
+            </Ilmub>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Terviklik inimene */}
-      <section className="bg-clay">
-        <div className="mx-auto grid max-w-[1360px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1fr_1fr] lg:gap-20 lg:px-10 lg:py-24">
+      <section className="overflow-hidden bg-clay">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-20 sm:py-28 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24 lg:px-12 lg:py-36">
           <div>
-            <Pealkiri silt={terviklikkus.silt}>
-              {terviklikkus.pealkiri}
-            </Pealkiri>
+            <Ilmub>
+              <Pealkiri silt={terviklikkus.silt}>
+                {terviklikkus.pealkiri}
+              </Pealkiri>
+            </Ilmub>
             {/* Suurem kiri ja hõredam vahe, et tekstiveerg ei jääks pildi kõrval kokkusurutuks */}
-            <div className="mt-9 space-y-7">
+            <Ilmub ruhm className="mt-9 space-y-7">
               {terviklikkus.loigud.map((loik) => (
                 <p
                   key={loik}
-                  className="max-w-[52ch] text-xl leading-[1.7] text-ink/85"
+                  className="max-w-[52ch] text-xl leading-[1.75] text-ink/85"
                 >
                   {loik}
                 </p>
               ))}
-            </div>
+            </Ilmub>
           </div>
 
-          <div className="w-full max-w-[440px] justify-self-center lg:justify-self-end">
+          <div className="w-full max-w-[420px] justify-self-center lg:justify-self-end">
             <Foto
               nimi="marta-tutrega"
               alt="Marta Raudsoo koos tütrega"
-              sizes="(max-width: 1024px) 100vw, 440px"
+              kaar
+              sizes="(max-width: 1024px) 92vw, 420px"
             />
           </div>
         </div>
       </section>
 
       {/* Lõpetuseks */}
-      <Sektsioon taust="linen" laius="kitsas" className="text-center">
-        <blockquote className="kuva mx-auto max-w-3xl text-[clamp(1.5rem,3.2vw,2.4rem)] leading-[1.35] text-ink">
-          {lopp.tsitaat}
-        </blockquote>
-        <div className="mt-12">
-          <Nupp href="/broneerimine">{lopp.nuppTekst}</Nupp>
-        </div>
+      <Sektsioon taust="linen" laius="kitsas" polsterdus="ohuke" className="text-center">
+        <Ilmub>
+          <div aria-hidden="true" className="pystjoon" />
+          <blockquote className="kuva mx-auto mt-8 max-w-3xl text-[clamp(1.55rem,3.2vw,2.4rem)] leading-[1.35] text-ink">
+            {lopp.tsitaat}
+          </blockquote>
+        </Ilmub>
+        <Ilmub viive={180} className="mt-12">
+          <Nupp href="/broneerimine" nool>
+            {lopp.nuppTekst}
+          </Nupp>
+        </Ilmub>
       </Sektsioon>
     </>
   );

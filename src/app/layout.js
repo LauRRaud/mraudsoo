@@ -40,6 +40,10 @@ export async function generateMetadata() {
   };
 }
 
+export const viewport = {
+  themeColor: "#fdfcf9",
+};
+
 export default async function RootLayout({ children }) {
   const sisu = await laeSisuKordKorras();
   const kujundus = await laeKujundusKordKorras();
@@ -47,6 +51,16 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="et" className={`${koikFondiKlassid} h-full antialiased`}>
       <head>
+        {/*
+          Ilmumisanimatsioonide algseis (peidus) kehtib ainult klassiga
+          html.js — nii on ilma JavaScriptita kogu sisu kohe nähtav.
+          Skript peab jooksma enne esimest joonistust, seepärast siin.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
         {/*
           Admin-lehelt salvestatud kujundus kirjutab :root muutujad üle.
           Väärtused on puhastatud (vt src/kujundus/lae.js), seega siia ei saa
@@ -56,13 +70,18 @@ export default async function RootLayout({ children }) {
       </head>
       <body className="flex min-h-full flex-col">
         {/* Pais on kliendikomponent — sisu jõuab sinna ainult propsidena */}
-        <Pais navi={sisu.navi} saidiNimi={sisu.meta.saidiNimi} />
+        <Pais
+          navi={sisu.navi}
+          saidiNimi={sisu.meta.saidiNimi}
+          kontakt={sisu.kontakt}
+        />
         <main className="flex-1">{children}</main>
         <Jalus
           navi={sisu.navi}
           kontakt={sisu.kontakt}
           saidiNimi={sisu.meta.saidiNimi}
           tutvustus={sisu.jalus.tutvustus}
+          tunnuslause={sisu.meta.tunnuslause}
         />
       </body>
     </html>

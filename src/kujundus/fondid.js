@@ -22,6 +22,10 @@ import {
   objekti — ühist seadete objekti laiali laotada (`...uhised`) ei saa.
 
   latin-ext on kohustuslik: ilma selleta puuduvad õ ä ö ü š ž.
+
+  Kuvafondid laaditakse koos PÄRIS kaldkirjaga (style: italic) — kaldkirjas
+  alapealkirjad ja rõhud on kujunduskeele osa ning brauseri võltskaldkiri
+  rikuks serifi joonise. Marcellusel kaldkirja lõiget ei ole.
 */
 
 /* Pealkirjafondid */
@@ -29,6 +33,7 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin", "latin-ext"],
   weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -36,6 +41,7 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -43,6 +49,7 @@ const ebGaramond = EB_Garamond({
   variable: "--font-ebgaramond",
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -57,6 +64,7 @@ const lora = Lora({
   variable: "--font-lora",
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 

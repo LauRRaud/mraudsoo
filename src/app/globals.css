@@ -1,14 +1,18 @@
 @import "tailwindcss";
 
 /*
-  Marta Raudsoo — disainisüsteem
+  Marta Raudsoo — disainisüsteem „Püha Ruum”
 
-  Palett on kolm värvi: MUST, VALGE ja KULD. Muud toonid puuduvad.
-  Sektsioonide eristamiseks kasutame musta ja valge vahepealseid neutraalseid
-  halle — need on värvitud, mitte soojad, et palett püsiks puhas.
+  Keel: vaikne pühamu. Soe luuvalge, tint ja kuld; lisaks ÜKS tume toon —
+  sügav metsaroheline —, mis kannab lehe kõige isiklikumaid hetki (liikumine,
+  pöördumislugu, jalus). Fotosid raamib kaar nagu kirikuakent; jooned on
+  juuspeened; liikumine on aeglane ja väärikas.
 
-  Kuld on toonilt ~45 kraadi ehk päris kuld, mitte pruun. Kaks tugevust:
-  hele suurtele pealkirjadele, tume tekstisuuruses kasutuseks.
+  Kordumotiivid:
+    kaar      — foto ülaserv on poolkaar (.kaar)
+    püstjoon  — lühike vertikaalne kuldjoon salmide ja vaiksete hetkede kohal
+    juusjoon  — 1px kuldne eraldusjoon (.joon / .joon-tume)
+    tera      — vaevumärgatav filmitera kogu lehe peal (body::after)
 */
 
 /*
@@ -20,32 +24,40 @@
   salvestatud kujundus need üle kirjutada (vt src/kujundus/).
 */
 @theme {
-  /* Pinnad — valgest tumedama halli suunas */
-  --color-bone: #ffffff; /* lehe põhitaust: valge */
-  --color-linen: #f7f6f4; /* vaevumärgatav paneel */
-  --color-shell: #efeeeb; /* pisut tumedam paneel */
-  --color-clay: #e9e7e3; /* rahulik hall paneel */
-  --color-clay-soft: #f2f1ee;
-  --color-sage: #e3e1dd; /* tumedaim hele paneel */
+  /* Pinnad — soe luuvalge, lina ja savi suunas */
+  --color-bone: #fdfcf9; /* lehe põhitaust */
+  --color-linen: #f7f5ef; /* vaevumärgatav paneel */
+  --color-shell: #f0ede5; /* pisut tumedam paneel */
+  --color-clay: #e8e4d9; /* rahulik paneel */
+  --color-clay-soft: #f3f1ea;
+  --color-sage: #e4e3d7; /* tumedaim hele paneel, kerge rohekas kuma */
 
   /*
-    Kuld kolmes tugevuses. Hele on täidetud nuppudele — sellel peab tekst
-    olema must (valge annaks ainult 3.2:1, must annab 6:1).
-  */
-  /*
-    Nupuvärv — sügav murtud roheline. Premium toon, mis ei konkureeri
-    fotode sooja tooniga. Valge tekst annab 7.3:1, nupu serv valgel sama.
+    Nupuvärv — sügav murtud roheline. Valge tekst annab 7.3:1.
   */
   --color-rohe: #4a5a46;
   --color-rohe-hele: #5c6e57;
-  --color-gold: #a6862f; /* suured pealkirjad (3.5:1 valgel) */
-  --color-gold-deep: #8a6f20; /* tekst, lingid, tsitaadid (4.8:1 valgel) */
-  --color-brick: #8a6f20; /* varem punane aktsent — paletti ei kuulu, seega kuld */
 
-  /* Must ja hallid */
-  --color-ink: #121212; /* pealkirjad ja tugev tekst */
-  --color-ink-soft: #3b3b3b; /* põhitekst (11:1 valgel) */
-  --color-ink-faint: #6e6e6e; /* meta-tekst, sildid (5.1:1 valgel) */
+  /* Kuld — hele suurtele pealkirjadele, tume tekstisuuruses kasutuseks */
+  --color-gold: #a6862f;
+  --color-gold-deep: #8a6f20;
+  --color-brick: #8a6f20; /* ajalooline nimi — paletti ei kuulu, seega kuld */
+
+  /*
+    Tume pühamu — pehme metsaroheline, nupurohelisest vaid astme võrra
+    sügavam. Kannab liikumise sektsiooni, pöördumislugu, stiiliteekonda
+    ja jalust. Kuld ja luu on tumeda tausta paarilised: kuld-hele loetav
+    sildina (4.6:1), luu tekstina (7.1:1).
+  */
+  --color-mets: #46543f;
+  --color-mets-syva: #3c4936;
+  --color-kuld-hele: #dcc27a;
+  --color-luu: #f4f1e8;
+
+  /* Tint ja hallid — kergelt sooja alatooniga */
+  --color-ink: #161613; /* pealkirjad ja tugev tekst */
+  --color-ink-soft: #3d3c37; /* põhitekst */
+  --color-ink-faint: #6e6c64; /* meta-tekst, kõrvaline */
 
   /*
     Fondid. Väärtus tuleb --kuva-font / --tekst-font kaudu, mille määrab
@@ -62,14 +74,17 @@
   vaikimisi väärtused — kui admin ei ole midagi salvestanud, kehtivad need.
 */
 :root {
-  --silt-suurus: 1.125rem;
-  --mikro-suurus: 1.0625rem;
+  --silt-suurus: 0.9375rem;
+  --mikro-suurus: 0.9375rem;
   --tekst-suurus: 1.125rem;
-  --tekst-suur-suurus: 1.25rem;
+  --tekst-suur-suurus: 1.3125rem;
 
-  --silt-vahe: 0.2em;
-  --mikro-vahe: 0.14em;
-  --nimi-vahe: 0.06em;
+  --silt-vahe: 0.28em;
+  --mikro-vahe: 0.16em;
+  --nimi-vahe: 0.05em;
+
+  /* Liikumise ühine kõver — aeglane, väärikas lõpp */
+  --sujuv: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
@@ -84,41 +99,63 @@
     /* Kaal 400, mitte 300 — peenike kiri kadus heledal taustal ära */
     font-weight: 400;
     line-height: 1.8;
-    letter-spacing: 0.005em;
+    letter-spacing: 0.004em;
     -webkit-font-smoothing: antialiased;
   }
 
+  /*
+    Filmitera — vaevumärgatav tekstuur kogu lehe peal. `multiply` tähendab,
+    et tera ainult tumendab: heledal pinnal annab paberi karakteri, tumedal
+    kaob ise ära. Osutisündmusi kiht ei püüa.
+  */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23t)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 260px 260px;
+    mix-blend-mode: multiply;
+    opacity: 0.05;
+  }
+
   ::selection {
-    background-color: var(--color-clay);
+    background-color: color-mix(in srgb, var(--color-gold) 26%, transparent);
     color: var(--color-ink);
   }
 
   /* Fookus on nähtav kõikjal — klaviatuuriga navigeerimine peab töötama */
   :focus-visible {
-    outline: 2px solid var(--color-gold-deep);
+    outline: 2px solid var(--color-gold);
     outline-offset: 3px;
+  }
+
+  /* Ankrusse kerides jäägu kleepuva päise alla ruumi */
+  :target {
+    scroll-margin-top: 6rem;
   }
 }
 
 @layer components {
   /*
     TÄHEVAHED — kogu lehel on neid neli, mitte rohkem:
-      .kuva  -0.005em  suur kuvakiri (suures kirjas on tihedam õige)
-      .nimi   0.06em   lehe nimi / logo — hõredam, et lugeda kui märki
-      .silt   0.2em    sektsioonisildid suurtähtedes
-      .mikro  0.14em   nupud, noolelingid, menüü
+      .kuva  -0.01em  suur kuvakiri (suures kirjas on tihedam õige)
+      .nimi   0.08em  lehe nimi / logo — hõredam, et lugeda kui märki
+      .silt   0.28em  sektsioonisildid suurtähtedes
+      .mikro  0.16em  nupud, noolelingid, menüü
   */
 
   /*
-    Kuvakiri — Cormorant. Kaal 500, mitte 300: Cormorant on loomu poolest
-    peenike ja väiksemates pealkirjades (nt annid, teenuste nimed) kadus
-    kerge kaal ära. Suurtes pealkirjades püsib 500 endiselt elegantne.
+    Kuvakiri — Cormorant. Kaal 500: Cormorant on loomu poolest peenike ja
+    väiksemates pealkirjades kadus kerge kaal ära.
   */
   .kuva {
     font-family: var(--font-display);
     font-weight: 500;
-    line-height: 1.15;
-    letter-spacing: -0.005em;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
     /*
       Joonnumbrid. Cormorant kasutab vaikimisi vanastiilis numbreid, kus „1” on
       x-kõrgusega ja näeb välja nagu i — „1:1 teekond” luges „i:i teekond”.
@@ -140,10 +177,15 @@
   */
   .silt {
     font-size: var(--silt-suurus);
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: var(--silt-vahe);
     text-transform: uppercase;
     color: var(--color-gold-deep);
+  }
+
+  /* Sama silt tumedal taustal — hele kuld (5.7:1 metsal) */
+  .silt-tume {
+    color: var(--color-kuld-hele);
   }
 
   /*
@@ -152,7 +194,7 @@
   */
   .mikro {
     font-size: var(--mikro-suurus);
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: var(--mikro-vahe);
     text-transform: uppercase;
   }
@@ -169,8 +211,236 @@
   /* Juuksekarva peenusega joon — asendab kaarte ja varje */
   .joon {
     height: 1px;
-    background-color: color-mix(in srgb, var(--color-gold) 28%, transparent);
+    background-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
   }
+
+  /* Sama joon tumedal taustal */
+  .joon-tume {
+    height: 1px;
+    background-color: color-mix(in srgb, var(--color-kuld-hele) 30%, transparent);
+  }
+
+  /*
+    Püstjoon — lühike vertikaalne kuldjoon salmi või vaikse hetke kohal.
+    Korduv motiiv: küünal, sammas, kiriku aken.
+  */
+  .pystjoon {
+    width: 1px;
+    height: 2.75rem;
+    margin-inline: auto;
+    background-color: color-mix(in srgb, var(--color-gold) 55%, transparent);
+  }
+
+  .pystjoon-tume {
+    background-color: color-mix(in srgb, var(--color-kuld-hele) 60%, transparent);
+  }
+
+  /* Kaar — foto ülaserv on poolkaar nagu kirikuaken */
+  .kaar {
+    border-radius: 999rem 999rem 0 0;
+  }
+
+  /*
+    Alajoon — link, mille alla kasvab juuspeen joon vasakult sisse ja
+    paremalt välja. Aktiivsel menüüpunktil püsib joon all.
+  */
+  .alajoon {
+    position: relative;
+  }
+
+  .alajoon::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.35em;
+    height: 1px;
+    width: 100%;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 0.5s var(--sujuv);
+  }
+
+  .alajoon:hover::after,
+  .alajoon[aria-current="page"]::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  /*
+    NUPP — arhitektuurne, teravnurkne, aeglase täitumisega.
+    Variant määrab muutujad; pühkiv kiht (::before) kasvab vasakult.
+  */
+  .nupp {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85em;
+    padding: 1.05rem 2.5rem;
+    border: 1px solid var(--nupp-aar);
+    background-color: var(--nupp-taust, transparent);
+    color: var(--nupp-tekst);
+    transition:
+      color 0.45s var(--sujuv),
+      border-color 0.45s var(--sujuv);
+  }
+
+  .nupp::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--nupp-taide);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.55s var(--sujuv);
+  }
+
+  .nupp > * {
+    position: relative;
+  }
+
+  .nupp:hover:not(:disabled)::before {
+    transform: scaleX(1);
+  }
+
+  .nupp:hover:not(:disabled) {
+    color: var(--nupp-tekst-peal, var(--nupp-tekst));
+    border-color: var(--nupp-aar-peal, var(--nupp-aar));
+  }
+
+  /* Nool nupu sees nihkub õrnalt paremale */
+  .nupp .nool {
+    display: inline-block;
+    transition: transform 0.45s var(--sujuv);
+  }
+
+  .nupp:hover:not(:disabled) .nool {
+    transform: translateX(0.35em);
+  }
+
+  .nupp:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Täidetud roheline — peamine tegevus heledal taustal */
+  .nupp-taidetud {
+    --nupp-aar: var(--color-rohe);
+    --nupp-taust: var(--color-rohe);
+    --nupp-taide: var(--color-rohe-hele);
+    --nupp-tekst: #ffffff;
+    --nupp-aar-peal: var(--color-rohe-hele);
+  }
+
+  /* Äärisega — teisene tegevus heledal taustal */
+  .nupp-aaris {
+    --nupp-aar: var(--color-rohe);
+    --nupp-taide: var(--color-rohe);
+    --nupp-tekst: var(--color-rohe);
+    --nupp-tekst-peal: #ffffff;
+  }
+
+  /* Hele täidis tumedal taustal */
+  .nupp-hele {
+    --nupp-aar: var(--color-luu);
+    --nupp-taust: var(--color-luu);
+    --nupp-taide: var(--color-kuld-hele);
+    --nupp-tekst: var(--color-mets-syva);
+  }
+
+  /* Hele ääris tumedal taustal */
+  .nupp-hele-aaris {
+    --nupp-aar: color-mix(in srgb, var(--color-luu) 55%, transparent);
+    --nupp-taide: var(--color-luu);
+    --nupp-tekst: var(--color-luu);
+    --nupp-tekst-peal: var(--color-mets-syva);
+    --nupp-aar-peal: var(--color-luu);
+  }
+
+  /* Väiksem nupp — päisesse ja tihedatesse kohtadesse */
+  .nupp-vaike {
+    padding: 0.65rem 1.5rem;
+  }
+
+  /*
+    SISENEMINE — käivitub kohe, kui element joonistub (esimene ekraanitäis).
+    Viide antakse elemendile CSS-muutujaga --viive.
+  */
+  @keyframes sisene-liik {
+    from {
+      opacity: 0;
+      transform: translateY(26px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .sisene {
+    animation: sisene-liik 0.95s var(--sujuv) both;
+    animation-delay: var(--viive, 0ms);
+  }
+
+  /* Lehe sisenemine marsruudivahetusel (vt src/app/template.js) */
+  @keyframes leht-sisse {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .leht-sisenemine {
+    animation: leht-sisse 0.6s var(--sujuv) both;
+  }
+
+  /*
+    ILMUMINE — element tõuseb nähtavale siis, kui ta keritakse vaatevälja
+    (vt src/components/Ilmub.js). Algseis on peidus AINULT siis, kui
+    JavaScript on olemas (html.js) — ilma skriptita on kõik kohe nähtav.
+  */
+  html.js .ilmub {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 1s var(--sujuv),
+      transform 1s var(--sujuv);
+    transition-delay: var(--ilmub-viide, 0ms);
+  }
+
+  html.js .ilmub.nahtav {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Rühm — lapsed ilmuvad üksteise järel astmeliselt */
+  html.js .ilmub-ruhm > * {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 0.95s var(--sujuv),
+      transform 0.95s var(--sujuv);
+  }
+
+  html.js .ilmub-ruhm.nahtav > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  html.js .ilmub-ruhm.nahtav > *:nth-child(1) { transition-delay: 0ms; }
+  html.js .ilmub-ruhm.nahtav > *:nth-child(2) { transition-delay: 90ms; }
+  html.js .ilmub-ruhm.nahtav > *:nth-child(3) { transition-delay: 180ms; }
+  html.js .ilmub-ruhm.nahtav > *:nth-child(4) { transition-delay: 270ms; }
+  html.js .ilmub-ruhm.nahtav > *:nth-child(5) { transition-delay: 360ms; }
+  html.js .ilmub-ruhm.nahtav > *:nth-child(6) { transition-delay: 450ms; }
+  html.js .ilmub-ruhm.nahtav > *:nth-child(7) { transition-delay: 540ms; }
+  html.js .ilmub-ruhm.nahtav > *:nth-child(n + 8) { transition-delay: 630ms; }
 }
 
 /* Austa kasutaja eelistust liikumise osas */
@@ -185,5 +455,12 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* Ilmuvad elemendid on kohe paigal ja nähtaval */
+  html.js .ilmub,
+  html.js .ilmub-ruhm > * {
+    opacity: 1;
+    transform: none;
   }
 }

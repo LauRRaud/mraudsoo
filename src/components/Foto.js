@@ -1,7 +1,13 @@
 import Image from "next/image";
 
 /*
-  Fotod kuvatakse alati oma loomulikus kuvasuhtes — midagi ei lõigata ära.
+  Fotod elavad raamis: ümbris määrab kuvasuhte (vaikimisi foto loomulik suhe,
+  seega midagi ei lõigata) ja pilt täidab raami. Fotod on paigal ja ilma
+  tekke-efektita — nad on lehel lihtsalt olemas.
+
+  `kaar` — ülaserv on poolkaar nagu kirikuaken (lehe kordumotiiv).
+  `kuvasuhe` — nt "4 / 5", kui raam peab olema loomulikust suhtest erinev;
+  siis pilt kärbitakse servadest (object-cover), nägu jääb keskele.
 
   Mõõdud vastavad failide tegelikele mõõtmetele. Kui lisad uue foto,
   lisa siia ka selle mõõdud — nii ei teki lehe laadimisel hüppamist.
@@ -19,12 +25,8 @@ export default function Foto({
   alt,
   sizes = "100vw",
   priority = false,
-  /*
-    Esimese ekraanitäie pildid: lisaks laiusele piirame ka kõrgust, muidu
-    kasvab lõikamata püstfoto vaateaknast pikemaks ja "jääb liiga alla".
-    Kuvasuhe säilib — pilt lihtsalt kahaneb, midagi ei lõigata.
-  */
-  mahuEkraanile = false,
+  kaar = false,
+  kuvasuhe,
   className = "",
 }) {
   const moot = MOODUD[nimi];
@@ -36,20 +38,20 @@ export default function Foto({
   }
 
   return (
-    <Image
-      src={`/pildid/${nimi}.jpg`}
-      alt={alt}
-      width={moot.laius}
-      height={moot.korgus}
-      quality={90}
-      priority={priority}
-      sizes={sizes}
-      className={`${
-        mahuEkraanile
-          ? // Lahutame päise ja sektsiooni vahed, et pilt mahuks tervikuna ekraanile
-            "mx-auto h-auto max-h-[calc(100vh-10rem)] w-auto max-w-full"
-          : "h-auto w-full"
-      } ${className}`}
-    />
+    <div
+      className={`relative overflow-hidden ${kaar ? "kaar " : ""}${className}`}
+      style={{ aspectRatio: kuvasuhe ?? `${moot.laius} / ${moot.korgus}` }}
+    >
+      <Image
+        src={`/pildid/${nimi}.jpg`}
+        alt={alt}
+        width={moot.laius}
+        height={moot.korgus}
+        quality={90}
+        priority={priority}
+        sizes={sizes}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+    </div>
   );
 }

@@ -1,5 +1,6 @@
-import { Pealkiri, Sektsioon, Tekst } from "@/components/ui";
+import { Sektsioon, Tekst } from "@/components/ui";
 import BroneeriVorm from "@/components/BroneeriVorm";
+import Ilmub from "@/components/Ilmub";
 import { laeSisu } from "@/sisu/lae";
 import { laeKalender } from "@/broneering/kalender";
 
@@ -20,19 +21,28 @@ export default async function Broneerimine() {
 
   return (
     <>
-      <Sektsioon taust="bone">
-        <div className="max-w-3xl">
-          <Pealkiri silt={broneerimine.hero.silt} tase="h1">
+      <Sektsioon taust="bone" polsterdus="ohuke">
+        <div className="max-w-3xl pt-6 sm:pt-10">
+          <p className="sisene silt">{broneerimine.hero.silt}</p>
+          <h1
+            className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
+            style={{ "--viive": "90ms" }}
+          >
             {broneerimine.hero.pealkiri}
-          </Pealkiri>
-          <div className="joon my-10 max-w-24" />
-          <Tekst suur>{broneerimine.hero.tekst}</Tekst>
+          </h1>
+          <div
+            className="sisene joon mb-9 mt-9 max-w-28"
+            style={{ "--viive": "200ms" }}
+          />
+          <div className="sisene" style={{ "--viive": "300ms" }}>
+            <Tekst suur>{broneerimine.hero.tekst}</Tekst>
+          </div>
         </div>
       </Sektsioon>
 
       <section className="bg-linen">
-        <div className="mx-auto grid max-w-[1360px] gap-16 px-6 py-20 sm:py-24 lg:grid-cols-[1.3fr_0.7fr] lg:gap-24 lg:px-10 lg:py-32">
-          <div>
+        <div className="mx-auto grid max-w-[1400px] gap-16 px-6 py-20 sm:py-28 lg:grid-cols-[1.3fr_0.7fr] lg:gap-24 lg:px-12 lg:py-36">
+          <Ilmub>
             <p className="silt">{broneerimine.vormSilt}</p>
             <div className="mt-10">
               <BroneeriVorm
@@ -43,16 +53,20 @@ export default async function Broneerimine() {
                 suletudNadalapaevad={kalender.suletudNadalapaevad}
               />
             </div>
-          </div>
+          </Ilmub>
 
-          <aside className="lg:border-l lg:border-gold/25 lg:pl-16">
+          <Ilmub
+            as="aside"
+            viive={150}
+            className="lg:border-l lg:border-gold/25 lg:pl-16"
+          >
             <p className="silt">{broneerimine.kontaktSilt}</p>
 
             <ul className="mt-8 space-y-6">
               <li>
                 <a
                   href={`mailto:${kontakt.email}`}
-                  className="kuva text-xl text-ink transition-colors hover:text-gold-deep"
+                  className="kuva text-xl text-ink transition-colors hover:text-gold-deep sm:text-2xl"
                 >
                   {kontakt.email}
                 </a>
@@ -63,7 +77,7 @@ export default async function Broneerimine() {
                   href={kontakt.instagram}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-lg text-ink-soft transition-colors hover:text-gold-deep"
+                  className="alajoon text-lg text-ink-soft transition-colors hover:text-gold-deep"
                 >
                   Instagram {kontakt.instagramNimi}
                 </a>
@@ -73,7 +87,7 @@ export default async function Broneerimine() {
                   href={kontakt.facebook}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-lg text-ink-soft transition-colors hover:text-gold-deep"
+                  className="alajoon text-lg text-ink-soft transition-colors hover:text-gold-deep"
                 >
                   Facebook
                 </a>
@@ -82,10 +96,10 @@ export default async function Broneerimine() {
 
             <div className="joon my-10" />
 
-            <p className="text-lg leading-relaxed text-ink-soft">
+            <p className="max-w-[44ch] text-lg leading-[1.85] text-ink-soft">
               {broneerimine.markus}
             </p>
-          </aside>
+          </Ilmub>
         </div>
       </section>
     </>

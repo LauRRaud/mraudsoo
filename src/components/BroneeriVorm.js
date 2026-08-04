@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Kalender, { vormindaKuupaev } from "@/components/Kalender";
+import { Nupp } from "@/components/ui";
 import { saadaBroneering } from "@/app/broneerimine/tegevused";
 
 const KELLAAJAD = [
@@ -238,13 +239,9 @@ export default function BroneeriVorm({
       </div>
 
       <div className="flex flex-wrap items-center gap-6">
-        <button
-          type="submit"
-          disabled={saadab}
-          className="inline-block border border-rohe bg-rohe px-9 py-4 mikro text-white transition-colors duration-300 hover:border-rohe-hele hover:bg-rohe-hele disabled:cursor-not-allowed disabled:opacity-60"
-        >
+        <Nupp type="submit" disabled={saadab} nool={!saadab}>
           {saadab ? "Saadan …" : "Saada soov"}
-        </button>
+        </Nupp>
       </div>
 
       {/* Tagasiside pärast saatmist */}

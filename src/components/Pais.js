@@ -2,16 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /*
-  Kliendikomponent ei loe sisu ise — navi ja saidiNimi tulevad propsidena
-  juurpaigutusest (src/app/layout.js), kus sisu on failist loetud.
+  Kliendikomponent ei loe sisu ise — navi, saidiNimi ja kontakt tulevad
+  propsidena juurpaigutusest (src/app/layout.js), kus sisu on failist loetud.
+
+  Käitumine: päis peitub alla kerides ja tuleb üles kerides kohe tagasi.
+  Mobiilimenüü on täisekraani tume kiht (metsSyva), mille lingid ilmuvad
+  astmeliselt; ESC sulgeb, taust ei keri.
 */
-export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo" }) {
+export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo", kontakt = {} }) {
   const [avatud, setAvatud] = useState(false);
   const [peidus, setPeidus] = useState(false);
   const tee = usePathname();
+  const menyyViide = useRef(null);
 
   /*
     Sulge mobiilimenüü lehe vahetumisel.
@@ -54,48 +59,82 @@ export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo" }) {
   // Avatud mobiilimenüüga ei tohi päis ära peituda
   const varjatud = peidus && !avatud;
 
-  // Kui menüü on avatud, ei tohi taust kerida
+  // Kui menüü on avatud, ei tohi taust kerida; ESC sulgeb
   useEffect(() => {
     document.body.style.overflow = avatud ? "hidden" : "";
+
+    function klahv(sundmus) {
+      if (sundmus.key === "Escape") setAvatud(false);
+    }
+
+    if (avatud) {
+      window.addEventListener("keydown", klahv);
+      menyyViide.current?.focus();
+    }
+
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", klahv);
     };
   }, [avatud]);
 
+  /* Broneerimine on esile tõstetud — menüüs seisab see nupuna */
+  const tavalised = navi.filter((punkt) => punkt.tee !== "/broneerimine");
+  const esile = navi.find((punkt) => punkt.tee === "/broneerimine");
+
+  function aktiivne(punkt) {
+    return tee === punkt.tee || tee.startsWith(`${punkt.tee}/`);
+  }
+
   return (
+    <>
     <header
-      className={`sticky top-0 z-50 border-b border-gold/20 bg-bone/95 backdrop-blur-sm transition-transform duration-300 ${
+      className={`sticky top-0 z-50 transition-transform duration-500 ${
         varjatud ? "-translate-y-full" : "translate-y-0"
+      } ${
+        avatud
+          ? "border-b border-transparent bg-transparent"
+          : "border-b border-gold/15 bg-bone/90 backdrop-blur-md"
       }`}
     >
-      <div className="mx-auto flex max-w-[1360px] items-center justify-between px-6 py-5 lg:px-10">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-5 lg:px-12">
         <Link
           href="/"
-          className="nimi text-2xl text-ink transition-colors hover:text-gold-deep sm:text-3xl"
+          className={`nimi text-2xl transition-colors sm:text-[1.7rem] ${
+            avatud ? "text-luu hover:text-kuld-hele" : "text-ink hover:text-gold-deep"
+          }`}
         >
           {saidiNimi}
         </Link>
 
         {/* Töölaua navigatsioon */}
         <nav className="hidden lg:block" aria-label="Peamenüü">
-          <ul className="flex items-center gap-8">
-            {navi.map((punkt) => {
-              const aktiivne =
-                tee === punkt.tee || tee.startsWith(`${punkt.tee}/`);
-              return (
-                <li key={punkt.tee}>
-                  <Link
-                    href={punkt.tee}
-                    aria-current={aktiivne ? "page" : undefined}
-                    className={`mikro transition-colors hover:text-gold-deep ${
-                      aktiivne ? "text-gold-deep" : "text-ink-soft"
-                    }`}
-                  >
-                    {punkt.nimi}
-                  </Link>
-                </li>
-              );
-            })}
+          <ul className="flex items-center gap-9">
+            {tavalised.map((punkt) => (
+              <li key={punkt.tee}>
+                <Link
+                  href={punkt.tee}
+                  aria-current={aktiivne(punkt) ? "page" : undefined}
+                  className={`mikro alajoon transition-colors duration-300 ${
+                    aktiivne(punkt)
+                      ? "text-gold-deep"
+                      : "text-ink-soft hover:text-ink"
+                  }`}
+                >
+                  {punkt.nimi}
+                </Link>
+              </li>
+            ))}
+            {esile && (
+              <li>
+                <Link
+                  href={esile.tee}
+                  className="nupp nupp-aaris nupp-vaike mikro"
+                >
+                  <span>{esile.nimi}</span>
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 
@@ -105,51 +144,120 @@ export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo" }) {
           onClick={() => setAvatud((v) => !v)}
           aria-expanded={avatud}
           aria-controls="mobiilimenyy"
-          className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] lg:hidden"
+          className="flex h-10 w-10 flex-col items-center justify-center gap-[6px] lg:hidden"
         >
           <span className="sr-only">{avatud ? "Sulge menüü" : "Ava menüü"}</span>
           <span
             aria-hidden="true"
-            className={`h-px w-6 bg-ink transition-transform duration-300 ${
-              avatud ? "translate-y-[6px] rotate-45" : ""
+            className={`h-px w-6 transition-all duration-300 ${
+              avatud ? "translate-y-[7px] rotate-45 bg-luu" : "bg-ink"
             }`}
           />
           <span
             aria-hidden="true"
-            className={`h-px w-6 bg-ink transition-opacity duration-300 ${
-              avatud ? "opacity-0" : ""
+            className={`h-px w-6 transition-opacity duration-300 ${
+              avatud ? "opacity-0" : "bg-ink"
             }`}
           />
           <span
             aria-hidden="true"
-            className={`h-px w-6 bg-ink transition-transform duration-300 ${
-              avatud ? "-translate-y-[6px] -rotate-45" : ""
+            className={`h-px w-6 transition-all duration-300 ${
+              avatud ? "-translate-y-[7px] -rotate-45 bg-luu" : "bg-ink"
             }`}
           />
         </button>
       </div>
 
-      {/* Mobiilimenüü */}
-      {avatud && (
-        <nav
-          id="mobiilimenyy"
-          aria-label="Peamenüü"
-          className="border-t border-gold/20 bg-bone lg:hidden"
-        >
-          <ul className="mx-auto max-w-[1360px] px-6 py-4">
-            {navi.map((punkt) => (
-              <li key={punkt.tee} className="border-b border-gold/10 last:border-0">
-                <Link
-                  href={punkt.tee}
-                  className="kuva block py-4 text-2xl text-ink transition-colors hover:text-gold-deep"
-                >
-                  {punkt.nimi}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
     </header>
+
+      {/*
+        Mobiilimenüü — täisekraani tume kiht. Seisab päise KÕRVAL, mitte sees:
+        päisel on translate (peitumine) ja see muudaks fixed-kihi
+        paigutuse päisesuuruseks. z-40 jääb päise (z-50) alla, nii et
+        logo ja sulgemisnupp püsivad nähtaval.
+      */}
+      {avatud && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div className="leht-sisenemine absolute inset-0 bg-mets-syva" />
+
+          <nav
+            id="mobiilimenyy"
+            aria-label="Peamenüü"
+            ref={menyyViide}
+            tabIndex={-1}
+            className="absolute inset-0 flex flex-col justify-between overflow-y-auto px-6 pb-10 pt-28 outline-none"
+          >
+            <ul>
+              {navi.map((punkt, jrk) => (
+                <li key={punkt.tee}>
+                  <Link
+                    href={punkt.tee}
+                    aria-current={aktiivne(punkt) ? "page" : undefined}
+                    className={`sisene kuva block py-3 text-[clamp(2.1rem,9vw,3.2rem)] transition-colors ${
+                      aktiivne(punkt)
+                        ? "text-kuld-hele"
+                        : "text-luu hover:text-kuld-hele"
+                    }`}
+                    style={{ "--viive": `${140 + jrk * 70}ms` }}
+                  >
+                    {punkt.nimi}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <div
+              className="sisene mt-10"
+              style={{ "--viive": `${140 + navi.length * 70 + 80}ms` }}
+            >
+              <div className="joon-tume" />
+              <div className="mt-7 space-y-3">
+                {kontakt.email && (
+                  <a
+                    href={`mailto:${kontakt.email}`}
+                    className="block text-lg text-luu transition-colors hover:text-kuld-hele"
+                  >
+                    {kontakt.email}
+                  </a>
+                )}
+                <div className="flex flex-wrap gap-x-7 gap-y-2">
+                  {/* Kanalite nimed, mitte muudetav sisu */}
+                  {kontakt.instagram && (
+                    <a
+                      href={kontakt.instagram}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mikro text-luu/75 transition-colors hover:text-kuld-hele"
+                    >
+                      Instagram
+                    </a>
+                  )}
+                  {kontakt.facebook && (
+                    <a
+                      href={kontakt.facebook}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mikro text-luu/75 transition-colors hover:text-kuld-hele"
+                    >
+                      Facebook
+                    </a>
+                  )}
+                  {kontakt.substack && (
+                    <a
+                      href={kontakt.substack}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mikro text-luu/75 transition-colors hover:text-kuld-hele"
+                    >
+                      Substack
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      )}
+    </>
   );
 }

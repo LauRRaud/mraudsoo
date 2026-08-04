@@ -51,6 +51,9 @@ const KONTROLLID = [
   { tekst: "gold", taust: "bone", nimi: "Kuldsed pealkirjad", suur: true },
   { tekst: "inkSoft", taust: "linen", nimi: "Põhitekst heledal paneelil" },
   { tekst: "inkSoft", taust: "clay", nimi: "Põhitekst rahulikul paneelil" },
+  { tekst: "luu", taust: "mets", nimi: "Tekst tumedal sektsioonil" },
+  { tekst: "kuldHele", taust: "mets", nimi: "Kuld tumedal sektsioonil" },
+  { tekst: "luu", taust: "metsSyva", nimi: "Tekst jaluses" },
 ];
 
 export default function KujunduseHaldus({ algseis, kuvaFondid, tekstiFondid }) {

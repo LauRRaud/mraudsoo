@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Ilmub from "@/components/Ilmub";
 import { Sektsioon } from "@/components/ui";
 import { laeSisu, laeSisuSync } from "@/sisu/lae";
 
@@ -46,23 +47,31 @@ export default async function Postitus({ params }) {
 
   return (
     <article>
-      <Sektsioon taust="bone" laius="kitsas">
-        <time
-          dateTime={postitus.kuupaev}
-          className="mikro text-ink-faint"
-        >
-          {vormindaKuupaev(postitus.kuupaev)}
-        </time>
-        <h1 className="kuva mt-6 text-[clamp(2.2rem,5.5vw,4rem)] text-ink">
-          {postitus.pealkiri}
-        </h1>
-        <p className="mt-8 text-lg leading-[1.8] text-gold-deep sm:text-xl">
-          {postitus.sissejuhatus}
-        </p>
+      <Sektsioon taust="bone" laius="kitsas" polsterdus="ohuke">
+        <div className="pt-6 sm:pt-10">
+          <time
+            dateTime={postitus.kuupaev}
+            className="sisene mikro block text-ink-faint"
+          >
+            {vormindaKuupaev(postitus.kuupaev)}
+          </time>
+          <h1
+            className="sisene kuva mt-6 text-[clamp(2.2rem,5.5vw,4rem)] text-ink"
+            style={{ "--viive": "90ms" }}
+          >
+            {postitus.pealkiri}
+          </h1>
+          <p
+            className="sisene mt-8 text-lg leading-[1.8] text-gold-deep sm:text-xl"
+            style={{ "--viive": "200ms" }}
+          >
+            {postitus.sissejuhatus}
+          </p>
+        </div>
       </Sektsioon>
 
       <Sektsioon taust="linen" laius="kitsas">
-        <div className="space-y-7">
+        <Ilmub ruhm className="space-y-7">
           {loigud.map((loik, indeks) => (
             <p
               key={`${postitus.slug}-${indeks}`}
@@ -71,17 +80,17 @@ export default async function Postitus({ params }) {
               {loik}
             </p>
           ))}
-        </div>
+        </Ilmub>
 
         <div className="joon mt-16" />
         {/* Sisupuus ei ole tagasilingi jaoks välja — jääb vaikimisi sõnastus */}
         <Link
           href="/blogi"
-          className="group mt-8 inline-flex items-center gap-3 mikro text-gold-deep transition-colors hover:text-ink"
+          className="group mikro mt-8 inline-flex items-center gap-3 text-gold-deep transition-colors hover:text-ink"
         >
           <span
             aria-hidden="true"
-            className="inline-block transition-transform duration-300 group-hover:-translate-x-1"
+            className="inline-block transition-transform duration-300 group-hover:-translate-x-1.5"
           >
             ←
           </span>

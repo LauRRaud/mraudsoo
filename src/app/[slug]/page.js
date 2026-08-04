@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Ilmub from "@/components/Ilmub";
 import { Pealkiri, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
 
@@ -42,15 +43,24 @@ export default async function OmaLeht({ params }) {
 
   return (
     <>
-      <Sektsioon taust="bone">
-        <div className="max-w-3xl">
-          <Pealkiri silt={leht.silt || undefined} tase="h1">
+      <Sektsioon taust="bone" polsterdus="ohuke">
+        <div className="max-w-3xl pt-6 sm:pt-10">
+          {leht.silt && <p className="sisene silt">{leht.silt}</p>}
+          <h1
+            className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
+            style={{ "--viive": "90ms" }}
+          >
             {leht.pealkiri}
-          </Pealkiri>
+          </h1>
           {leht.sissejuhatus && (
             <>
-              <div className="joon my-10 max-w-24" />
-              <Tekst suur>{leht.sissejuhatus}</Tekst>
+              <div
+                className="sisene joon mb-9 mt-9 max-w-28"
+                style={{ "--viive": "200ms" }}
+              />
+              <div className="sisene" style={{ "--viive": "300ms" }}>
+                <Tekst suur>{leht.sissejuhatus}</Tekst>
+              </div>
             </>
           )}
         </div>
@@ -72,13 +82,18 @@ export default async function OmaLeht({ params }) {
             laius="kitsas"
           >
             {plokk.pealkiri && (
-              <Pealkiri className="max-w-2xl">{plokk.pealkiri}</Pealkiri>
+              <Ilmub>
+                <Pealkiri className="max-w-2xl">{plokk.pealkiri}</Pealkiri>
+              </Ilmub>
             )}
-            <div className={plokk.pealkiri ? "mt-8 space-y-6" : "space-y-6"}>
+            <Ilmub
+              ruhm
+              className={plokk.pealkiri ? "mt-8 space-y-6" : "space-y-6"}
+            >
               {loigud.map((loik, jrk) => (
                 <Tekst key={`${leht.slug}-${indeks}-${jrk}`}>{loik}</Tekst>
               ))}
-            </div>
+            </Ilmub>
           </Sektsioon>
         );
       })}
