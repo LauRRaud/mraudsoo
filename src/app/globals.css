@@ -208,16 +208,16 @@
     font-size: var(--tekst-suur-suurus);
   }
 
-  /* Juuksekarva peenusega joon — asendab kaarte ja varje */
+  /* Peen kuldjoon — asendab kaarte ja varje. Nõksa üle juuksekarva, et püsiks nähtav. */
   .joon {
-    height: 1px;
-    background-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
+    height: 1.5px;
+    background-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
   }
 
   /* Sama joon tumedal taustal */
   .joon-tume {
-    height: 1px;
-    background-color: color-mix(in srgb, var(--color-kuld-hele) 30%, transparent);
+    height: 1.5px;
+    background-color: color-mix(in srgb, var(--color-kuld-hele) 40%, transparent);
   }
 
   /*
@@ -225,14 +225,14 @@
     Korduv motiiv: küünal, sammas, kiriku aken.
   */
   .pystjoon {
-    width: 1px;
+    width: 2px;
     height: 2.75rem;
     margin-inline: auto;
-    background-color: color-mix(in srgb, var(--color-gold) 55%, transparent);
+    background-color: color-mix(in srgb, var(--color-gold) 65%, transparent);
   }
 
   .pystjoon-tume {
-    background-color: color-mix(in srgb, var(--color-kuld-hele) 60%, transparent);
+    background-color: color-mix(in srgb, var(--color-kuld-hele) 70%, transparent);
   }
 
   /* Kaar — foto ülaserv on poolkaar nagu kirikuaken */
