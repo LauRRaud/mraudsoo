@@ -43,45 +43,42 @@ export default async function Teenused() {
 
       <section className="bg-linen">
         <div className="mx-auto max-w-[1400px] px-6 pb-20 sm:pb-28 lg:px-12 lg:pb-36">
-          <Ilmub ruhm as="ul" className="pt-16 sm:pt-20 lg:pt-24">
+          {/*
+            Register, mitte tabel: iga teenus on omaette plokk kahes veerus,
+            jooni ei ole — plokke lahutab õhk. Sama vorm mis avalehel, ainult
+            suurema kirjaga, sest siin on teenused lehe peasisu.
+          */}
+          <Ilmub
+            ruhm
+            as="ul"
+            className="grid gap-x-20 gap-y-16 pt-16 sm:grid-cols-2 sm:pt-20 lg:gap-x-28 lg:gap-y-20 lg:pt-24"
+          >
             {teenused.map((teenus) => (
               <li key={teenus.slug}>
-                <Link
-                  href={`/teenused/${teenus.slug}`}
-                  /* Negatiivne veeris: hover-taust ulatub sektsiooni servani */
-                  /* Kirjeldus algab kohe nime veeru järel, mitte lehe paremast
-                     servast — kaks veergu peavad lugema ühe reana */
-                  className="group -mx-6 grid grid-cols-1 gap-x-14 gap-y-4 border-t border-gold/25 px-6 py-10 transition-colors duration-300 hover:bg-bone sm:grid-cols-[minmax(0,35rem)_1fr] sm:py-12 lg:-mx-12 lg:px-12"
-                >
-                  <div>
-                    <h2 className="kuva text-[clamp(1.75rem,3.6vw,2.8rem)] text-ink transition-all duration-500 group-hover:translate-x-1.5 group-hover:text-gold-deep">
-                      {teenus.nimi}
-                    </h2>
-                    {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
-                    <p className="kuva mt-1 italic text-xl text-ink-faint sm:text-2xl">
-                      {teenus.alapealkiri}
-                    </p>
-                  </div>
-
-                  <div className="sm:self-center">
-                    <p className="max-w-[46ch] text-lg leading-relaxed text-ink-soft">
-                      {teenus.luhike}
-                    </p>
-                    <span className="mikro mt-5 inline-flex items-center gap-3 text-gold-deep">
-                      {loeLahemalt}
-                      <span
-                        aria-hidden="true"
-                        className="inline-block transition-transform duration-300 group-hover:translate-x-1.5"
-                      >
-                        →
-                      </span>
+                <Link href={`/teenused/${teenus.slug}`} className="group block">
+                  <h2 className="kuva text-[clamp(1.85rem,3.2vw,2.6rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
+                    {teenus.nimi}
+                  </h2>
+                  {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
+                  <p className="kuva mt-1 italic text-xl text-ink-faint sm:text-2xl">
+                    {teenus.alapealkiri}
+                  </p>
+                  <p className="mt-5 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
+                    {teenus.luhike}
+                  </p>
+                  <span className="mikro mt-5 inline-flex items-center gap-3 text-gold-deep">
+                    {loeLahemalt}
+                    <span
+                      aria-hidden="true"
+                      className="inline-block transition-transform duration-300 group-hover:translate-x-1.5"
+                    >
+                      →
                     </span>
-                  </div>
+                  </span>
                 </Link>
               </li>
             ))}
           </Ilmub>
-          <div className="joon" />
         </div>
       </section>
 

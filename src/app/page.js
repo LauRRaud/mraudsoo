@@ -184,33 +184,33 @@ export default async function Avaleht() {
           <NooleLink href="/teenused">{teenusedPlokk.linkTekst}</NooleLink>
         </Ilmub>
 
-        <Ilmub ruhm as="ul" className="mt-14">
+        {/*
+          Register, mitte tabel: iga teenus on omaette plokk kahes veerus.
+          Jooni ei ole — plokke lahutab õhk. Hover puudutab ainult nime,
+          mitte tervet rida (reataust luges nagu tabel).
+        */}
+        <Ilmub
+          ruhm
+          as="ul"
+          className="mt-16 grid gap-x-16 gap-y-14 sm:grid-cols-2 lg:gap-x-24"
+        >
           {sisu.teenused.map((teenus) => (
             <li key={teenus.slug}>
-              <Link
-                href={`/teenused/${teenus.slug}`}
-                /* Negatiivne veeris + sama polsterdus: hover-taust ulatub
-                   sektsiooni servani, muidu jääb mulje äralõigatud kastist */
-                className="group -mx-6 grid grid-cols-1 items-center gap-x-14 gap-y-4 border-t border-gold/25 px-6 py-8 transition-colors duration-300 hover:bg-bone sm:grid-cols-[minmax(0,33rem)_1fr] sm:py-10 lg:-mx-12 lg:px-12"
-              >
-                <div>
-                  <h3 className="kuva text-[clamp(1.55rem,3.1vw,2.4rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
-                    {teenus.nimi}
-                  </h3>
-                  {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
-                  <p className="kuva mt-1 italic text-xl text-ink-faint sm:text-2xl">
-                    {teenus.alapealkiri}
-                  </p>
-                </div>
-                {/* Kirjeldus algab kohe nime järel, mitte lehe paremast servast */}
-                <p className="max-w-[46ch] text-lg leading-relaxed text-ink-soft">
+              <Link href={`/teenused/${teenus.slug}`} className="group block">
+                <h3 className="kuva text-[clamp(1.6rem,2.8vw,2.15rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
+                  {teenus.nimi}
+                </h3>
+                {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
+                <p className="kuva mt-1 italic text-xl text-ink-faint">
+                  {teenus.alapealkiri}
+                </p>
+                <p className="mt-4 max-w-[44ch] text-lg leading-relaxed text-ink-soft">
                   {teenus.luhike}
                 </p>
               </Link>
             </li>
           ))}
         </Ilmub>
-        <div className="joon" />
       </Sektsioon>
 
       {/* Minust */}
