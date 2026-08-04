@@ -16,7 +16,7 @@ export async function generateMetadata() {
 /* TEENUSED — nummerdatud register, iga rida on uks omaette maailma. */
 export default async function Teenused() {
   const sisu = await laeSisu();
-  const { hero, loeLahemalt, tsitaat, tsitaadiSilt, lopp } = sisu.teenusedLeht;
+  const { hero, tsitaat, tsitaadiSilt, lopp } = sisu.teenusedLeht;
   /* Admin võib teenuste massiivi tervikuna asendada — kindlustame kuju */
   const teenused = Array.isArray(sisu.teenused) ? sisu.teenused : [];
 
@@ -63,18 +63,10 @@ export default async function Teenused() {
                   <p className="kuva mt-1 italic text-[clamp(1.5rem,5.2vw,1.75rem)] text-ink-soft">
                     {teenus.alapealkiri}
                   </p>
+                  {/* „Loe lähemalt” siin ei ole — kogu plokk on juba link, sama mis avalehel */}
                   <p className="mt-5 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
                     {teenus.luhike}
                   </p>
-                  <span className="mikro mt-5 inline-flex items-center gap-3 text-gold-deep">
-                    {loeLahemalt}
-                    <span
-                      aria-hidden="true"
-                      className="inline-block transition-transform duration-300 group-hover:translate-x-1.5"
-                    >
-                      →
-                    </span>
-                  </span>
                 </Link>
               </li>
             ))}

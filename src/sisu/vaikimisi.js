@@ -91,10 +91,15 @@ export const vaikimisiSisu = {
       ],
     },
 
-    /* Marta enda sõnad Instagramist — sinu unikaalne essents */
+    /*
+      Marta enda sõnad Instagramist — sinu unikaalne essents.
+      Pildil (IG 76) on see kahes osas: suur pealkiri ja väiksem alarida.
+      Varem olid need mõttekriipsuga üheks reaks liidetud — see kriips oli minu.
+    */
     essents: {
       silt: "Essents",
-      pealkiri: "Sinu unikaalne essents — kelleks JUMAL on sind loonud …",
+      pealkiri: "Sinu unikaalne essents",
+      alapealkiri: "Kelleks JUMAL on sind loonud …",
       loigud: [
         "Sinu essents … ei ole lihtsalt stiil. See ei ole ainult riided, värvid või vormid. See on sinu kohalolu. Sinu ehe viis olla. Sinu sisemine ilu. Sinu kordumatu väljendus. Sinu Jumala näo järgi loodud unikaalsus.",
         "Aga lisaks sellele usun … et iga inimene kannab endas midagi ainulaadset. Midagi, mida Jumal on just temasse pannud. Iga inimese elul on tähendus, suund ja kutsumus — ning tema olemuses on midagi, mis ei ole kellegi teisega asendatav.",
@@ -122,12 +127,16 @@ export const vaikimisiSisu = {
       linkTekst: "Kõik teenused",
     },
 
+    /*
+      Marta lause seisis siin pooleks murtuna: esimene pool oli pealkiri,
+      teine pool eraldi lõik. Nüüd on see terve lause ühe tsitaadina.
+    */
     minustPlokk: {
       silt: "Minust",
-      pealkiri: "Kõik, mis minus on head, on Jumala kingitus",
+      tsitaat:
+        "„Kõik, mis minus on head, on Jumala kingitus. Minu soov ei ole juhtida inimesi enda juurde, vaid aidata neil kasvada oma suhtes Jumalaga.”",
       loigud: [
         "Pakun inimestele ruumi, kus on võimalik peatuda, olla kuuldud ja märgata uuesti seda, mis on elus oluline.",
-        "Minu soov ei ole juhtida inimesi enda juurde, vaid aidata neil kasvada oma suhtes Jumalaga.",
       ],
       linkTekst: "Loe minust",
     },
@@ -135,7 +144,7 @@ export const vaikimisiSisu = {
     /* Lehe lõpetus on Marta enda slaid (IG 90), mitte minu kutselause */
     kutse: {
       silt: "Järgmine samm kuulub sinule",
-      pealkiri: "Ja võib-olla on aeg näha ennast nii, nagu Jumal sind on loonud. 🤍",
+      pealkiri: "„Ja võib-olla on aeg näha ennast nii, nagu Jumal sind on loonud.”",
       nuppEsmane: "Broneeri aeg",
       nuppTeine: "Vaata hinnakirja",
     },
@@ -189,7 +198,7 @@ export const vaikimisiSisu = {
         "Inimese sees on kaks reaalsust korraga.",
         "Igatsus elada õigesti, soov olla aus, vajadus rahu ja lihtsuse järele - süda tunneb ära, mis on õige …",
         "Aga samal ajal… meie inimlik pool on väsinud, kardab, hoiab kinni harjumustest, läheb tagasi vanadesse mustritesse ja nii tekib vastuolu sa tead, mis on õige… aga ei ela seda.",
-        "Sinu süda teab tõde aga Jumala vägi aitab sul seda elada 🤍",
+        "Sinu süda teab tõde aga Jumala vägi aitab sul seda elada",
         "Täna ma soovin küsida … millele me tegelikult oma elu ehitame?",
         "… kui elu on ehitatud sõltuvustele, siis oleme ehitanud liivale. Ja kui see kõik kõigub ja laguneb - kukub ka inimene.",
         "Kui töö = turvalisus\nraha = väärtus\nroll = identiteet",
@@ -205,8 +214,10 @@ export const vaikimisiSisu = {
         "Ristimine oli minu jaoks pöördepunkt.",
         "Me ei kaota midagi, vastupidi - kohtume tõe, tee ja eluga.",
         "Sest Jumala tee lammutab selle, mis ei ole tõde ja ehitab selle, mis jääb.",
-        "Ei ole enam lihtsalt töö vaid KUTSUMUS, ei ole enam pingutus, vaid TEENIMINE ARMASTUSEST, ei juhi enam hirm vaid RAHU.",
       ],
+      /* Loo lõpetus — Marta oma slaid (IG 121), seisab tsitaadina loo lõpus */
+      tsitaat:
+        "„Ei ole enam lihtsalt töö vaid KUTSUMUS, ei ole enam pingutus, vaid TEENIMINE ARMASTUSEST, ei juhi enam hirm vaid RAHU.”",
       /* Sama kuju mis minust.kirjakoht. Selgitus on tühi seal, kus pildil seda ei olnud. */
       kirjakohad: [
         {
@@ -305,7 +316,7 @@ export const vaikimisiSisu = {
     loeLahemalt: "Loe lähemalt",
     /* Marta sõnad (IG 241) — kehtivad kõigi teenuste kohta, mitte ainult Püha Ruumi */
     tsitaat:
-      "Minu tee ei ole ainult minu oma — see on teenimine läbi kohalolu, kuulamise ja sügava empaatia.",
+      "âMinu tee ei ole ainult minu oma — see on teenimine läbi kohalolu, kuulamise ja sügava empaatia.â",
     tsitaadiSilt: "Kohalolu",
     lopp: {
       pealkiri: "Ei tea, kust alustada?",
@@ -446,9 +457,9 @@ export const vaikimisiSisu = {
         },
       ],
       tsitaat: {
-        tekst: "See ei ole lihtsalt muutus. See on tagasi tulemine iseenda juurde.",
+        tekst: "âSee ei ole lihtsalt muutus. See on tagasi tulemine iseenda juurde.â",
         selgitus:
-          "Kui tunned, et oled selleks valmis… siis see teekond on sinu jaoks 🤍",
+          "Kui tunned, et oled selleks valmis… siis see teekond on sinu jaoks",
       },
       nimekirjaPealkiri: "Vaatame koos, mis vajab sinu elus korrastust",
       nimekiri: [
@@ -497,7 +508,7 @@ export const vaikimisiSisu = {
       ],
       tsitaat: {
         tekst:
-          "See on personaalne peegeldus sellest, kuidas sinu olemus, stiil, keha ja kohalolu omavahel kohtuvad.",
+          "âSee on personaalne peegeldus sellest, kuidas sinu olemus, stiil, keha ja kohalolu omavahel kohtuvad.â",
         selgitus: "",
       },
       nimekirjaPealkiri: "Saad selgust …",
@@ -525,7 +536,7 @@ export const vaikimisiSisu = {
       plokid: [],
       tsitaat: {
         tekst:
-          "Tulemuseks on garderoob, mis loob rohkem kergust, selgust ja rahu — ning on kooskõlas sinu elu, keha ja olemusega.",
+          "„Tulemuseks on garderoob, mis loob rohkem kergust, selgust ja rahu — ning on kooskõlas sinu elu, keha ja olemusega.”",
         selgitus: "",
       },
       nimekirjaPealkiri: "Vaatame koos",
@@ -552,7 +563,7 @@ export const vaikimisiSisu = {
       plokid: [],
       tsitaat: {
         tekst:
-          "… kuidas liikuda vanast mina-pildist lähemale sellele versioonile sinust, kes on oodanud, et teda märgataks.",
+          "„… kuidas liikuda vanast mina-pildist lähemale sellele versioonile sinust, kes on oodanud, et teda märgataks.”",
         selgitus: "",
       },
       nimekirjaPealkiri: "Nüüd tead …",
@@ -610,7 +621,8 @@ export const vaikimisiSisu = {
     teekondSilt: "Kolm sammu koos",
     sisaldabSilt: "Sisaldab",
     /* Marta lause failist „Lehe iseloomustus” — seni lehel kasutamata */
-    tsitaat: "Väärtus on inimesel juba Jumalalt. Mina aitan seda märgata ja väljendada.",
+    tsitaat:
+      "„Väärtus on inimesel juba Jumalalt. Mina aitan seda märgata ja väljendada.”",
     tsitaadiSilt: "Väärtus",
     lopp: {
       pealkiri: "Kui hind on takistuseks, räägi sellest.",

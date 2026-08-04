@@ -80,39 +80,51 @@ export default async function Avaleht() {
         </div>
       </section>
 
-      {/* Kutsumus — miks teenused ei ole eraldi maailmad */}
-      <Sektsioon taust="linen" laius="kitsas">
-        <Ilmub>
-          <p className="silt">{kutsumus.silt}</p>
-          <blockquote className="kuva mt-8 text-[clamp(1.7rem,3.6vw,2.75rem)] leading-[1.3] text-ink">
-            {kutsumus.tsitaat}
-          </blockquote>
-        </Ilmub>
+      {/*
+        Kutsumus — miks teenused ei ole eraldi maailmad.
 
-        <Ilmub ruhm className="mt-11 space-y-6">
-          {kutsumus.loigud.map((loik) => (
-            <Tekst key={loik}>{loik}</Tekst>
-          ))}
-        </Ilmub>
+        Kaks veergu: Marta tsitaat jääb laial ekraanil vasakule püsima, tekst ja
+        litaania voolavad kõrval. Ühes kitsas tulbas seisid tsitaat, lõigud,
+        joon ja litaania kõik eri laiusega ja sektsioon luges laialivalguvana.
+      */}
+      <Sektsioon taust="linen">
+        <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-24">
+          <div className="lg:sticky lg:top-32 lg:self-start">
+            <Ilmub>
+              <p className="silt">{kutsumus.silt}</p>
+              <blockquote className="kuva mt-6 text-[clamp(1.7rem,3.4vw,2.6rem)] leading-[1.3] text-ink">
+                {kutsumus.tsitaat}
+              </blockquote>
+              <div className="joon mt-10 max-w-28" />
+            </Ilmub>
+          </div>
 
-        {/*
-          Kuidas kutsumus praktikas väljendub — mitte tabel, vaid litaania:
-          read voolavad sissejuhatuse jätkuna kuvakirjas, ilma joonteta.
-        */}
-        <Ilmub className="joon my-12 max-w-28" />
-        <Ilmub>
-          <Tekst>{kutsumus.valjendusSissejuhatus}</Tekst>
-        </Ilmub>
-        <Ilmub ruhm as="ul" className="mt-9 space-y-5">
-          {kutsumus.valjendus.map((punkt) => (
-            <li
-              key={punkt}
-              className="kuva italic text-[clamp(1.35rem,2.4vw,1.8rem)] leading-[1.35] text-ink"
-            >
-              {punkt}
-            </li>
-          ))}
-        </Ilmub>
+          <div className="lg:pt-2">
+            <Ilmub ruhm className="space-y-6">
+              {kutsumus.loigud.map((loik) => (
+                <Tekst key={loik}>{loik}</Tekst>
+              ))}
+            </Ilmub>
+
+            {/*
+              Kuidas kutsumus praktikas väljendub — mitte tabel, vaid litaania:
+              read voolavad sissejuhatuse jätkuna kuvakirjas, ilma joonteta.
+            */}
+            <Ilmub className="mt-12">
+              <Tekst>{kutsumus.valjendusSissejuhatus}</Tekst>
+            </Ilmub>
+            <Ilmub ruhm as="ul" className="mt-8 space-y-5">
+              {kutsumus.valjendus.map((punkt) => (
+                <li
+                  key={punkt}
+                  className="kuva italic text-[clamp(1.35rem,2.4vw,1.8rem)] leading-[1.35] text-ink"
+                >
+                  {punkt}
+                </li>
+              ))}
+            </Ilmub>
+          </div>
+        </div>
       </Sektsioon>
 
       {/*
@@ -165,11 +177,19 @@ export default async function Avaleht() {
       <Sektsioon taust="bone">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-24">
           <div className="lg:sticky lg:top-32 lg:self-start">
-            {/* Pealkiri algab ise sõnaga „essents” — eraldi silti pole vaja */}
+            {/*
+              Pealkiri algab ise sõnaga „essents” — eraldi silti pole vaja.
+              Kaks osa nagu Marta pildil: suur rida ja väiksem alarida.
+            */}
             <Ilmub>
               <h2 className="kuva text-[clamp(2.2rem,4.6vw,3.5rem)] text-ink">
                 {essents.pealkiri}
               </h2>
+              {essents.alapealkiri && (
+                <p className="kuva mt-3 italic text-[clamp(1.4rem,2.8vw,1.95rem)] leading-[1.3] text-gold-deep">
+                  {essents.alapealkiri}
+                </p>
+              )}
               <div className="joon mt-10 max-w-28" />
             </Ilmub>
           </div>
@@ -262,9 +282,12 @@ export default async function Avaleht() {
           </div>
 
           <div>
-            {/* Pealkiri kõneleb ise — „Minust” silt oleks kordus */}
+            {/* Marta enda lause tervikuna — varem oli see pealkirjaks ja lõiguks pooleks murtud */}
             <Ilmub>
-              <Pealkiri>{minustPlokk.pealkiri}</Pealkiri>
+              <p className="silt">{minustPlokk.silt}</p>
+              <blockquote className="kuva mt-5 text-[clamp(1.5rem,2.9vw,2.15rem)] leading-[1.32] text-ink">
+                {minustPlokk.tsitaat}
+              </blockquote>
             </Ilmub>
             <Ilmub ruhm className="mt-8 space-y-6">
               {minustPlokk.loigud.map((loik) => (
@@ -285,9 +308,9 @@ export default async function Avaleht() {
         <Ilmub>
           <div aria-hidden="true" className="pystjoon" />
           <p className="silt mt-7">{kutse.silt}</p>
-          <p className="kuva mx-auto mt-7 max-w-2xl text-[clamp(1.9rem,4vw,3.1rem)] leading-[1.22] text-ink">
+          <blockquote className="kuva mx-auto mt-7 max-w-2xl text-[clamp(1.9rem,4vw,3.1rem)] leading-[1.22] text-ink">
             {kutse.pealkiri}
-          </p>
+          </blockquote>
         </Ilmub>
         <Ilmub viive={180} className="mt-12 flex flex-wrap justify-center gap-4">
           <Nupp href="/broneerimine" nool>

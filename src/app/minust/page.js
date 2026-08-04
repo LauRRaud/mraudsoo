@@ -136,26 +136,33 @@ export default async function Minust() {
         </Ilmub>
 
         <Ilmub ruhm className="mx-auto mt-14 max-w-[60ch] space-y-9 sm:mt-16">
-          {pooordumine.loigud.map((loik, jrk) => {
-            const viimane = jrk === pooordumine.loigud.length - 1;
-
-            return (
-              <p
-                key={loik}
-                /* whitespace-pre-line: Marta reavahetused pildilt jäävad alles */
-                className={`whitespace-pre-line ${
-                  viimane
-                    ? "kuva pt-5 text-[clamp(1.35rem,2.7vw,1.9rem)] leading-[1.45] text-kuld-hele"
-                    : jrk === 0
-                      ? "text-xl leading-[1.75] text-luu sm:text-[1.4rem]"
-                      : "text-lg leading-[1.85] text-luu/95 sm:text-xl"
-                }`}
-              >
-                {loik}
-              </p>
-            );
-          })}
+          {pooordumine.loigud.map((loik, jrk) => (
+            <p
+              key={loik}
+              /* whitespace-pre-line: Marta reavahetused pildilt jäävad alles */
+              className={`whitespace-pre-line ${
+                jrk === 0
+                  ? "text-xl leading-[1.75] text-luu sm:text-[1.4rem]"
+                  : "text-lg leading-[1.85] text-luu/95 sm:text-xl"
+              }`}
+            >
+              {loik}
+            </p>
+          ))}
         </Ilmub>
+
+        {/*
+          Loo lõpetus omaette tsitaadina — lugu algab ja lõpeb sama kuldse
+          püstjoonega, vahepeal on Marta jutustus.
+        */}
+        {pooordumine.tsitaat && (
+          <Ilmub className="mx-auto mt-16 max-w-3xl text-center sm:mt-20">
+            <div aria-hidden="true" className="pystjoon pystjoon-tume" />
+            <blockquote className="kuva mt-8 text-[clamp(1.35rem,2.7vw,1.9rem)] leading-[1.45] text-kuld-hele">
+              {pooordumine.tsitaat}
+            </blockquote>
+          </Ilmub>
+        )}
       </Sektsioon>
 
       {/*
