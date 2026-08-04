@@ -198,7 +198,8 @@ export default async function Avaleht() {
                   <h3 className="kuva text-[clamp(1.55rem,3.1vw,2.4rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
                     {teenus.nimi}
                   </h3>
-                  <p className="kuva mt-1 italic text-lg text-ink-faint sm:text-xl">
+                  {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
+                  <p className="kuva mt-1 italic text-xl text-ink-faint sm:text-2xl">
                     {teenus.alapealkiri}
                   </p>
                 </div>

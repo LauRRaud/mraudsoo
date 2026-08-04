@@ -74,8 +74,8 @@
   vaikimisi väärtused — kui admin ei ole midagi salvestanud, kehtivad need.
 */
 :root {
-  --silt-suurus: 0.9375rem;
-  --mikro-suurus: 0.9375rem;
+  --silt-suurus: 1rem;
+  --mikro-suurus: 1rem;
   --tekst-suurus: 1.125rem;
   --tekst-suur-suurus: 1.3125rem;
 

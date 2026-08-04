@@ -55,7 +55,8 @@ export default async function Teenused() {
                     <h2 className="kuva text-[clamp(1.75rem,3.6vw,2.8rem)] text-ink transition-all duration-500 group-hover:translate-x-1.5 group-hover:text-gold-deep">
                       {teenus.nimi}
                     </h2>
-                    <p className="kuva mt-1 italic text-lg text-ink-faint sm:text-xl">
+                    {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
+                    <p className="kuva mt-1 italic text-xl text-ink-faint sm:text-2xl">
                       {teenus.alapealkiri}
                     </p>
                   </div>

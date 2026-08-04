@@ -43,8 +43,8 @@ export const vaikimisiKujundus = {
 
   /* Suurused pikslites — admin-lehel on need liugurid */
   suurused: {
-    silt: 15,
-    mikro: 15,
+    silt: 16,
+    mikro: 16,
     tekst: 18,
     tekstSuur: 21,
   },
