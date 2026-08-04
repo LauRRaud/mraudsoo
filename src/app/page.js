@@ -201,7 +201,7 @@ export default async function Avaleht() {
                   {teenus.nimi}
                 </h3>
                 {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
-                <p className="kuva mt-1 italic text-xl text-ink-faint">
+                <p className="kuva mt-1 italic text-xl text-ink-soft sm:text-2xl">
                   {teenus.alapealkiri}
                 </p>
                 <p className="mt-4 max-w-[44ch] text-lg leading-relaxed text-ink-soft">

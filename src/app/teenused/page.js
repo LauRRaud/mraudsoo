@@ -60,7 +60,7 @@ export default async function Teenused() {
                     {teenus.nimi}
                   </h2>
                   {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
-                  <p className="kuva mt-1 italic text-xl text-ink-faint sm:text-2xl">
+                  <p className="kuva mt-1 italic text-xl text-ink-soft sm:text-2xl">
                     {teenus.alapealkiri}
                   </p>
                   <p className="mt-5 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
