@@ -47,7 +47,7 @@ export default function Foto({
         alt={alt}
         width={moot.laius}
         height={moot.korgus}
-        quality={90}
+        quality={100}
         priority={priority}
         sizes={sizes}
         className="absolute inset-0 h-full w-full object-cover"

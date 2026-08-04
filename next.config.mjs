@@ -3,9 +3,9 @@ const nextConfig = {
   images: {
     /*
       Next.js 16 nõuab lubatud kvaliteediväärtuste loetlemist.
-      Kasutame 90 — fotod on portreed ja peavad püsima teravad.
+      Kasutame 100 — fotod on portreed ja peavad püsima maksimaalselt teravad.
     */
-    qualities: [90],
+    qualities: [100],
     // Kaasaegsed vormingud: väiksem fail sama kvaliteedi juures
     formats: ["image/avif", "image/webp"],
   },
