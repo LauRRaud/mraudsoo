@@ -87,21 +87,21 @@ export default async function Avaleht() {
           ))}
         </Ilmub>
 
-        {/* Kuidas kutsumus praktikas väljendub */}
+        {/*
+          Kuidas kutsumus praktikas väljendub — mitte tabel, vaid litaania:
+          read voolavad sissejuhatuse jätkuna kuvakirjas, ilma joonteta.
+        */}
         <Ilmub className="joon my-12 max-w-28" />
         <Ilmub>
           <Tekst>{kutsumus.valjendusSissejuhatus}</Tekst>
         </Ilmub>
-        <Ilmub ruhm as="ul" className="mt-8">
+        <Ilmub ruhm as="ul" className="mt-9 space-y-5">
           {kutsumus.valjendus.map((punkt) => (
             <li
               key={punkt}
-              className="grid grid-cols-[auto_1fr] items-baseline gap-6 border-t border-gold/25 py-5 text-lg text-ink-soft last:border-b sm:text-xl"
+              className="kuva italic text-[clamp(1.35rem,2.4vw,1.8rem)] leading-[1.35] text-ink"
             >
-              <span aria-hidden="true" className="text-gold">
-                —
-              </span>
-              <span>{punkt}</span>
+              {punkt}
             </li>
           ))}
         </Ilmub>
@@ -191,7 +191,7 @@ export default async function Avaleht() {
                 href={`/teenused/${teenus.slug}`}
                 /* Negatiivne veeris + sama polsterdus: hover-taust ulatub
                    sektsiooni servani, muidu jääb mulje äralõigatud kastist */
-                className="group -mx-6 grid grid-cols-1 items-center gap-x-14 gap-y-4 border-t border-gold/25 px-6 py-8 transition-colors duration-300 hover:bg-bone sm:grid-cols-[minmax(0,26rem)_1fr] sm:py-10 lg:-mx-12 lg:px-12"
+                className="group -mx-6 grid grid-cols-1 items-center gap-x-14 gap-y-4 border-t border-gold/25 px-6 py-8 transition-colors duration-300 hover:bg-bone sm:grid-cols-[minmax(0,33rem)_1fr] sm:py-10 lg:-mx-12 lg:px-12"
               >
                 <div>
                   <h3 className="kuva text-[clamp(1.55rem,3.1vw,2.4rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">

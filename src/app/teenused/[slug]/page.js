@@ -247,22 +247,17 @@ export default async function TeenuseLeht({ params }) {
             </Pealkiri>
           </Ilmub>
 
-          <Ilmub ruhm as="ul" className="mt-14 max-w-4xl">
+          {/* Litaania, mitte tabel: kuvakirjas read ilma joonteta */}
+          <Ilmub ruhm as="ul" className="mt-11 max-w-3xl space-y-5">
             {nimekiri.map((punkt) => (
               <li
                 key={punkt}
-                className="grid grid-cols-[auto_1fr] items-baseline gap-6 border-t border-gold/25 py-6"
+                className="kuva italic text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink"
               >
-                <span aria-hidden="true" className="text-gold">
-                  —
-                </span>
-                <span className="text-lg leading-relaxed text-ink-soft sm:text-xl">
-                  {punkt}
-                </span>
+                {punkt}
               </li>
             ))}
           </Ilmub>
-          <div className="joon max-w-4xl" />
         </Sektsioon>
       )}
 

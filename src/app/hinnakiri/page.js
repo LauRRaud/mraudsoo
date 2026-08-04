@@ -101,18 +101,14 @@ export default async function Hinnakiri() {
 
           <Ilmub viive={150}>
             <p className="silt silt-tume">{hinnakiriLeht.sisaldabSilt}</p>
-            <ul className="mt-6">
+            {/* Litaania, mitte tabel: kuvakirjas read ilma joonteta */}
+            <ul className="mt-8 space-y-5">
               {teekond.sisaldab.map((punkt) => (
                 <li
                   key={punkt}
-                  className="grid grid-cols-[auto_1fr] items-baseline gap-6 border-t border-kuld-hele/25 py-5 last:border-b"
+                  className="kuva italic text-[clamp(1.2rem,2vw,1.5rem)] leading-[1.4] text-luu"
                 >
-                  <span aria-hidden="true" className="text-kuld-hele">
-                    —
-                  </span>
-                  <span className="text-lg leading-relaxed text-luu">
-                    {punkt}
-                  </span>
+                  {punkt}
                 </li>
               ))}
             </ul>

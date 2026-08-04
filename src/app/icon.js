@@ -1,15 +1,24 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 
 /*
-  Brauseri vahekaardi ikoon — kaar, lehe kordumotiiv (kirikuaken, mille
-  raamis elavad kõik fotod). Kuldne kaar sügavrohelisel: eristub nii heleda
-  kui tumeda vahekaardiriba peal ja kannab kaubamärki paremini kui tähed.
+  Brauseri vahekaardi ikoon — Cormorant'i „M” sügavrohelisel, kuldsena.
+  Sama kirjatüüp, millega on laotud lehe pealkirjad: monogramm on päriselt
+  kaubamärgi nägu, mitte üldine süsteemikiri.
+
+  Kirjafail elab siinsamas kaustas (cormorant-500.ttf) ja loetakse ehituse
+  ajal — ikoon genereeritakse staatiliselt, võrgupäringuid ei tehta.
 
   Mõõt on täpselt 32x32, sest brauser kasutab just seda suurust (või poolitab
-  selle puhtalt 16-ks). Suurema pildi vähendamine muutis kuju uduseks.
+  selle puhtalt 16-ks). Suurema pildi vähendamine muudab kuju uduseks.
 */
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
+
+const cormorant = readFileSync(
+  path.join(process.cwd(), "src", "app", "cormorant-500.ttf")
+);
 
 export default function Icon() {
   return new ImageResponse(
@@ -19,22 +28,24 @@ export default function Icon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "flex-end",
+          alignItems: "center",
           justifyContent: "center",
           background: "#3c4936",
-          paddingBottom: 5,
+          color: "#dcc27a",
+          fontFamily: "Cormorant",
+          fontSize: 27,
+          /* Cormorant istub joonel madalal — tõstame optiliselt keskele */
+          paddingBottom: 3,
         }}
       >
-        <div
-          style={{
-            width: 16,
-            height: 21,
-            background: "#dcc27a",
-            borderRadius: "999px 999px 0 0",
-          }}
-        />
+        M
       </div>
     ),
-    size
+    {
+      ...size,
+      fonts: [
+        { name: "Cormorant", data: cormorant, weight: 500, style: "normal" },
+      ],
+    }
   );
 }
