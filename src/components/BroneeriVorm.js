@@ -164,10 +164,10 @@ export default function BroneeriVorm({
       {/* Kalender */}
       <fieldset>
         <legend className={siltStiil}>Millal sulle sobiks?</legend>
+        {/* Selgitus jääb lühikeseks: kuidas valida. Ülejäänu lepitakse kirjas kokku. */}
         <p className="mt-3 max-w-[52ch] text-lg leading-relaxed text-ink-soft">
           Kui sul on mõni päev juba mõttes, vali kuni kolm. Kui ei ole, jäta
-          vahele — lepime aja kokku kirja teel. Valitud päevad ei ole
-          kinnitatud ajad; Marta vaatab need üle ja kinnitab sulle sobiva.
+          vahele — lepime aja kokku kirja teel.
         </p>
 
         <div className="mt-8 max-w-md border border-gold/25 bg-bone p-5 sm:p-7">

@@ -157,12 +157,22 @@
   /*
     Kuvakiri — Cormorant. Kaal 500: Cormorant on loomu poolest peenike ja
     väiksemates pealkirjades kadus kerge kaal ära.
+
+    TÄHEVAHE SÕLTUB KRAADIST. Sama kirja kasutatakse lehel 1,2rem-st 6,5rem-ni.
+    Suures kraadis on tihe vahe õige, väikeses kleepuvad Cormorant'i peenikesed
+    tähed kokku — üks kindel väärtus oli mõlemas otsas vale.
+
+    calc() teeb selle ise: `1em` tähendab elemendi ENDA kirjasuurust, seega
+    2,6rem juures on vahe null, väiksemas kirjas kasvab plussi (1,3rem → ligi
+    +0,02em) ja suuremas läheb miinusesse (6,5rem → ligi −0,012em).
+
+    --kuva-lisa annab tumedale pinnale veel õhku juurde (vt allpool).
   */
   .kuva {
     font-family: var(--font-display);
     font-weight: 500;
     line-height: 1.12;
-    letter-spacing: -0.01em;
+    letter-spacing: calc((2.6rem - 1em) * 0.02 + var(--kuva-lisa, 0em));
     text-wrap: balance;
     /*
       Joonnumbrid. Cormorant kasutab vaikimisi vanastiilis numbreid, kus „1” on
@@ -194,6 +204,22 @@
   /* Sama silt tumedal taustal — hele kuld (5.7:1 metsal) */
   .silt-tume {
     color: var(--color-kuld-hele);
+  }
+
+  /*
+    TUME PIND VAJAB ROHKEM ÕHKU.
+
+    Hele kiri tumedal taustal paistab jämedam ja tihedam kui tume kiri heledal
+    (valgus „valgub” tähtede servadest üle). Sama tähevahe, mis heledal pinnal
+    on paras, loeb sügavrohelisel kokkukleepununa. Seepärast saab kogu kiri
+    tumedal pinnal pisut rohkem vahet — kuvakiri --kuva-lisa kaudu, tavatekst
+    otse. Sildid ja nupud (.silt, .mikro, .nimi) määravad oma vahe ise, nii et
+    nendeni see ei ulatu.
+  */
+  .bg-mets,
+  .bg-mets-syva {
+    --kuva-lisa: 0.016em;
+    letter-spacing: 0.014em;
   }
 
   /*
