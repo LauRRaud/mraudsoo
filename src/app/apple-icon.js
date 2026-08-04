@@ -26,11 +26,12 @@ export default function AppleIcon() {
             background: "#ffffff",
           }}
         />
+        {/* Põikpuu samas kohas mis 32 px ikoonil (top 12 / 32 ≈ 68 / 180) */}
         <div
           style={{
             position: "absolute",
             left: 44,
-            top: 62,
+            top: 68,
             width: 92,
             height: 18,
             background: "#ffffff",

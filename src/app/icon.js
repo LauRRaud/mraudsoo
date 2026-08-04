@@ -34,11 +34,12 @@ export default function Icon() {
             background: "#ffffff",
           }}
         />
+        {/* Põikpuu istub püsttala ülemises kolmandikus, pisut alla keskkohta 5..27 */}
         <div
           style={{
             position: "absolute",
             left: 8,
-            top: 10,
+            top: 12,
             width: 16,
             height: 4,
             background: "#ffffff",
