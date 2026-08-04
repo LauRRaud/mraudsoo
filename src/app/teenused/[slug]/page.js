@@ -142,7 +142,7 @@ export default async function TeenuseLeht({ params }) {
           {alapealkiriOnLause ? (
             <p
               className={`sisene kuva max-w-[36ch] italic text-[clamp(1.2rem,2.3vw,1.6rem)] leading-[1.4] ${
-                tume ? "text-luu/80" : "text-ink/70"
+                tume ? "text-luu/90" : "text-ink/70"
               }`}
             >
               {teenus.alapealkiri}

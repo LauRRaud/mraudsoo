@@ -127,8 +127,11 @@ export default async function Avaleht() {
               key={rida.millest}
               className="flex flex-wrap items-baseline justify-center gap-x-5 py-4 sm:gap-x-7 sm:py-5"
             >
-              <span className="mikro text-luu/70">{rida.millest}</span>
-              <span aria-hidden="true" className="text-lg text-kuld-hele/80">
+              {/* Lähtekoht on loetav, mitte aimatav — suurem ja heledam kui tavaline silt */}
+              <span className="mikro text-lg text-luu/90 sm:text-xl">
+                {rida.millest}
+              </span>
+              <span aria-hidden="true" className="text-xl text-kuld-hele">
                 →
               </span>
               <span className="kuva italic text-[clamp(2rem,4.6vw,3.2rem)] leading-[1.15] text-luu">

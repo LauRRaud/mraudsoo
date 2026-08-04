@@ -227,7 +227,7 @@ export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo", kontakt =
                       href={kontakt.instagram}
                       target="_blank"
                       rel="noreferrer"
-                      className="mikro text-luu/75 transition-colors hover:text-kuld-hele"
+                      className="mikro text-luu/90 transition-colors hover:text-kuld-hele"
                     >
                       Instagram
                     </a>
@@ -237,7 +237,7 @@ export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo", kontakt =
                       href={kontakt.facebook}
                       target="_blank"
                       rel="noreferrer"
-                      className="mikro text-luu/75 transition-colors hover:text-kuld-hele"
+                      className="mikro text-luu/90 transition-colors hover:text-kuld-hele"
                     >
                       Facebook
                     </a>
@@ -247,7 +247,7 @@ export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo", kontakt =
                       href={kontakt.substack}
                       target="_blank"
                       rel="noreferrer"
-                      className="mikro text-luu/75 transition-colors hover:text-kuld-hele"
+                      className="mikro text-luu/90 transition-colors hover:text-kuld-hele"
                     >
                       Substack
                     </a>

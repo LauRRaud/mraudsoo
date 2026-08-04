@@ -80,11 +80,11 @@ export default function Jalus({
 
         <div className="joon-tume mt-16" />
         <div className="mt-7 flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3">
-          <p className="text-[0.9375rem] text-luu/65">
+          <p className="text-[0.9375rem] text-luu/75">
             © {new Date().getFullYear()} {saidiNimi}
           </p>
           {tunnuslause && (
-            <p className="text-[0.9375rem] text-luu/65">{tunnuslause}</p>
+            <p className="text-[0.9375rem] text-luu/75">{tunnuslause}</p>
           )}
         </div>
       </div>
