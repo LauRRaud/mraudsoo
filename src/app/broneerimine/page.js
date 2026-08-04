@@ -1,6 +1,7 @@
 import { Pealkiri, Sektsioon, Tekst } from "@/components/ui";
 import BroneeriVorm from "@/components/BroneeriVorm";
 import { laeSisu } from "@/sisu/lae";
+import { laeKalender } from "@/broneering/kalender";
 
 /* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
 export async function generateMetadata() {
@@ -14,6 +15,7 @@ export async function generateMetadata() {
 
 export default async function Broneerimine() {
   const sisu = await laeSisu();
+  const kalender = await laeKalender();
   const { broneerimine, kontakt, teenused, teekond } = sisu;
 
   return (
@@ -37,6 +39,8 @@ export default async function Broneerimine() {
                 email={kontakt.email}
                 teenused={teenused}
                 teekonnaNimi={teekond.nimi}
+                suletudPaevad={kalender.suletudPaevad}
+                suletudNadalapaevad={kalender.suletudNadalapaevad}
               />
             </div>
           </div>

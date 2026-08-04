@@ -50,7 +50,17 @@ export function vormindaKuupaev(voti) {
   });
 }
 
-export default function Kalender({ valitud, onMuuda }) {
+/*
+  suletudPaevad / suletudNadalapaevad tulevad serverilt (data/kalender.json).
+  Marta märgib need admin-lehel; külastaja neid päevi valida ei saa.
+  Nädalapäev on 1 = esmaspäev ... 7 = pühapäev.
+*/
+export default function Kalender({
+  valitud,
+  onMuuda,
+  suletudPaevad = [],
+  suletudNadalapaevad = [],
+}) {
   const tana = useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -139,7 +149,14 @@ export default function Kalender({ valitud, onMuuda }) {
           const onValitud = valitud.includes(voti);
           const onTana = kuupaev.getTime() === tana.getTime();
           const taisTais = valitud.length >= MAX_KUUPAEVI && !onValitud;
-          const keelatud = minevikus || taisTais;
+
+          /* JS annab pühapäevaks 0, meie kuju on 1–7 */
+          const nadalapaev = kuupaev.getDay() === 0 ? 7 : kuupaev.getDay();
+          const suletud =
+            suletudPaevad.includes(voti) ||
+            suletudNadalapaevad.includes(nadalapaev);
+
+          const keelatud = minevikus || suletud || taisTais;
 
           return (
             <button
@@ -148,19 +165,28 @@ export default function Kalender({ valitud, onMuuda }) {
               onClick={() => lyliti(voti, keelatud)}
               disabled={keelatud}
               aria-pressed={onValitud}
-              aria-label={vormindaKuupaev(voti)}
+              aria-label={`${vormindaKuupaev(voti)}${suletud ? " — ei ole kohtumisteks avatud" : ""}`}
               className={`relative flex aspect-square items-center justify-center text-lg transition-colors ${
                 onValitud
                   ? "bg-rohe text-white"
                   : minevikus
                     ? "cursor-not-allowed text-ink-faint/40"
-                    : taisTais
-                      ? "cursor-not-allowed text-ink-faint"
-                      : "text-ink hover:bg-clay-soft"
+                    : suletud
+                      ? "cursor-not-allowed text-ink-faint/50"
+                      : taisTais
+                        ? "cursor-not-allowed text-ink-faint"
+                        : "text-ink hover:bg-clay-soft"
               }`}
             >
               {paev}
-              {onTana && !onValitud && (
+              {/* Suletud päev saab kriipsu — värvist üksi ei piisa */}
+              {suletud && !minevikus && (
+                <span
+                  aria-hidden="true"
+                  className="absolute h-px w-1/2 rotate-[-20deg] bg-ink-faint/60"
+                />
+              )}
+              {onTana && !onValitud && !suletud && (
                 <span
                   aria-hidden="true"
                   className="absolute bottom-1.5 h-1 w-1 rounded-full bg-gold"

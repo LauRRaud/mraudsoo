@@ -21,7 +21,13 @@ const KELLAAJAD = [
   Sisu (e-post, teenuste nimekiri, teekonna nimi) tuleb propsidena serverilt —
   see on kliendikomponent ja ei tohi sisulaadijat ise importida.
 */
-export default function BroneeriVorm({ email, teenused = [], teekonnaNimi }) {
+export default function BroneeriVorm({
+  email,
+  teenused = [],
+  teekonnaNimi,
+  suletudPaevad = [],
+  suletudNadalapaevad = [],
+}) {
   const [kuupaevad, setKuupaevad] = useState([]);
   const [kellaajad, setKellaajad] = useState([]);
 
@@ -164,7 +170,12 @@ export default function BroneeriVorm({ email, teenused = [], teekonnaNimi }) {
         </p>
 
         <div className="mt-8 max-w-md border border-gold/25 bg-bone p-5 sm:p-7">
-          <Kalender valitud={kuupaevad} onMuuda={setKuupaevad} />
+          <Kalender
+            valitud={kuupaevad}
+            onMuuda={setKuupaevad}
+            suletudPaevad={suletudPaevad}
+            suletudNadalapaevad={suletudNadalapaevad}
+          />
         </div>
       </fieldset>
 

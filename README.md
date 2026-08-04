@@ -85,7 +85,8 @@ Broneerimissoov **salvestatakse alati** faili `data/broneeringud.json` ja on
 nähtav admin-lehel `/admin/broneeringud`. E-kiri on lisaks — kui allolevad
 muutujad puuduvad, jääb saatmine lihtsalt vahele ja midagi ei lähe kaotsi.
 
-Gmaili puhul on vaja **rakenduse parooli** (mitte tavalist Google'i parooli).
+Majutuspaketis e-posti ei ole, seega kasutame Marta Gmaili.
+Selleks on vaja **rakenduse parooli** (mitte tavalist Google'i parooli).
 Selle saab luua Google'i konto turvaseadetes, kui kaheastmeline kinnitamine on
 sisse lülitatud: Google'i konto → Turvalisus → Rakenduste paroolid.
 

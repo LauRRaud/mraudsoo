@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { kasSisseLoginud, onParoolSeatud } from "@/admin/turve";
 import { Sisselogimisvorm } from "@/components/AdminToimeti";
 import { loguValjaTegevus } from "./tegevused";
@@ -48,15 +49,36 @@ export default async function AdminPaigutus({ children }) {
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-clay pb-4">
           <p className="nimi text-xl text-ink">Marta Raudsoo · sisuhaldus</p>
 
-          {/* Väljalogimine on tavaline vorm — töötab ka ilma JavaScriptita */}
-          <form action={loguValjaTegevus}>
-            <button
-              type="submit"
-              className="mikro border border-clay px-4 py-2 text-[0.7rem] text-ink-faint transition-colors hover:border-rohe hover:text-rohe"
-            >
-              Logi välja
-            </button>
-          </form>
+          <div className="flex flex-wrap items-center gap-6">
+            <nav aria-label="Sisuhalduse menüü">
+              <ul className="flex flex-wrap items-center gap-5">
+                {[
+                  { tee: "/admin", nimi: "Sisu" },
+                  { tee: "/admin/broneeringud", nimi: "Broneeringud" },
+                  { tee: "/admin/kalender", nimi: "Kalender" },
+                ].map((punkt) => (
+                  <li key={punkt.tee}>
+                    <Link
+                      href={punkt.tee}
+                      className="mikro text-[0.7rem] text-ink-soft transition-colors hover:text-rohe"
+                    >
+                      {punkt.nimi}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Väljalogimine on tavaline vorm — töötab ka ilma JavaScriptita */}
+            <form action={loguValjaTegevus}>
+              <button
+                type="submit"
+                className="mikro border border-clay px-4 py-2 text-[0.7rem] text-ink-faint transition-colors hover:border-rohe hover:text-rohe"
+              >
+                Logi välja
+              </button>
+            </form>
+          </div>
         </div>
       </div>
 

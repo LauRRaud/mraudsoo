@@ -13,6 +13,7 @@ import { redirect } from "next/navigation";
 import { kasSisseLoginud, loguSisse, loguValja } from "@/admin/turve";
 import { laeSisu, puhasta, salvestaSisu, vaikimisiSisu } from "@/sisu/lae";
 import { markiLoetuks } from "@/broneering/salvesta";
+import { salvestaKalender } from "@/broneering/kalender";
 
 /*
   Kuju valideerimine (puhasta) elab failis src/sisu/lae.js, sest sama kontroll
@@ -140,4 +141,27 @@ export async function markiLoetuksTegevus(vormiAndmed) {
   revalidatePath("/admin/broneeringud");
 
   return { ok: true };
+}
+
+/*
+  KALENDRI SAADAVUS.
+  Kuju puhastatakse salvestamisel (vt src/broneering/kalender.js), seega
+  siin piisab sessioonikontrollist ja kirjutamisest.
+*/
+export async function salvestaKalendriTegevus(andmed) {
+  const keeld = await noudaSessiooni();
+  if (keeld) return keeld;
+
+  try {
+    const salvestatud = await salvestaKalender(andmed);
+    /* Broneerimisleht loeb kalendrit päringu ajal — värskendame vahemälu */
+    revalidatePath("/broneerimine");
+    revalidatePath("/admin/kalender");
+    return { ok: true, seis: salvestatud };
+  } catch {
+    return {
+      ok: false,
+      viga: "Salvestamine ebaõnnestus: faili data/kalender.json ei õnnestunud kirjutada.",
+    };
+  }
 }
