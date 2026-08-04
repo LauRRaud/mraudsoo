@@ -1,14 +1,8 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
 import { ImageResponse } from "next/og";
 
-/* Ikoon iOS-i avaekraanile — sama Cormorant'i monogramm, suuremas mõõdus */
+/* Ikoon iOS-i avaekraanile — sama rist, suuremas mõõdus */
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
-
-const cormorant = readFileSync(
-  path.join(process.cwd(), "src", "app", "cormorant-500.ttf")
-);
 
 export default function AppleIcon() {
   return new ImageResponse(
@@ -18,23 +12,32 @@ export default function AppleIcon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          position: "relative",
           background: "#3c4936",
-          color: "#dcc27a",
-          fontFamily: "Cormorant",
-          fontSize: 148,
-          paddingBottom: 16,
         }}
       >
-        M
+        <div
+          style={{
+            position: "absolute",
+            left: 81,
+            top: 30,
+            width: 18,
+            height: 118,
+            background: "#dcc27a",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            left: 44,
+            top: 62,
+            width: 92,
+            height: 18,
+            background: "#dcc27a",
+          }}
+        />
       </div>
     ),
-    {
-      ...size,
-      fonts: [
-        { name: "Cormorant", data: cormorant, weight: 500, style: "normal" },
-      ],
-    }
+    size
   );
 }

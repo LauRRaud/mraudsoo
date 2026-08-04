@@ -1,24 +1,15 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
 import { ImageResponse } from "next/og";
 
 /*
-  Brauseri vahekaardi ikoon — Cormorant'i „M” sügavrohelisel, kuldsena.
-  Sama kirjatüüp, millega on laotud lehe pealkirjad: monogramm on päriselt
-  kaubamärgi nägu, mitte üldine süsteemikiri.
+  Brauseri vahekaardi ikoon — peenike kuldne rist sügavrohelisel.
+  Sama joonekeel, mis lehe püstjoon-motiivil: vaikne, mitte plakatlik.
 
-  Kirjafail elab siinsamas kaustas (cormorant-500.ttf) ja loetakse ehituse
-  ajal — ikoon genereeritakse staatiliselt, võrgupäringuid ei tehta.
-
-  Mõõt on täpselt 32x32, sest brauser kasutab just seda suurust (või poolitab
-  selle puhtalt 16-ks). Suurema pildi vähendamine muudab kuju uduseks.
+  Mõõt on täpselt 32x32, sest brauser kasutab just seda suurust (või
+  poolitab selle puhtalt 16-ks) — ribade laiused on valitud nii, et ka
+  pooleks vähendatuna jääksid jooned teravaks.
 */
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
-
-const cormorant = readFileSync(
-  path.join(process.cwd(), "src", "app", "cormorant-500.ttf")
-);
 
 export default function Icon() {
   return new ImageResponse(
@@ -28,24 +19,33 @@ export default function Icon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          position: "relative",
           background: "#3c4936",
-          color: "#dcc27a",
-          fontFamily: "Cormorant",
-          fontSize: 27,
-          /* Cormorant istub joonel madalal — tõstame optiliselt keskele */
-          paddingBottom: 3,
         }}
       >
-        M
+        {/* Püsttala — ülemine haru lühem, alumine pikem (ladina rist) */}
+        <div
+          style={{
+            position: "absolute",
+            left: 14,
+            top: 5,
+            width: 4,
+            height: 22,
+            background: "#dcc27a",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            left: 8,
+            top: 10,
+            width: 16,
+            height: 4,
+            background: "#dcc27a",
+          }}
+        />
       </div>
     ),
-    {
-      ...size,
-      fonts: [
-        { name: "Cormorant", data: cormorant, weight: 500, style: "normal" },
-      ],
-    }
+    size
   );
 }
