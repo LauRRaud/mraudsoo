@@ -1,5 +1,5 @@
 import Ilmub from "@/components/Ilmub";
-import { Nupp, Sektsioon, Tekst } from "@/components/ui";
+import { Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
 
 /* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
@@ -115,6 +115,18 @@ export default async function Hinnakiri() {
           </Ilmub>
         </div>
       </Sektsioon>
+
+      {/* Marta lause väärtusest — hind ei ole see, mis inimese väärtuse määrab */}
+      {hinnakiriLeht.tsitaat && (
+        <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
+          <Ilmub>
+            <Salm
+              viide={hinnakiriLeht.tsitaadiSilt}
+              tekst={hinnakiriLeht.tsitaat}
+            />
+          </Ilmub>
+        </Sektsioon>
+      )}
 
       <Sektsioon taust="bone" laius="kitsas" polsterdus="ohuke" className="text-center">
         <Ilmub>

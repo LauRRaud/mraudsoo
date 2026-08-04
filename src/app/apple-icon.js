@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-/* Ikoon iOS-i avaekraanile — sama rist, suuremas mõõdus */
+/* Ikoon iOS-i avaekraanile — sama valge rist mustjal, suuremas mõõdus */
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
@@ -13,7 +13,7 @@ export default function AppleIcon() {
           height: "100%",
           display: "flex",
           position: "relative",
-          background: "#3c4936",
+          background: "#161613",
         }}
       >
         <div
@@ -23,7 +23,7 @@ export default function AppleIcon() {
             top: 30,
             width: 18,
             height: 118,
-            background: "#dcc27a",
+            background: "#ffffff",
           }}
         />
         <div
@@ -33,7 +33,7 @@ export default function AppleIcon() {
             top: 62,
             width: 92,
             height: 18,
-            background: "#dcc27a",
+            background: "#ffffff",
           }}
         />
       </div>

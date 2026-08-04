@@ -1,4 +1,4 @@
-import { Sektsioon, Tekst } from "@/components/ui";
+import { Salm, Sektsioon, Tekst } from "@/components/ui";
 import BroneeriVorm from "@/components/BroneeriVorm";
 import Ilmub from "@/components/Ilmub";
 import { laeSisu } from "@/sisu/lae";
@@ -102,6 +102,19 @@ export default async function Broneerimine() {
           </Ilmub>
         </div>
       </section>
+
+      {/* Kirjakoht lõpetuseks — kutse peatuda enne, kui kirjutad */}
+      {broneerimine.kirjakoht?.tekst && (
+        <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
+          <Ilmub>
+            <Salm
+              viide={broneerimine.kirjakoht.viide}
+              tekst={broneerimine.kirjakoht.tekst}
+              selgitus={broneerimine.kirjakoht.selgitus}
+            />
+          </Ilmub>
+        </Sektsioon>
+      )}
     </>
   );
 }

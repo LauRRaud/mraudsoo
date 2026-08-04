@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Ilmub from "@/components/Ilmub";
-import { Nupp, Pealkiri, Sektsioon, Tekst } from "@/components/ui";
+import { Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
 
 export async function generateMetadata() {
@@ -16,7 +16,7 @@ export async function generateMetadata() {
 /* TEENUSED — nummerdatud register, iga rida on uks omaette maailma. */
 export default async function Teenused() {
   const sisu = await laeSisu();
-  const { hero, loeLahemalt, lopp } = sisu.teenusedLeht;
+  const { hero, loeLahemalt, tsitaat, tsitaadiSilt, lopp } = sisu.teenusedLeht;
   /* Admin võib teenuste massiivi tervikuna asendada — kindlustame kuju */
   const teenused = Array.isArray(sisu.teenused) ? sisu.teenused : [];
 
@@ -56,11 +56,11 @@ export default async function Teenused() {
             {teenused.map((teenus) => (
               <li key={teenus.slug}>
                 <Link href={`/teenused/${teenus.slug}`} className="group block">
-                  <h2 className="kuva text-[clamp(1.85rem,3.2vw,2.6rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
+                  <h2 className="kuva text-[clamp(2.15rem,7vw,2.6rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
                     {teenus.nimi}
                   </h2>
-                  {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
-                  <p className="kuva mt-1 italic text-xl text-ink-soft sm:text-2xl">
+                  {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust, eriti mobiilis */}
+                  <p className="kuva mt-1 italic text-[clamp(1.5rem,5.2vw,1.75rem)] text-ink-soft">
                     {teenus.alapealkiri}
                   </p>
                   <p className="mt-5 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
@@ -81,6 +81,15 @@ export default async function Teenused() {
           </Ilmub>
         </div>
       </section>
+
+      {/* Marta lause, mis kehtib kõigi teenuste kohta — mitte ainult ühe kohta */}
+      {tsitaat && (
+        <Sektsioon taust="shell" laius="kitsas" polsterdus="ohuke">
+          <Ilmub>
+            <Salm viide={tsitaadiSilt} tekst={tsitaat} />
+          </Ilmub>
+        </Sektsioon>
+      )}
 
       <Sektsioon taust="bone" laius="kitsas" polsterdus="ohuke" className="text-center">
         <Ilmub>

@@ -373,6 +373,17 @@
   }
 
   /*
+    Mobiilis on nupud täislaiuses ja üksteise all. Muidu määras laiuse teksti
+    pikkus ja kaks kõrvutist nuppu („Broneeri aeg” / „Vaata hinnakirja”) jäid
+    eri laiusega ning rida loksus. Väike päisenupp jääb omal laiusel.
+  */
+  @media (max-width: 639px) {
+    .nupp:not(.nupp-vaike) {
+      width: 100%;
+    }
+  }
+
+  /*
     SISENEMINE — käivitub kohe, kui element joonistub (esimene ekraanitäis).
     Viide antakse elemendile CSS-muutujaga --viive.
   */

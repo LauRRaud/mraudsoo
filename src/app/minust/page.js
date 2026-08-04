@@ -142,13 +142,14 @@ export default async function Minust() {
             return (
               <p
                 key={loik}
-                className={
+                /* whitespace-pre-line: Marta reavahetused pildilt jäävad alles */
+                className={`whitespace-pre-line ${
                   viimane
                     ? "kuva pt-5 text-[clamp(1.35rem,2.7vw,1.9rem)] leading-[1.45] text-kuld-hele"
                     : jrk === 0
                       ? "text-xl leading-[1.75] text-luu sm:text-[1.4rem]"
                       : "text-lg leading-[1.85] text-luu/95 sm:text-xl"
-                }
+                }`}
               >
                 {loik}
               </p>
@@ -232,7 +233,8 @@ export default async function Minust() {
               {terviklikkus.loigud.map((loik) => (
                 <p
                   key={loik}
-                  className="max-w-[52ch] text-xl leading-[1.75] text-ink/85"
+                  /* whitespace-pre-line: Marta reavahetused pildilt jäävad alles */
+                  className="max-w-[52ch] whitespace-pre-line text-xl leading-[1.75] text-ink/85"
                 >
                   {loik}
                 </p>

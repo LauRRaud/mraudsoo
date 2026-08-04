@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 /*
-  Brauseri vahekaardi ikoon — peenike kuldne rist sügavrohelisel.
+  Brauseri vahekaardi ikoon — peenike valge rist mustjal taustal.
   Sama joonekeel, mis lehe püstjoon-motiivil: vaikne, mitte plakatlik.
 
   Mõõt on täpselt 32x32, sest brauser kasutab just seda suurust (või
@@ -20,7 +20,7 @@ export default function Icon() {
           height: "100%",
           display: "flex",
           position: "relative",
-          background: "#3c4936",
+          background: "#161613",
         }}
       >
         {/* Püsttala — ülemine haru lühem, alumine pikem (ladina rist) */}
@@ -31,7 +31,7 @@ export default function Icon() {
             top: 5,
             width: 4,
             height: 22,
-            background: "#dcc27a",
+            background: "#ffffff",
           }}
         />
         <div
@@ -41,7 +41,7 @@ export default function Icon() {
             top: 10,
             width: 16,
             height: 4,
-            background: "#dcc27a",
+            background: "#ffffff",
           }}
         />
       </div>

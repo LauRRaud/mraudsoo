@@ -130,8 +130,16 @@ export default async function TeenuseLeht({ params }) {
     /teenused/fotograafia peal kaks ühesugust sektsiooni järjest ühte
     pikka alasse sulama.
   */
+  const tsitaat = teenus.tsitaat?.tekst ? teenus.tsitaat : null;
+
   const eelnevTaust =
-    nimekiri.length > 0 ? "shell" : plokid.length > 0 ? "linen" : "bone";
+    nimekiri.length > 0
+      ? "shell"
+      : tsitaat
+        ? "sage"
+        : plokid.length > 0
+          ? "linen"
+          : "bone";
   const kutseTaust = eelnevTaust === "bone" ? "linen" : "bone";
 
   return (
@@ -236,6 +244,18 @@ export default async function TeenuseLeht({ params }) {
               </div>
             );
           })}
+        </Sektsioon>
+      )}
+
+      {/*
+        Teenuse tsitaat — üks Marta lause, mis kannab kogu teenuse mõtet.
+        Ilma viiteta salm: püstjoon, lause kuvakirjas, vajadusel järelmõte all.
+      */}
+      {tsitaat && (
+        <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
+          <Ilmub>
+            <Salm tekst={tsitaat.tekst} selgitus={tsitaat.selgitus} />
+          </Ilmub>
         </Sektsioon>
       )}
 

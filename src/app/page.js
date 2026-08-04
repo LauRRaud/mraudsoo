@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Foto from "@/components/Foto";
 import Ilmub from "@/components/Ilmub";
-import { Nupp, NooleLink, Pealkiri, Sektsioon, Tekst } from "@/components/ui";
+import { Nupp, NooleLink, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
 
 /*
@@ -14,8 +14,16 @@ import { laeSisu } from "@/sisu/lae";
 */
 export default async function Avaleht() {
   const sisu = await laeSisu();
-  const { hero, kutsumus, liikumine, essents, teenusedPlokk, minustPlokk, kutse } =
-    sisu.avaleht;
+  const {
+    hero,
+    kutsumus,
+    liikumine,
+    essents,
+    kirjakoht,
+    teenusedPlokk,
+    minustPlokk,
+    kutse,
+  } = sisu.avaleht;
 
   return (
     <>
@@ -108,33 +116,41 @@ export default async function Avaleht() {
       </Sektsioon>
 
       {/*
-        Liikumine — Marta enda tugevaim sõnastus, lehe tume süda.
-        Tsentreeritud nagu litaania: iga rida on üks hingetõmme, väike
-        lähtekoht ja suur kaldkirjas sihtkoht samal joonel.
+        Liikumine — lehe tume süda. Pealkiri on Marta enda lause (tsitaadina),
+        all litaania: iga rida on üks hingetõmme, väike lähtekoht ja suur
+        kaldkirjas sihtkoht samal joonel.
       */}
       <Sektsioon taust="mets">
         <Ilmub className="text-center">
           <div aria-hidden="true" className="pystjoon pystjoon-tume" />
           <p className="silt silt-tume mt-7">{liikumine.silt}</p>
-          <h2 className="kuva mx-auto mt-6 max-w-3xl text-[clamp(2rem,4.2vw,3.3rem)] text-luu">
+          <blockquote className="kuva mx-auto mt-6 max-w-3xl text-[clamp(2rem,4.2vw,3.3rem)] text-luu">
             {liikumine.pealkiri}
-          </h2>
+          </blockquote>
         </Ilmub>
 
+        {/*
+          Rida peab mahtuma ÜHELE reale ka kõige kitsamal telefonil — pikim
+          paar on „Killustatusest → tasakaalu”. Seepärast ei murra rida (nowrap)
+          ja mõlemad kirjad kahanevad vaates koos: väike ka tähevahet kitsamaks.
+        */}
         <Ilmub ruhm as="ul" className="mt-12 sm:mt-16">
           {liikumine.read.map((rida) => (
             <li
               key={rida.millest}
-              className="flex flex-wrap items-baseline justify-center gap-x-5 py-4 sm:gap-x-7 sm:py-5"
+              className="flex flex-nowrap items-baseline justify-center gap-x-3 py-4 sm:gap-x-7 sm:py-5"
             >
               {/* Lähtekoht on loetav, mitte aimatav — suurem ja heledam kui tavaline silt */}
-              <span className="mikro text-lg text-luu/90 sm:text-xl">
+              <span className="mikro whitespace-nowrap text-[clamp(0.8rem,3.2vw,1.25rem)] tracking-[0.12em] text-luu/90 sm:tracking-[0.16em]">
                 {rida.millest}
               </span>
-              <span aria-hidden="true" className="text-xl text-kuld-hele">
+              <span
+                aria-hidden="true"
+                className="text-base text-kuld-hele sm:text-xl"
+              >
                 →
               </span>
-              <span className="kuva italic text-[clamp(2rem,4.6vw,3.2rem)] leading-[1.15] text-luu">
+              <span className="kuva whitespace-nowrap italic text-[clamp(1.7rem,7vw,3.2rem)] leading-[1.15] text-luu">
                 {rida.milleks}
               </span>
             </li>
@@ -172,11 +188,31 @@ export default async function Avaleht() {
                 {loik}
               </p>
             ))}
+
+            {/* Marta lause, mis võtab kogu sektsiooni kokku */}
+            {essents.tsitaat && (
+              <blockquote className="kuva max-w-[52ch] pt-4 text-[clamp(1.5rem,3vw,2.1rem)] leading-[1.35] text-gold-deep">
+                {essents.tsitaat}
+              </blockquote>
+            )}
           </Ilmub>
         </div>
       </Sektsioon>
 
-      {/* Teenused — nummerdatud register */}
+      {/* Kirjakoht — üks vaikne hetk enne teenuseid */}
+      {kirjakoht?.tekst && (
+        <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
+          <Ilmub>
+            <Salm
+              viide={kirjakoht.viide}
+              tekst={kirjakoht.tekst}
+              selgitus={kirjakoht.selgitus}
+            />
+          </Ilmub>
+        </Sektsioon>
+      )}
+
+      {/* Teenused — register */}
       <Sektsioon taust="linen">
         {/* Pealkiri ütleb „kuus viisi” ise — eraldi silti pole vaja */}
         <Ilmub className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
@@ -197,11 +233,11 @@ export default async function Avaleht() {
           {sisu.teenused.map((teenus) => (
             <li key={teenus.slug}>
               <Link href={`/teenused/${teenus.slug}`} className="group block">
-                <h3 className="kuva text-[clamp(1.6rem,2.8vw,2.15rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
+                <h3 className="kuva text-[clamp(1.9rem,6vw,2.15rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
                   {teenus.nimi}
                 </h3>
-                {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust */}
-                <p className="kuva mt-1 italic text-xl text-ink-soft sm:text-2xl">
+                {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust, eriti mobiilis */}
+                <p className="kuva mt-1 italic text-[clamp(1.45rem,5vw,1.6rem)] text-ink-soft">
                   {teenus.alapealkiri}
                 </p>
                 <p className="mt-4 max-w-[44ch] text-lg leading-relaxed text-ink-soft">

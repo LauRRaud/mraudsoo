@@ -8,12 +8,19 @@
   Seepärast: siia kirjutatakse ainult vaikimisi tekstid, mitte kasutaja muudatused.
   Puu kuju (võtmete nimed) määratakse siin — data/sisu.json tundmatud võtmed
   jäetakse tähelepanuta, nii ei lähe leht katki, kui vaikimisi sisu hiljem täieneb.
+
+  SÕNASTUSE REEGEL: Marta tekstid on siin sõna-sõnalt nii, nagu need on tema
+  piltidel (`koduleht pildid` → `TEKSTID-KOIK.md`). Kirjavahemärke, reavahetusi
+  ega kolmpunkte ei ühtlustata „ilusamaks” — tema kirjaviis on osa tema häälest.
+  Kolmpunkt on tema piltidel üks märk „…”, mitte kolm punkti. Reavahetus tekstis
+  (\n) tähendab, et pildil olid need read eraldi — leht hoiab need eraldi.
+  Vt `TEKSTIKONTROLL.md` juurkaustas.
 */
 
 export const vaikimisiSisu = {
   meta: {
     saidiNimi: "Marta Raudsoo",
-    tunnuslause: "Püha Ruum, kohalolu ja stiiliselgus",
+    tunnuslause: "Püha Ruum, kohalolu ja selgus",
     kirjeldus:
       "Kohalolu, selgus ja stiil — et inimene võiks elada rohkem kooskõlas sellega, kelleks Jumal on ta loonud. Püha Ruum, stiiliselgus, garderoobi korrastus, teadlik ostlemine ja fotograafia.",
   },
@@ -66,10 +73,15 @@ export const vaikimisiSisu = {
       ],
     },
 
-    /* Marta enda sõnastus liikumisest — lehe kõige tugevam sõnum */
+    /*
+      Liikumine. Pealkiri on Marta enda lause („Lehe iseloomustus”, kus see on
+      eraldi välja toodud kui tema oma sõnad) — varem seisis siin minu kirjutatud
+      lause, mida allikates ei olnud.
+    */
     liikumine: {
       silt: "Liikumine",
-      pealkiri: "Ma ei aita sul valida riideid. Ma aitan sul liikuda.",
+      pealkiri:
+        "„Mis loovad samuti ellu selgust, kergust, tasakaalu, rahu, rõõmu ja vabadust.”",
       read: [
         { millest: "Kaosest", milleks: "selgusesse" },
         { millest: "Raskusest", milleks: "kergusesse" },
@@ -82,17 +94,30 @@ export const vaikimisiSisu = {
     /* Marta enda sõnad Instagramist — sinu unikaalne essents */
     essents: {
       silt: "Essents",
-      pealkiri: "Sinu unikaalne essents — kelleks JUMAL on sind loonud",
+      pealkiri: "Sinu unikaalne essents — kelleks JUMAL on sind loonud …",
       loigud: [
-        "Sinu essents ... ei ole lihtsalt stiil. See ei ole ainult riided, värvid või vormid. See on sinu kohalolu. Sinu ehe viis olla. Sinu sisemine ilu. Sinu kordumatu väljendus. Sinu Jumala näo järgi loodud unikaalsus.",
-        "Aga lisaks sellele usun ... et iga inimene kannab endas midagi ainulaadset. Midagi, mida Jumal on just temasse pannud. Iga inimese elul on tähendus, suund ja kutsumus — ning tema olemuses on midagi, mis ei ole kellegi teisega asendatav.",
+        "Sinu essents … ei ole lihtsalt stiil. See ei ole ainult riided, värvid või vormid. See on sinu kohalolu. Sinu ehe viis olla. Sinu sisemine ilu. Sinu kordumatu väljendus. Sinu Jumala näo järgi loodud unikaalsus.",
+        "Aga lisaks sellele usun … et iga inimene kannab endas midagi ainulaadset. Midagi, mida Jumal on just temasse pannud. Iga inimese elul on tähendus, suund ja kutsumus — ning tema olemuses on midagi, mis ei ole kellegi teisega asendatav.",
         "Ja riietus võib olla üks viis, kuidas see nähtavale tuleb. Mitte selleks, et tõestada oma väärtust, ega olla keegi teine. Ka mitte selleks, et sobituda maailma mõõdupuusse. Vaid selleks, et tulla rohkem kooskõlla sellega, kes sa päriselt oled.",
       ],
+      /* Marta lause failist „Lehe iseloomustus” — seni lehel kasutamata */
+      tsitaat:
+        "„Jumal ei loo inimesi juhuslikult. Iga inimese sees on väärtus, isikupära ja ilu, mida saab õppida märkama ja austama.”",
+    },
+
+    /*
+      Kirjakoht avalehele — seni ei olnud avalehel ühtegi salmi, kuigi leht
+      algab usulise alusega. Tuli minust-lehe salmiridast, kus neid oli kuus.
+    */
+    kirjakoht: {
+      viide: "Johannese 10:10",
+      tekst: "„Mina olen tulnud, et neil oleks elu ja seda ülirohkesti.”",
+      selgitus: "",
     },
 
     teenusedPlokk: {
       silt: "Teenused",
-      /* Arv käib teenuste massiivi pikkusega kaasas — 1:1 teekonna lisandumisel kuus */
+      /* Arv käib teenuste massiivi pikkusega kaasas */
       pealkiri: "Kuus viisi, kuidas sama kutsumus praktikas väljendub",
       linkTekst: "Kõik teenused",
     },
@@ -107,9 +132,10 @@ export const vaikimisiSisu = {
       linkTekst: "Loe minust",
     },
 
+    /* Lehe lõpetus on Marta enda slaid (IG 90), mitte minu kutselause */
     kutse: {
-      silt: "Alustame",
-      pealkiri: "Kui miski siin kõnetas, siis on see hea koht, kust alustada.",
+      silt: "Järgmine samm kuulub sinule",
+      pealkiri: "Ja võib-olla on aeg näha ennast nii, nagu Jumal sind on loonud. 🤍",
       nuppEsmane: "Broneeri aeg",
       nuppTeine: "Vaata hinnakirja",
     },
@@ -130,9 +156,9 @@ export const vaikimisiSisu = {
       loigud: [
         "Nii kaua kui ma ennast mäletan, olen ma igatsenud kohtuda iseenda unikaalsusega. Mitte lihtsalt oma stiili, välimuse või rollide kaudu, vaid selle tõelise minaga — inimesega, kelleks JUMAL on mind loonud.",
         "Olen alateadlikult tundnud kutset ja tõmmet mõista: milline on see kordumatu „mina”, kelle Jumal on loonud?",
-        "Ma mäletan ennast juba noorena ... inimesi vaatlemas.",
-        "Mitte lihtsalt nende riideid või välimust, vaid midagi enamat. Mind on alati paelunud, miks inimene riietub nii, nagu ta riietub ...",
-        "... ja miks ta on valinud just selle töö, selle viisi olla, selle väljenduse. Miks mõni inimene justkui peidab end. Miks mõni mõjub kohe kohalolevalt. Miks mõne inimese puhul on tunne, et tema väline pilt ja sisemine olemus ei ole omavahel kooskõlas.",
+        "Ma mäletan ennast juba noorena … inimesi vaatlemas.",
+        "Mitte lihtsalt nende riideid või välimust, vaid midagi enamat. Mind on alati paelunud, miks inimene riietub nii, nagu ta riietub …",
+        "… ja miks ta on valinud just selle töö, selle viisi olla, selle väljenduse. Miks mõni inimene justkui peidab end. Miks mõni mõjub kohe kohalolevalt. Miks mõne inimese puhul on tunne, et tema väline pilt ja sisemine olemus ei ole omavahel kooskõlas.",
         "Ma tundsin sageli, nagu näeksin või tajuksin inimese juures midagi, mida ma ei osanud seletada. Vahel tundus see isegi kummaline.",
         "Aga täna ma mõistan, et see ei olnud juhuslik.",
         "See oli kutse. See oli sisemine suund. See oli and, mis vajas minus juurdumist ja küpsemist. Ma usun, et Jumal on pannud meie sisse annid.",
@@ -143,7 +169,7 @@ export const vaikimisiSisu = {
 
     kirjakoht: {
       viide: "1. Moosese 1:27",
-      tekst: "„Ja Jumal lõi inimese oma näo järgi...”",
+      tekst: "„Ja Jumal lõi inimese oma näo järgi…”",
       selgitus:
         "Minu jaoks tähendab see, et ükski inimene ei ole juhuslik. Me ei ole loodud koopiatena. Meis kõigis on midagi Jumalast peegelduvat — ilu, loovust, tugevust, õrnust, sügavust, valgust ja kohalolu.",
     },
@@ -153,27 +179,29 @@ export const vaikimisiSisu = {
       Lõikude kaar: äratundmine (süda igatseb tõde) → vale alus → pöördepunkt
       → mida see andis → kutsumus. Kirjakohad käivad loo juurde ja järgivad
       sama kuju mis minust.kirjakoht.
+
+      Reavahetused (\n) on pildilt: „Kui töö = turvalisus” oli kolm eraldi rida.
     */
     pooordumine: {
       silt: "Süda igatseb tõde",
       pealkiri: "Täna ma näen selgemalt kui iial varem",
       loigud: [
         "Inimese sees on kaks reaalsust korraga.",
-        "Igatsus elada õigesti, soov olla aus, vajadus rahu ja lihtsuse järele - süda tunneb ära, mis on õige ...",
-        "Aga samal ajal... meie inimlik pool on väsinud, kardab, hoiab kinni harjumustest, läheb tagasi vanadesse mustritesse ja nii tekib vastuolu sa tead, mis on õige... aga ei ela seda.",
-        "Sinu süda teab tõde aga Jumala vägi aitab sul seda elada",
-        "Täna ma soovin küsida ... millele me tegelikult oma elu ehitame?",
-        "... kui elu on ehitatud sõltuvustele, siis oleme ehitanud liivale. Ja kui see kõik kõigub ja laguneb - kukub ka inimene.",
-        "Kui töö = turvalisus · raha = väärtus · roll = identiteet",
-        "See ei ole tõeline alus ...",
-        "... Aga ma elasin aastaid nii. Fookus oli arvete maksmine, ellujäämine, süsteemis püsimine. Ja kuigi väliselt tundus justkui “korras”... siis enda sees olin ma katki.",
-        "Täna ma saan ausalt tunnistada - ma teenisin süsteemi, mitte Jumalat. Ja kui puudub suhe Jumalaga, hakkame alati teenima midagi muud ... seni kuni ei ole kohtunud tõega.",
-        "Jumala sõna kuulekus ... loob stabiilse vundamendi (kalju), mis peab vastu eluraskustele, samas kui sõnade eiramine viib vaimse huku ja kokkuvarisemiseni.",
-        "Minu jaoks algas muutus siis...",
-        "... kui ma hakkasin päriselt lahti laskma valest. See ei olnud lihtne, see oli valus, ebakindel ja murdis mu vanad alused. Aga samal ajal hakkas sündima midagi uut ...",
-        "Ja kui ma andsin oma elu ...",
-        "... oma töö, oma kutsumise, oma tuleviku. Jumala kätte - siis on hakanud muutuma ...",
-        "... Mu süda, mu meel, mu suhe eluga.",
+        "Igatsus elada õigesti, soov olla aus, vajadus rahu ja lihtsuse järele - süda tunneb ära, mis on õige …",
+        "Aga samal ajal… meie inimlik pool on väsinud, kardab, hoiab kinni harjumustest, läheb tagasi vanadesse mustritesse ja nii tekib vastuolu sa tead, mis on õige… aga ei ela seda.",
+        "Sinu süda teab tõde aga Jumala vägi aitab sul seda elada 🤍",
+        "Täna ma soovin küsida … millele me tegelikult oma elu ehitame?",
+        "… kui elu on ehitatud sõltuvustele, siis oleme ehitanud liivale. Ja kui see kõik kõigub ja laguneb - kukub ka inimene.",
+        "Kui töö = turvalisus\nraha = väärtus\nroll = identiteet",
+        "See ei ole tõeline alus …",
+        "… Aga ma elasin aastaid nii. Fookus oli arvete maksmine, ellujäämine, süsteemis püsimine. Ja kuigi väliselt tundus justkui „korras”… siis enda sees olin ma katki.",
+        "Täna ma saan ausalt tunnistada - ma teenisin süsteemi, mitte Jumalat. Ja kui puudub suhe Jumalaga, hakkame alati teenima midagi muud … seni kuni ei ole kohtunud tõega.",
+        "Jumala sõna kuulekus … loob stabiilse vundamendi (kalju), mis peab vastu eluraskustele, samas kui sõnade eiramine viib vaimse huku ja kokkuvarisemiseni.",
+        "Minu jaoks algas muutus siis…",
+        "… kui ma hakkasin päriselt lahti laskma valest. See ei olnud lihtne, see oli valus, ebakindel ja murdis mu vanad alused. Aga samal ajal hakkas sündima midagi uut …",
+        "Ja kui ma andsin oma elu …",
+        "… oma töö, oma kutsumise, oma tuleviku. Jumala kätte - siis on hakanud muutuma …",
+        "… Mu süda, mu meel, mu suhe eluga.",
         "Ristimine oli minu jaoks pöördepunkt.",
         "Me ei kaota midagi, vastupidi - kohtume tõe, tee ja eluga.",
         "Sest Jumala tee lammutab selle, mis ei ole tõde ja ehitab selle, mis jääb.",
@@ -192,32 +220,27 @@ export const vaikimisiSisu = {
           viide: "Roomlastele 7:19",
           tekst: "„Ma ei tee head, mida ma tahan, vaid kurja, mida ma ei taha.”",
           selgitus:
-            "Inimene ei ole loodud elama ainult oma jõust ... me vajame Jumalat.",
+            "Inimene ei ole loodud elama ainult oma jõust … me vajame Jumalat.",
         },
         {
           viide: "Matteuse 7:24-27",
           tekst:
-            "„Kes kuuleb mu sõnu ja teeb nende järgi... on nagu mees, kes ehitas oma maja kaljule... Aga kes ei tee... on nagu see, kes ehitas liivale.”",
+            "„Kes kuuleb mu sõnu ja teeb nende järgi… on nagu mees, kes ehitas oma maja kaljule… Aga kes ei tee… on nagu see, kes ehitas liivale.”",
           selgitus: "",
         },
         {
           viide: "Matteuse 6:24",
           tekst:
-            "“Keegi ei saa teenida kahte Issandat, sest ta kas vihkab ühte ja armastab teist või hoidub ühe poole ega hooli teisest. Te ei saa teenida Jumalat ja mammonat.”",
+            "„Keegi ei saa teenida kahte Issandat, sest ta kas vihkab ühte ja armastab teist või hoidub ühe poole ega hooli teisest. Te ei saa teenida Jumalat ja mammonat.”",
           selgitus:
             "Jumal ei kutsu meid elama kurnatuses. Ta kutsub meid elama Tões.",
         },
         {
           viide: "Matteuse 16:24",
           tekst:
-            "„Kui keegi tahab käia minu järel, siis ta salgagu iseennast... ja järgnegu mulle.”",
+            "„Kui keegi tahab käia minu järel, siis ta salgagu iseennast… ja järgnegu mulle.”",
           selgitus:
-            "Enam ei ole minu tee, vaid Tema tee. Kui ma lasen lahti oma teest, avaneb tee, mida ma ise ei oleks kunagi näinud. Ma ei ela enam ainult oma soovide, plaanide ja arusaamise järgi... vaid usaldan Jumala juhtimist oma elus.",
-        },
-        {
-          viide: "Johannese 10:10",
-          tekst: "“Mina olen tulnud, et neil oleks elu ja seda ülirohkesti.”",
-          selgitus: "",
+            "Enam ei ole minu tee, vaid Tema tee. Kui ma lasen lahti oma teest, avaneb tee, mida ma ise ei oleks kunagi näinud. Ma ei ela enam ainult oma soovide, plaanide ja arusaamise järgi… vaid usaldan Jumala juhtimist oma elus.",
         },
       ],
     },
@@ -227,22 +250,22 @@ export const vaikimisiSisu = {
       silt: "Annid",
       pealkiri: "Annid, mida olen oma teekonnal ära tundnud",
       sissejuhatus:
-        "Korintlastele 12 õpetab, et Püha Vaim annab oma ande ühiseks kasuks. Oma teekonnal olen kõige enam märganud, et Jumal kasutab minu kaudu eelkõige järgmist.",
+        "Korintlastele 12 õpetab, et Püha Vaim annab oma ande ühiseks kasuks. Oma teekonnal olen kõige enam märganud, et Jumal kasutab minu kaudu eelkõige:",
       loend: [
         {
-          nimi: "Tarkuse jagamine",
+          nimi: "tarkuse jagamist",
           kirjeldus: "aidata näha olukordi laiemalt ja mõista järgmisi samme",
         },
         {
-          nimi: "Tunnetus",
+          nimi: "tunnetust",
           kirjeldus: "märgata seda, mis vajab tähelepanu või korrastumist",
         },
         {
-          nimi: "Usu julgustamine",
+          nimi: "usu julgustamist",
           kirjeldus: "tuletada meelde lootust ja usaldust Jumala vastu",
         },
         {
-          nimi: "Kuulamine ja kohalolu",
+          nimi: "kuulamist ja kohalolu",
           kirjeldus:
             "luua turvaline ruum, kus inimene võib olla aus ning kogeda selgust",
         },
@@ -258,7 +281,8 @@ export const vaikimisiSisu = {
       silt: "Terviklikkus",
       pealkiri: "Jumal hoolib terviklikust inimesest",
       loigud: [
-        "Selles teekonnas hakkab korrastuma — vaimne, emotsionaalne, füüsiline maailm. Mitte eraldi vaid koos.",
+        /* Sõna-sõnalt pildilt (IG 226): koma, punkti ega mõttekriipsu seal ei ole */
+        "Selles teekonnas hakkab korrastuma - vaimne emotsionaalne, füüsiline maailm\nMitte eraldi vaid koos.",
         "Seepärast kohtuvad minu töös sisemine ja väline — kuulamine ja praktilised sammud, kohalolu ja korrastumine.",
         "Kui südames sünnib selgus, saab see hakata peegelduma ka igapäevases elus: valikutes, garderoobis, kodus, eneseväljenduses ja suhetes.",
       ],
@@ -279,6 +303,10 @@ export const vaikimisiSisu = {
         "Minu teenused ei ole eraldi maailmad. Püha Ruum ei ole üks teenus ning stiiliselgus, garderoobi korrastus, teadlik ostlemine ja fotograafia teised. Need on kõik ühe ja sama kutsumuse erinevad väljendusviisid.",
     },
     loeLahemalt: "Loe lähemalt",
+    /* Marta sõnad (IG 241) — kehtivad kõigi teenuste kohta, mitte ainult Püha Ruumi */
+    tsitaat:
+      "Minu tee ei ole ainult minu oma — see on teenimine läbi kohalolu, kuulamise ja sügava empaatia.",
+    tsitaadiSilt: "Kohalolu",
     lopp: {
       pealkiri: "Ei tea, kust alustada?",
       tekst:
@@ -298,7 +326,7 @@ export const vaikimisiSisu = {
       sissejuhatus:
         "Pakun inimestele ruumi, kus on võimalik peatuda, olla kuuldud ja märgata uuesti seda, mis on elus oluline.",
       loigud: [
-        "Usun, et Jumal kasutab erinevaid inimesi erineval viisil. Minu südames on saanud oluliseks luua keskkond, kus võivad sündida kuulamine, selgus, korrastumine, julgustus ja järgmiste sammude eristamine.",
+        "Usun, et Jumal kasutab erinevaid inimesi erineval viisil. Minu südames on saanud oluliseks luua keskkond, kus võivad sündida:",
         "Kõik see sünnib usus, palves ja sooviga anda kogu au Jumalale.",
       ],
       plokid: [
@@ -306,35 +334,22 @@ export const vaikimisiSisu = {
           pealkiri: "Psalm 62:1",
           loigud: [
             "„Üksnes Jumala juures on mu hing vait, temalt tuleb mu pääste.”",
-            "Vaikus = koht, kus hing leiab rahu, tõe ja selguse ...",
-          ],
-        },
-        {
-          pealkiri: "Kohalolu",
-          loigud: [
-            "Minu tee ei ole ainult minu oma — see on teenimine läbi kohalolu, kuulamise ja sügava empaatia.",
+            "Vaikus = koht, kus hing leiab rahu, tõe ja selguse …",
           ],
         },
         {
           pealkiri: "Luuka 21:34",
           loigud: [
-            "„Pidage aga endid silmas, et teie süda ei oleks koormatud...”",
-            "Kui süda on täis... siis ei ole enam ruumi kuulda.",
+            "„Pidage aga endid silmas, et teie süda ei oleks koormatud…”",
+            "Kui süda on täis… siis ei ole enam ruumi kuulda.",
             "Me kuulame, aga ei jõua mõista. Me kogeme, aga ei jõua integreerida. Me oleme kohal, aga ei jõua päriselt kohale.",
           ],
         },
         {
           pealkiri: "Jumal kutsub meid tagasi lihtsusesse",
           loigud: [
-            "Ja võib-olla just sellepärast... Jumal kutsub meid tagasi lihtsusesse aga sügavale ... vaikusesse, rahusse häälestumisesse.",
-            "Vaikus ei loo identiteeti, vaid paljastab tõe ...",
-          ],
-        },
-        {
-          pealkiri: "Psalm 46:10",
-          loigud: [
-            "„Olge vagusi ja teadke, et mina olen Jumal.”",
-            "See on kutse peatuda ja häälestuda ...",
+            "Ja võib-olla just sellepärast… Jumal kutsub meid tagasi lihtsusesse aga sügavale … vaikusesse, rahusse häälestumisesse.",
+            "Vaikus ei loo identiteeti, vaid paljastab tõe …",
           ],
         },
         {
@@ -353,7 +368,7 @@ export const vaikimisiSisu = {
         {
           pealkiri: "Luuka 10:41–42",
           loigud: [
-            "Marta ning Maarja loos ütleb Jeesus manitsedes Martat leebelt: „Sa muretsed ja vaevad ennast paljude asjadega, kuid tarvis on vaid üht. Maarja on ju valinud hea osa, mida ei võeta temalt ära.\"",
+            "Marta ning Maarja loos ütleb Jeesus manitsedes Martat leebelt: „Sa muretsed ja vaevad ennast paljude asjadega, kuid tarvis on vaid üht. Maarja on ju valinud hea osa, mida ei võeta temalt ära.”",
             "Me ei vaja mitte rohkem tegemist - müra, vaid kohalolu.",
           ],
         },
@@ -366,24 +381,24 @@ export const vaikimisiSisu = {
         {
           pealkiri: "Häälestunud kohalolu",
           loigud: [
-            "Ma nimetaks seda häälestunud kohaloluks ... See on koht, kus müra vaibub, tempo aeglustub ja süda saab taas ruumi.",
+            "Ma nimetaks seda häälestunud kohaloluks … See on koht, kus müra vaibub, tempo aeglustub ja süda saab taas ruumi.",
             "Just vaikuses saab inimene tagasi ühendusse Jumalaga.",
             "Häälestunud kohalolu on sisemine rahu keset elu, kus ei pea enam kõike kontrollima, tõestama ega kiirustama.",
-            "Häälestunud kohalolus saab vaikselt ilmsiks TÕDE, meie tõeline identiteet ...",
+            "Häälestunud kohalolus saab vaikselt ilmsiks TÕDE, meie tõeline identiteet …",
           ],
         },
         {
           pealkiri: "Kuhu me tegelikult teel oleme",
           loigud: [
-            "Ja võib-olla see ongi see, kuhu me tegelikult teel oleme... mitte rohkem tegemise, mitte rohkem kogemise, mitte rohkem teadmise poole - vaid tagasi ...",
-            "... tagasi sellesse, kes me oleme Jumalas. Sest vaikuses ei kao midagi ära. Vaikuses hakkab ilmnema tõde. Ja samm-sammult... me liigume lähemale sellele, kes me oleme olnud kogu aeg.",
+            "Ja võib-olla see ongi see, kuhu me tegelikult teel oleme… mitte rohkem tegemise, mitte rohkem kogemise, mitte rohkem teadmise poole - vaid tagasi …",
+            "… tagasi sellesse, kes me oleme Jumalas. Sest vaikuses ei kao midagi ära. Vaikuses hakkab ilmnema tõde. Ja samm-sammult… me liigume lähemale sellele, kes me oleme olnud kogu aeg.",
           ],
         },
         {
           pealkiri: "Ma aitan sul aeglustuda",
           loigud: [
-            "Ma aitan sul aeglustuda, korrastada vaimset, emotsionaalset ja füüsilist maailma ...",
-            "... ja kohtuda tõega - sellest kohast sünnivad õiged valikud.",
+            "Ma aitan sul aeglustuda, korrastada vaimset, emotsionaalset ja füüsilist maailma …",
+            "… ja kohtuda tõega - sellest kohast sünnivad õiged valikud.",
           ],
         },
       ],
@@ -404,17 +419,17 @@ export const vaikimisiSisu = {
       luhike:
         "Kuupikkune teekond, kus vaimne, emotsionaalne ja füüsiline maailm hakkavad korrastuma koos.",
       sissejuhatus:
-        "Mõnikord ei vaja me rohkem teadmisi... vaid ruumi, kus kõik saab vaikselt selgineda.",
+        "Mõnikord ei vaja me rohkem teadmisi… vaid ruumi, kus kõik saab vaikselt selgineda.",
       loigud: [
-        "Kohtume ühe kuu jooksul kord nädalas. Kindlal päeval. Kindlas rütmis. Mitte selleks, et “rohkem teha”... vaid et hakata päriselt nägema.",
-        "Me vaatame üle sinu elu päriselt. Mis sind toetab... ja mis mitte. Kus sinu energia liigub... ja kuhu see vaikselt kaob.",
+        "Kohtume ühe kuu jooksul kord nädalas. Kindlal päeval. Kindlas rütmis. Mitte selleks, et „rohkem teha”… vaid et hakata päriselt nägema.",
+        "Me vaatame üle sinu elu päriselt. Mis sind toetab… ja mis mitte. Kus sinu energia liigub… ja kuhu see vaikselt kaob.",
         "Me ei kiirusta muutust. Aga me ei väldi ka tõde.",
       ],
       plokid: [
         {
           pealkiri: "Füüsiline korrastus",
           loigud: [
-            "Füüsiline korrastus on selle teekonna osa. Sinu ruum. Sinu garderoob. Sinu igapäevane keskkond - sest see, mis on nähtav, peegeldab seda, mis toimub su sees ...",
+            "Füüsiline korrastus on selle teekonna osa. Sinu ruum. Sinu garderoob. Sinu igapäevane keskkond - sest see, mis on nähtav, peegeldab seda, mis toimub su sees …",
           ],
         },
         {
@@ -426,17 +441,15 @@ export const vaikimisiSisu = {
         {
           pealkiri: "Ja tasapisi",
           loigud: [
-            "Ja tasapisi... hakkab tekkima selgus ja läbipaistvus. Mitte läbi pingutuse - vaid vaimse, emotsionaalse ja füüsilise maailma korrastumise.",
-          ],
-        },
-        {
-          pealkiri: "See ei ole lihtsalt muutus",
-          loigud: [
-            "See ei ole lihtsalt muutus. See on tagasi tulemine iseenda juurde.",
-            "Kui tunned, et oled selleks valmis... siis see teekond on sinu jaoks",
+            "Ja tasapisi… hakkab tekkima selgus ja läbipaistvus. Mitte läbi pingutuse - vaid vaimse, emotsionaalse ja füüsilise maailma korrastumise.",
           ],
         },
       ],
+      tsitaat: {
+        tekst: "See ei ole lihtsalt muutus. See on tagasi tulemine iseenda juurde.",
+        selgitus:
+          "Kui tunned, et oled selleks valmis… siis see teekond on sinu jaoks 🤍",
+      },
       nimekirjaPealkiri: "Vaatame koos, mis vajab sinu elus korrastust",
       nimekiri: [
         "telefoni/arvuti korrastus",
@@ -456,7 +469,6 @@ export const vaikimisiSisu = {
         "Esimene samm sinu isikliku stiili essentsi, garderoobi inventuuri ja teadlikumate valikute suunas.",
       loigud: [
         "Stiil ei ole ainult välimus. See on viis, kuidas inimene väljendab seda, kes ta on.",
-        "Seepärast ei vaata me ainult riideid, vaid ka seda, mis on nende taga.",
       ],
       plokid: [
         {
@@ -464,7 +476,6 @@ export const vaikimisiSisu = {
           loigud: [
             "See on esimene ja kõige olulisem samm.",
             "Stiiliselgus ei ole lihtsalt küsimustike täitmine ega vastuste ülevaade.",
-            "See on personaalne peegeldus sellest, kuidas sinu olemus, stiil, keha ja kohalolu omavahel kohtuvad.",
           ],
         },
         {
@@ -483,14 +494,13 @@ export const vaikimisiSisu = {
             "Energeetiline kohalolu räägib sinu olemuse mõjust.",
           ],
         },
-        {
-          pealkiri: "Järgmine samm kuulub sinule",
-          loigud: [
-            "Ja võib-olla on aeg näha ennast nii, nagu Jumal sind on loonud.",
-          ],
-        },
       ],
-      nimekirjaPealkiri: "Saad selgust",
+      tsitaat: {
+        tekst:
+          "See on personaalne peegeldus sellest, kuidas sinu olemus, stiil, keha ja kohalolu omavahel kohtuvad.",
+        selgitus: "",
+      },
+      nimekirjaPealkiri: "Saad selgust …",
       nimekiri: [
         "milline on sinu põhiline stiiliessents / millised lisaessentsid annavad sinu stiilile sügavust",
         "milline on sinu energeetiline kohalolu",
@@ -510,16 +520,14 @@ export const vaikimisiSisu = {
         "Kui stiiliselgus on loodud, on järgmine loomulik samm garderoobi INVENTUUR.",
       loigud: [
         "Mis toetab, mis ei kaunista enam?",
-        "Garderoobi korrastades ei korrasta me ainult riideid. Vaatame koos, mis sobib, mis teenib sinu praegust eluhooaega ja millest on aeg lahti lasta.",
+        "Garderoobi korrastades ei korrasta me ainult riideid — vaid aitame märgata: kes sa oled, mis sulle päriselt sobib, millest on aeg lahti lasta ja kuidas väljendada oma olemust ausamalt.",
       ],
-      plokid: [
-        {
-          pealkiri: "Tulemus",
-          loigud: [
-            "Tulemuseks on garderoob, mis loob rohkem kergust, selgust ja rahu — ning on kooskõlas sinu elu, keha ja olemusega.",
-          ],
-        },
-      ],
+      plokid: [],
+      tsitaat: {
+        tekst:
+          "Tulemuseks on garderoob, mis loob rohkem kergust, selgust ja rahu — ning on kooskõlas sinu elu, keha ja olemusega.",
+        selgitus: "",
+      },
       nimekirjaPealkiri: "Vaatame koos",
       nimekiri: [
         "mis sind toetab",
@@ -540,27 +548,29 @@ export const vaikimisiSisu = {
         "Kogemus teha läbimõeldud valikuid, mis lähtuvad vajadusest, mitte survest või emotsioonist.",
       sissejuhatus:
         "Kui garderoob on üle vaadatud, saab ostlemine muutuda palju teadlikumaks.",
-      loigud: ["Ostlemine muutub rahulikuks, kui tead, mida otsid ja miks."],
-      plokid: [
-        {
-          pealkiri: "Uued valikud sinu stiiliselguse põhjal",
-          loigud: [
-            "Käime koos poes või veebis ja teeme valikuid, mis on kooskõlas sinu stiiliessentsi, eluhooaja ja tegeliku vajadusega.",
-          ],
-        },
-      ],
-      nimekirjaPealkiri: "Nüüd tead",
+      loigud: [],
+      plokid: [],
+      tsitaat: {
+        tekst:
+          "… kuidas liikuda vanast mina-pildist lähemale sellele versioonile sinust, kes on oodanud, et teda märgataks.",
+        selgitus: "",
+      },
+      nimekirjaPealkiri: "Nüüd tead …",
       nimekiri: [
         "mida sinu garderoob päriselt vajab",
         "millised toonid, lõiked ja materjalid sind toetavad",
         "millised riided on kooskõlas sinu elu, keha ja olemusega",
         "kuidas teha valikuid teadlikumalt, mitte enam hetke emotsioonist",
         "millised riided aitavad sul tunda end enesekindlamalt, vabamalt ja rohkem iseendana",
-        "kuidas liikuda vanast mina-pildist lähemale sellele versioonile sinust, kes on oodanud, et teda märgataks",
       ],
       toon: "soe",
     },
     {
+      /*
+        FOTOGRAAFIA — ainus teenus, mille kohta Martalt teksti ei ole.
+        Allikas annab ainult „Must valge” ja ühe lause. Siinsed laused on
+        ajutised — küsi Martalt 2–3 lauset ja „Mida see annab” loend.
+      */
       slug: "fotograafia",
       nimi: "Fotograafia",
       alapealkiri: "Must-valge",
@@ -599,6 +609,9 @@ export const vaikimisiSisu = {
     uksikudSilt: "Üksikteenused",
     teekondSilt: "Kolm sammu koos",
     sisaldabSilt: "Sisaldab",
+    /* Marta lause failist „Lehe iseloomustus” — seni lehel kasutamata */
+    tsitaat: "Väärtus on inimesel juba Jumalalt. Mina aitan seda märgata ja väljendada.",
+    tsitaadiSilt: "Väärtus",
     lopp: {
       pealkiri: "Kui hind on takistuseks, räägi sellest.",
       tekst:
@@ -717,6 +730,12 @@ export const vaikimisiSisu = {
     kontaktSilt: "Või kirjuta otse",
     markus:
       "Vastan ise ja võimalikult kiiresti. Kui sul on küsimus, mille kohta sa pole kindel, kas see üldse sobib — küsi ikkagi.",
+    /* Kirjakoht Marta piltidelt (IG 128) — kutse peatuda enne, kui kirjutad */
+    kirjakoht: {
+      viide: "Psalm 46:10",
+      tekst: "„Olge vagusi ja teadke, et mina olen Jumal.”",
+      selgitus: "See on kutse peatuda ja häälestuda …",
+    },
   },
 
   jalus: {

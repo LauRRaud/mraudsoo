@@ -166,11 +166,13 @@ export function Salm({ viide, tekst, selgitus = [], tume = false, className = ""
   return (
     <figure className={`text-center ${className}`}>
       <div aria-hidden="true" className={`pystjoon${tume ? " pystjoon-tume" : ""}`} />
-      <figcaption className={`silt mt-7${tume ? " silt-tume" : ""}`}>
-        {viide}
-      </figcaption>
+      {viide && (
+        <figcaption className={`silt mt-7${tume ? " silt-tume" : ""}`}>
+          {viide}
+        </figcaption>
+      )}
       <blockquote
-        className={`kuva mx-auto mt-6 max-w-2xl leading-[1.3] ${
+        className={`kuva mx-auto max-w-2xl leading-[1.3] ${viide ? "mt-6" : "mt-8"} ${
           tume ? "text-luu" : "text-ink"
         } ${
           pikk
