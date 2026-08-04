@@ -1,7 +1,9 @@
 import { Cormorant_Garamond, Poppins } from "next/font/google";
+import { cache } from "react";
 import "./globals.css";
 import Pais from "@/components/Pais";
 import Jalus from "@/components/Jalus";
+import { laeSisu } from "@/sisu/lae";
 
 /*
   Kuvakiri — kõrge kontrastiga elegantne serif, vastab Marta olemasolevale visuaalile.
@@ -22,33 +24,57 @@ const poppins = Poppins({
   display: "swap",
 });
 
-export const metadata = {
-  metadataBase: new URL("https://martaraudsoo.com"),
-  title: {
-    default: "Marta Raudsoo | Püha Ruum, kohalolu ja stiiliselgus",
-    template: "%s | Marta Raudsoo",
-  },
-  description:
-    "Kohalolu, selgus ja stiil — et inimene võiks elada rohkem kooskõlas sellega, kelleks Jumal on ta loonud. Püha Ruum, stiiliselgus, garderoobi korrastus, teadlik ostlemine ja fotograafia.",
-  openGraph: {
-    title: "Marta Raudsoo | Püha Ruum, kohalolu ja stiiliselgus",
-    description:
-      "Kohalolu, selgus ja stiil — et inimene võiks elada rohkem kooskõlas sellega, kelleks Jumal on ta loonud.",
-    locale: "et_EE",
-    type: "website",
-  },
-};
+/*
+  Sama päringu jooksul loeme sisu ainult korra: generateMetadata ja
+  RootLayout renderdatakse samas päringus, React cache jagab tulemuse.
+*/
+const laeSisuKordKorras = cache(laeSisu);
 
-export default function RootLayout({ children }) {
+/*
+  Pealkiri ja kirjeldus tulevad sisupuust (sisu.meta), seepärast ei saa siin
+  olla staatilist metadata-eksporti — sisu loetakse päringu ajal failist.
+*/
+export async function generateMetadata() {
+  const sisu = await laeSisuKordKorras();
+  const { saidiNimi, tunnuslause, kirjeldus } = sisu.meta;
+  const taisPealkiri = `${saidiNimi} | ${tunnuslause}`;
+
+  return {
+    metadataBase: new URL("https://martaraudsoo.com"),
+    title: {
+      /* Alamlehed annavad oma pealkirja, mis liidetakse malli järgi */
+      default: taisPealkiri,
+      template: `%s | ${saidiNimi}`,
+    },
+    description: kirjeldus,
+    openGraph: {
+      title: taisPealkiri,
+      description: kirjeldus,
+      siteName: saidiNimi,
+      locale: "et_EE",
+      type: "website",
+    },
+  };
+}
+
+export default async function RootLayout({ children }) {
+  const sisu = await laeSisuKordKorras();
+
   return (
     <html
       lang="et"
       className={`${cormorant.variable} ${poppins.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <Pais />
+        {/* Pais on kliendikomponent — sisu jõuab sinna ainult propsidena */}
+        <Pais navi={sisu.navi} saidiNimi={sisu.meta.saidiNimi} />
         <main className="flex-1">{children}</main>
-        <Jalus />
+        <Jalus
+          navi={sisu.navi}
+          kontakt={sisu.kontakt}
+          saidiNimi={sisu.meta.saidiNimi}
+          tutvustus={sisu.jalus.tutvustus}
+        />
       </body>
     </html>
   );

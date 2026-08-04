@@ -1,25 +1,29 @@
 import { Nupp, Pealkiri, Sektsioon, Tekst } from "@/components/ui";
-import { hinnakiri, teekond } from "@/sisu/sait";
+import { laeSisu } from "@/sisu/lae";
 
-export const metadata = {
-  title: "Hinnakiri",
-  description:
-    "Püha Ruumi, stiiliselguse, garderoobi korrastuse, teadliku ostlemise ja fotograafia hinnad.",
-};
+/* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
+export async function generateMetadata() {
+  const sisu = await laeSisu();
 
-export default function Hinnakiri() {
+  return {
+    title: sisu.hinnakiriLeht.hero.silt,
+    description: sisu.hinnakiriLeht.hero.tekst,
+  };
+}
+
+export default async function Hinnakiri() {
+  const sisu = await laeSisu();
+  const { hinnakiriLeht, hinnakiri, teekond } = sisu;
+
   return (
     <>
       <Sektsioon taust="bone">
         <div className="max-w-3xl">
-          <Pealkiri silt="Hinnakiri" tase="h1">
-            Selge kokkulepe juba enne alustamist
+          <Pealkiri silt={hinnakiriLeht.hero.silt} tase="h1">
+            {hinnakiriLeht.hero.pealkiri}
           </Pealkiri>
           <div className="joon my-10 max-w-24" />
-          <Tekst suur>
-            Iga teekond on erinev. Kui sa ei tea, milline teenus sind kõige
-            rohkem aitaks, kirjuta lihtsalt — mõtleme koos.
-          </Tekst>
+          <Tekst suur>{hinnakiriLeht.hero.tekst}</Tekst>
         </div>
       </Sektsioon>
 
@@ -27,14 +31,23 @@ export default function Hinnakiri() {
       <section className="bg-linen">
         <div className="mx-auto max-w-[1360px] px-6 pb-20 sm:pb-24 lg:px-10 lg:pb-32">
           <div className="pt-20 sm:pt-24 lg:pt-32">
-            <p className="silt">Üksikteenused</p>
+            <p className="silt">{hinnakiriLeht.uksikudSilt}</p>
           </div>
 
+          {/*
+            Hinnaveerg on kindla laiusega, mitte „auto”. Iga rida on oma grid,
+            nii et auto-veerg oleks igal real eri laiusega ja hinnad ei seisaks
+            enam ühel joonel. 1:1 teekonna kestus („Üks kuu, kord nädalas”) on
+            teistest kordades pikem — kindel laius hoiab kuue rea rütmi paigas.
+            16rem on selle kestuse loomulik laius ühel real; kitsamal ekraanil
+            jääb veerg 13rem peale ja kestus murdub kahele reale, et kirjeldus
+            ei jääks liiga kitsaks.
+          */}
           <ul className="mt-12">
             {hinnakiri.map((rida) => (
               <li
                 key={rida.nimi}
-                className="grid grid-cols-1 gap-x-10 gap-y-3 border-t border-gold/25 py-8 sm:grid-cols-[1.4fr_auto] sm:py-10"
+                className="grid grid-cols-1 gap-x-10 gap-y-3 border-t border-gold/25 py-8 sm:grid-cols-[1fr_13rem] sm:py-10 lg:grid-cols-[1fr_16rem]"
               >
                 <div>
                   <h2 className="kuva text-[clamp(1.4rem,2.8vw,2rem)] text-ink">
@@ -64,7 +77,7 @@ export default function Hinnakiri() {
       <Sektsioon taust="clay">
         <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
           <div>
-            <p className="silt !text-ink/70">Kolm sammu koos</p>
+            <p className="silt !text-ink/70">{hinnakiriLeht.teekondSilt}</p>
             <h2 className="kuva mt-6 text-[clamp(1.9rem,4vw,3.1rem)] text-ink">
               {teekond.nimi}
             </h2>
@@ -82,7 +95,7 @@ export default function Hinnakiri() {
           </div>
 
           <div>
-            <p className="silt !text-ink/70">Sisaldab</p>
+            <p className="silt !text-ink/70">{hinnakiriLeht.sisaldabSilt}</p>
             <ul className="mt-6">
               {teekond.sisaldab.map((punkt) => (
                 <li
@@ -104,14 +117,13 @@ export default function Hinnakiri() {
 
       <Sektsioon taust="bone" laius="kitsas" className="text-center">
         <p className="kuva mx-auto max-w-2xl text-[clamp(1.6rem,3.4vw,2.5rem)] leading-[1.3] text-ink">
-          Kui hind on takistuseks, räägi sellest.
+          {hinnakiriLeht.lopp.pealkiri}
         </p>
         <Tekst className="mx-auto mt-6 text-center">
-          Leiame lahenduse. Mulle on olulisem, et sa saaksid abi, kui see, et
-          kõik käiks ühtemoodi.
+          {hinnakiriLeht.lopp.tekst}
         </Tekst>
         <div className="mt-11">
-          <Nupp href="/broneerimine">Võta ühendust</Nupp>
+          <Nupp href="/broneerimine">{hinnakiriLeht.lopp.nuppTekst}</Nupp>
         </div>
       </Sektsioon>
     </>

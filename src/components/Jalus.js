@@ -1,7 +1,15 @@
 import Link from "next/link";
-import { kontakt, navi } from "@/sisu/sait";
 
-export default function Jalus() {
+/*
+  Jalus on serverikomponent, aga ei loe sisu ise — kõik tuleb propsidena
+  juurpaigutusest (src/app/layout.js), et allikas oleks üks.
+*/
+export default function Jalus({
+  navi = [],
+  kontakt = {},
+  saidiNimi = "Marta Raudsoo",
+  tutvustus = "",
+}) {
   const link =
     "text-lg text-ink-soft transition-colors hover:text-gold-deep";
 
@@ -10,10 +18,9 @@ export default function Jalus() {
       <div className="mx-auto max-w-[1360px] px-6 py-16 lg:px-10 lg:py-20">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
-            <p className="nimi text-3xl text-ink">Marta Raudsoo</p>
+            <p className="nimi text-3xl text-ink">{saidiNimi}</p>
             <p className="mt-4 max-w-xs text-lg leading-relaxed text-ink-soft">
-              Kohalolu, selgus ja stiil — et inimene võiks elada rohkem
-              kooskõlas sellega, kelleks Jumal on ta loonud.
+              {tutvustus}
             </p>
           </div>
 
@@ -33,38 +40,44 @@ export default function Jalus() {
           <div>
             <p className="silt">Kontakt</p>
             <ul className="mt-5 space-y-3">
-              <li>
-                <a href={`mailto:${kontakt.email}`} className={link}>
-                  {kontakt.email}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={kontakt.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={link}
-                >
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a
-                  href={kontakt.facebook}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={link}
-                >
-                  Facebook
-                </a>
-              </li>
+              {kontakt.email && (
+                <li>
+                  <a href={`mailto:${kontakt.email}`} className={link}>
+                    {kontakt.email}
+                  </a>
+                </li>
+              )}
+              {kontakt.instagram && (
+                <li>
+                  <a
+                    href={kontakt.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={link}
+                  >
+                    Instagram
+                  </a>
+                </li>
+              )}
+              {kontakt.facebook && (
+                <li>
+                  <a
+                    href={kontakt.facebook}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={link}
+                  >
+                    Facebook
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>
 
         <div className="joon mt-14" />
         <p className="mt-6 text-[0.9375rem] text-ink-faint">
-          © {new Date().getFullYear()} Marta Raudsoo
+          © {new Date().getFullYear()} {saidiNimi}
         </p>
       </div>
     </footer>

@@ -1,14 +1,21 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Sektsioon } from "@/components/ui";
-import { postitused } from "@/sisu/sait";
+import { laeSisu, laeSisuSync } from "@/sisu/lae";
 
+/*
+  generateStaticParams jookseb enne päringukonteksti, seepärast sünkroonne
+  laadija ilma connection()-ita.
+*/
 export function generateStaticParams() {
+  const { postitused } = laeSisuSync();
+
   return postitused.map((postitus) => ({ slug: postitus.slug }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
+  const { postitused } = await laeSisu();
   const postitus = postitused.find((p) => p.slug === slug);
   if (!postitus) return {};
 
@@ -18,6 +25,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
+/* Kuupäev eesti keeles: 3. august 2026 */
 function vormindaKuupaev(iso) {
   return new Date(iso).toLocaleDateString("et-EE", {
     day: "numeric",
@@ -28,9 +36,13 @@ function vormindaKuupaev(iso) {
 
 export default async function Postitus({ params }) {
   const { slug } = await params;
+  const { postitused } = await laeSisu();
   const postitus = postitused.find((p) => p.slug === slug);
 
   if (!postitus) notFound();
+
+  /* Sisulaadija tagab kuju, aga lõikude puudumine ei tohi lehte maha võtta */
+  const loigud = Array.isArray(postitus.loigud) ? postitus.loigud : [];
 
   return (
     <article>
@@ -51,14 +63,18 @@ export default async function Postitus({ params }) {
 
       <Sektsioon taust="linen" laius="kitsas">
         <div className="space-y-7">
-          {postitus.loigud.map((loik) => (
-            <p key={loik} className="text-lg leading-[1.95] text-ink-soft">
+          {loigud.map((loik, indeks) => (
+            <p
+              key={`${postitus.slug}-${indeks}`}
+              className="text-lg leading-[1.95] text-ink-soft"
+            >
               {loik}
             </p>
           ))}
         </div>
 
         <div className="joon mt-16" />
+        {/* Sisupuus ei ole tagasilingi jaoks välja — jääb vaikimisi sõnastus */}
         <Link
           href="/blogi"
           className="group mt-8 inline-flex items-center gap-3 mikro text-gold-deep transition-colors hover:text-ink"

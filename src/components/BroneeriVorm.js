@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Kalender, { vormindaKuupaev } from "@/components/Kalender";
-import { kontakt, teenused } from "@/sisu/sait";
+import { saadaBroneering } from "@/app/broneerimine/tegevused";
 
 const KELLAAJAD = [
   { vaartus: "Hommik", vihje: "9–12" },
@@ -17,8 +17,11 @@ const KELLAAJAD = [
   Kalender ei näita Marta tegelikke vabu aegu — külastaja pakub omalt poolt
   sobivad ajad ja Marta kinnitab. Kui hiljem tuleb päris broneerimissüsteem,
   tuleb välja vahetada ainult funktsioon saada().
+
+  Sisu (e-post, teenuste nimekiri, teekonna nimi) tuleb propsidena serverilt —
+  see on kliendikomponent ja ei tohi sisulaadijat ise importida.
 */
-export default function BroneeriVorm() {
+export default function BroneeriVorm({ email, teenused = [], teekonnaNimi }) {
   const [kuupaevad, setKuupaevad] = useState([]);
   const [kellaajad, setKellaajad] = useState([]);
 
@@ -30,38 +33,44 @@ export default function BroneeriVorm() {
     );
   }
 
+  const [saadab, alustaSaatmist] = useTransition();
+  const [seis, setSeis] = useState(null);
+
   function saada(sundmus) {
     sundmus.preventDefault();
     const vorm = new FormData(sundmus.currentTarget);
 
-    const nimi = vorm.get("nimi");
-    const epost = vorm.get("epost");
-    const telefon = vorm.get("telefon");
-    const valitud = vorm.get("teenus");
-    const sonum = vorm.get("sonum");
+    const andmed = {
+      nimi: vorm.get("nimi"),
+      epost: vorm.get("epost"),
+      telefon: vorm.get("telefon"),
+      teenus: vorm.get("teenus"),
+      sonum: vorm.get("sonum"),
+      /* Peidetud peibutusväli — inimene jätab tühjaks, bot täidab */
+      veebileht: vorm.get("veebileht"),
+      kuupaevad: kuupaevad.map((k) => vormindaKuupaev(k)),
+      kellaajad,
+    };
 
-    const teema = valitud ? `Broneerimissoov: ${valitud}` : "Broneerimissoov";
-    const sisu = [
-      `Nimi: ${nimi}`,
-      `E-post: ${epost}`,
-      telefon ? `Telefon: ${telefon}` : null,
-      valitud ? `Teenus: ${valitud}` : null,
-      "",
-      kuupaevad.length
-        ? `Sobivad kuupäevad:\n${kuupaevad
-            .map((k) => `  - ${vormindaKuupaev(k)}`)
-            .join("\n")}`
-        : null,
-      kellaajad.length ? `Sobiv kellaaeg: ${kellaajad.join(", ")}` : null,
-      kuupaevad.length || kellaajad.length ? "" : null,
-      sonum,
-    ]
-      .filter((rida) => rida !== null)
-      .join("\n");
-
-    window.location.href = `mailto:${kontakt.email}?subject=${encodeURIComponent(
-      teema
-    )}&body=${encodeURIComponent(sisu)}`;
+    alustaSaatmist(async () => {
+      setSeis(null);
+      try {
+        const vastus = await saadaBroneering(andmed);
+        if (vastus.ok) {
+          setSeis({ ok: true });
+          setKuupaevad([]);
+          setKellaajad([]);
+          sundmus.target.reset();
+        } else {
+          setSeis({ ok: false, viga: vastus.viga });
+        }
+      } catch {
+        setSeis({
+          ok: false,
+          viga: `Saatmine ebaõnnestus. Palun kirjuta otse aadressile ${email}.`,
+        });
+      }
+    });
   }
 
   const valjaStiil =
@@ -138,7 +147,9 @@ export default function BroneeriVorm() {
                 {t.nimi}
               </option>
             ))}
-            <option value="Stiiliteekond">Stiiliteekond (kolm sammu)</option>
+            {teekonnaNimi ? (
+              <option value={teekonnaNimi}>{teekonnaNimi} (kolm sammu)</option>
+            ) : null}
           </select>
         </div>
       </div>
@@ -163,6 +174,7 @@ export default function BroneeriVorm() {
         <p className="mt-3 max-w-[52ch] text-lg leading-relaxed text-ink-soft">
           Võid valida mitu või jätta valimata.
         </p>
+        {/* Valikunupud on nupud, seega rohelised — kuld jääb joonteks ja siltideks */}
         <div className="mt-6 flex flex-wrap gap-3">
           {KELLAAJAD.map((aeg) => {
             const onValitud = kellaajad.includes(aeg.vaartus);
@@ -174,13 +186,13 @@ export default function BroneeriVorm() {
                 aria-pressed={onValitud}
                 className={`border px-6 py-3 text-lg transition-colors ${
                   onValitud
-                    ? "border-gold bg-gold-light text-ink"
-                    : "border-gold/40 text-ink-soft hover:border-gold-deep hover:text-ink"
+                    ? "border-rohe bg-rohe text-white"
+                    : "border-rohe/40 text-ink-soft hover:border-rohe hover:text-ink"
                 }`}
               >
                 {aeg.vaartus}{" "}
                 <span
-                  className={onValitud ? "text-ink/60" : "text-ink-faint"}
+                  className={onValitud ? "text-white/70" : "text-ink-faint"}
                 >
                   {aeg.vihje}
                 </span>
@@ -205,18 +217,43 @@ export default function BroneeriVorm() {
         />
       </div>
 
+      {/*
+        Peibutusväli. Inimene ei näe seda ega saa sinna kursoriga sattuda;
+        automaatne täitja täidab ära ja reedab end sellega.
+      */}
+      <div aria-hidden="true" className="absolute left-[-9999px]">
+        <label htmlFor="veebileht">Jäta see väli tühjaks</label>
+        <input id="veebileht" name="veebileht" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <div className="flex flex-wrap items-center gap-6">
         <button
           type="submit"
-          className="inline-block border border-ink bg-ink px-9 py-4 mikro text-white transition-colors duration-300 hover:border-gold hover:bg-gold-light hover:text-ink"
+          disabled={saadab}
+          className="inline-block border border-rohe bg-rohe px-9 py-4 mikro text-white transition-colors duration-300 hover:border-rohe-hele hover:bg-rohe-hele disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Saada soov
+          {saadab ? "Saadan …" : "Saada soov"}
         </button>
-        <p className="text-sm leading-relaxed text-ink-faint">
-          Vorm avab sinu e-posti programmi, et saaksid kirja enne saatmist üle
-          vaadata.
-        </p>
       </div>
+
+      {/* Tagasiside pärast saatmist */}
+      {seis?.ok && (
+        <p
+          role="status"
+          className="border-l-2 border-rohe bg-linen px-6 py-5 text-lg leading-relaxed text-ink"
+        >
+          Aitäh — sinu soov on Martani jõudnud. Ta vastab ise ja võimalikult
+          kiiresti.
+        </p>
+      )}
+      {seis && !seis.ok && (
+        <p
+          role="alert"
+          className="border-l-2 border-gold-deep bg-linen px-6 py-5 text-lg leading-relaxed text-ink"
+        >
+          {seis.viga}
+        </p>
+      )}
     </form>
   );
 }

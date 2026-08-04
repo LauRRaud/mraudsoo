@@ -25,11 +25,11 @@
     olema must (valge annaks ainult 3.2:1, must annab 6:1).
   */
   /*
-    Metalne kuld täidetud nuppudele. Hele täidis üksi ei anna valge taustaga
-    piisavat piiri (2.1:1), seetõttu on nupul alati tumedam kuldne ääris,
-    mis annab piiri 3.5:1. Tekst kuldsel on must (8.9:1).
+    Nupuvärv — sügav murtud roheline. Premium toon, mis ei konkureeri
+    fotode sooja tooniga. Valge tekst annab 7.3:1, nupu serv valgel sama.
   */
-  --color-gold-light: #d4af37;
+  --color-rohe: #4a5a46;
+  --color-rohe-hele: #5c6e57;
   --color-gold: #a6862f; /* suured pealkirjad (3.5:1 valgel) */
   --color-gold-deep: #8a6f20; /* tekst, lingid, tsitaadid (4.8:1 valgel) */
   --color-brick: #8a6f20; /* varem punane aktsent — paletti ei kuulu, seega kuld */
@@ -90,6 +90,11 @@
     font-weight: 500;
     line-height: 1.15;
     letter-spacing: -0.005em;
+    /*
+      Joonnumbrid. Cormorant kasutab vaikimisi vanastiilis numbreid, kus „1” on
+      x-kõrgusega ja näeb välja nagu i — „1:1 teekond” luges „i:i teekond”.
+    */
+    font-variant-numeric: lining-nums;
   }
 
   /* Lehe nimi päises ja jaluses */

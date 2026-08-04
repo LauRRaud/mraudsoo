@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { Pealkiri, Sektsioon, Tekst } from "@/components/ui";
-import { kontakt, postitused } from "@/sisu/sait";
+import { laeSisu } from "@/sisu/lae";
 
-export const metadata = {
-  title: "Blogi",
-  description:
-    "Mõtteid kohalolust, selgusest ja sellest, kuidas sisemine ja väline korrastumine käivad käsikäes.",
-};
+/* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
+export async function generateMetadata() {
+  const sisu = await laeSisu();
+
+  return {
+    title: sisu.blogiLeht.hero.silt,
+    description: sisu.blogiLeht.hero.tekst,
+  };
+}
 
 /* Kuupäev eesti keeles: 3. august 2026 */
 function vormindaKuupaev(iso) {
@@ -17,7 +21,10 @@ function vormindaKuupaev(iso) {
   });
 }
 
-export default function Blogi() {
+export default async function Blogi() {
+  const sisu = await laeSisu();
+  const { blogiLeht, kontakt, postitused } = sisu;
+
   const jarjestatud = [...postitused].sort(
     (a, b) => new Date(b.kuupaev) - new Date(a.kuupaev)
   );
@@ -26,35 +33,29 @@ export default function Blogi() {
     <>
       <Sektsioon taust="bone">
         <div className="max-w-3xl">
-          <Pealkiri silt="Blogi" tase="h1">
-            Mõtteid teelt
+          <Pealkiri silt={blogiLeht.hero.silt} tase="h1">
+            {blogiLeht.hero.pealkiri}
           </Pealkiri>
           <div className="joon my-10 max-w-24" />
-          <Tekst suur>
-            Mõtteid kohalolust, selgusest ja sellest, kuidas sisemine ja väline
-            korrastumine käivad käsikäes.
-          </Tekst>
+          <Tekst suur>{blogiLeht.hero.tekst}</Tekst>
         </div>
       </Sektsioon>
 
       <Sektsioon taust="linen">
         {jarjestatud.length === 0 ? (
-          /* Tühi seis — postitused lisatakse faili src/sisu/sait.js */
+          /* Tühi seis — postitused lisatakse admin-lehelt */
           <div className="max-w-2xl">
             <p className="kuva text-[clamp(1.5rem,3.2vw,2.3rem)] leading-[1.35] text-gold-deep">
-              Esimesed postitused on siia tulekul.
+              {blogiLeht.tyhiPealkiri}
             </p>
-            <Tekst className="mt-8">
-              Seniks kirjutan Substackis. Sealt leiad pikemad mõtted ja saad
-              soovi korral tellida, et uus kirjutis sinuni jõuaks.
-            </Tekst>
+            <Tekst className="mt-8">{blogiLeht.tyhiTekst}</Tekst>
             <a
               href={kontakt.substack}
               target="_blank"
               rel="noreferrer"
               className="group mt-10 inline-flex items-center gap-3 mikro text-gold-deep transition-colors hover:text-ink"
             >
-              Loe Substackis
+              {blogiLeht.substackTekst}
               <span
                 aria-hidden="true"
                 className="inline-block transition-transform duration-300 group-hover:translate-x-1"

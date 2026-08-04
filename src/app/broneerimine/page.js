@@ -1,41 +1,48 @@
 import { Pealkiri, Sektsioon, Tekst } from "@/components/ui";
 import BroneeriVorm from "@/components/BroneeriVorm";
-import { kontakt } from "@/sisu/sait";
+import { laeSisu } from "@/sisu/lae";
 
-export const metadata = {
-  title: "Broneerimine",
-  description:
-    "Võta ühendust ja leiame koos sobiva aja ning viisi. Püha Ruum, stiiliselgus, garderoobi korrastus, teadlik ostlemine ja fotograafia.",
-};
+/* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
+export async function generateMetadata() {
+  const sisu = await laeSisu();
 
-export default function Broneerimine() {
+  return {
+    title: sisu.broneerimine.hero.silt,
+    description: sisu.broneerimine.hero.tekst,
+  };
+}
+
+export default async function Broneerimine() {
+  const sisu = await laeSisu();
+  const { broneerimine, kontakt, teenused, teekond } = sisu;
+
   return (
     <>
       <Sektsioon taust="bone">
         <div className="max-w-3xl">
-          <Pealkiri silt="Broneerimine" tase="h1">
-            Alustame vestlusest
+          <Pealkiri silt={broneerimine.hero.silt} tase="h1">
+            {broneerimine.hero.pealkiri}
           </Pealkiri>
           <div className="joon my-10 max-w-24" />
-          <Tekst suur>
-            Sa ei pea enne teadma, mida täpselt vajad. Kirjuta lihtsalt, mis
-            sind praegu kõige rohkem puudutab — leiame koos õige koha, kust
-            alustada.
-          </Tekst>
+          <Tekst suur>{broneerimine.hero.tekst}</Tekst>
         </div>
       </Sektsioon>
 
       <section className="bg-linen">
         <div className="mx-auto grid max-w-[1360px] gap-16 px-6 py-20 sm:py-24 lg:grid-cols-[1.3fr_0.7fr] lg:gap-24 lg:px-10 lg:py-32">
           <div>
-            <p className="silt">Saada soov</p>
+            <p className="silt">{broneerimine.vormSilt}</p>
             <div className="mt-10">
-              <BroneeriVorm />
+              <BroneeriVorm
+                email={kontakt.email}
+                teenused={teenused}
+                teekonnaNimi={teekond.nimi}
+              />
             </div>
           </div>
 
           <aside className="lg:border-l lg:border-gold/25 lg:pl-16">
-            <p className="silt">Või kirjuta otse</p>
+            <p className="silt">{broneerimine.kontaktSilt}</p>
 
             <ul className="mt-8 space-y-6">
               <li>
@@ -47,6 +54,7 @@ export default function Broneerimine() {
                 </a>
               </li>
               <li>
+                {/* „Instagram” ja „Facebook” on kanalite nimed, mitte muudetav sisu */}
                 <a
                   href={kontakt.instagram}
                   target="_blank"
@@ -71,8 +79,7 @@ export default function Broneerimine() {
             <div className="joon my-10" />
 
             <p className="text-lg leading-relaxed text-ink-soft">
-              Vastan ise ja võimalikult kiiresti. Kui sul on küsimus, mille
-              kohta sa pole kindel, kas see üldse sobib — küsi ikkagi.
+              {broneerimine.markus}
             </p>
           </aside>
         </div>

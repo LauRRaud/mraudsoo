@@ -3,17 +3,26 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { navi } from "@/sisu/sait";
 
-export default function Pais() {
+/*
+  Kliendikomponent ei loe sisu ise — navi ja saidiNimi tulevad propsidena
+  juurpaigutusest (src/app/layout.js), kus sisu on failist loetud.
+*/
+export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo" }) {
   const [avatud, setAvatud] = useState(false);
   const [peidus, setPeidus] = useState(false);
   const tee = usePathname();
 
-  // Sulge mobiilimenüü lehe vahetumisel
-  useEffect(() => {
+  /*
+    Sulge mobiilimenüü lehe vahetumisel.
+    Muudame seisundit renderdamise ajal, mitte efektis — efektis setState()
+    tekitaks kaskaadrenderduse (React: „You Might Not Need an Effect”).
+  */
+  const [eelmineTee, setEelmineTee] = useState(tee);
+  if (tee !== eelmineTee) {
+    setEelmineTee(tee);
     setAvatud(false);
-  }, [tee]);
+  }
 
   /*
     Päis peitub alla kerides ja tuleb kohe tagasi üles kerides.
@@ -64,7 +73,7 @@ export default function Pais() {
           href="/"
           className="nimi text-2xl text-ink transition-colors hover:text-gold-deep sm:text-3xl"
         >
-          Marta Raudsoo
+          {saidiNimi}
         </Link>
 
         {/* Töölaua navigatsioon */}

@@ -151,7 +151,7 @@ export default function Kalender({ valitud, onMuuda }) {
               aria-label={vormindaKuupaev(voti)}
               className={`relative flex aspect-square items-center justify-center text-lg transition-colors ${
                 onValitud
-                  ? "bg-gold-light text-ink"
+                  ? "bg-rohe text-white"
                   : minevikus
                     ? "cursor-not-allowed text-ink-faint/40"
                     : taisTais

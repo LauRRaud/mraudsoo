@@ -20,6 +20,9 @@
 # production
 /build
 
+# admin-lehelt salvestatud sisu (data/sisu.json) — elab serveris, mitte gitis
+/data
+
 # misc
 .DS_Store
 *.pem
