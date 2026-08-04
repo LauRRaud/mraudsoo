@@ -89,8 +89,9 @@ export function NooleLink({ href, children, className = "" }) {
 export function Tekst({ children, suur = false, className = "" }) {
   return (
     <p
+      /* .tekst / .tekst-suur loevad suuruse CSS-muutujast, mille admin saab muuta */
       className={`max-w-[60ch] ${
-        suur ? "text-xl sm:text-[1.375rem]" : "text-lg sm:text-xl"
+        suur ? "tekst-suur" : "tekst"
       } leading-[1.75] text-ink-soft ${className}`}
     >
       {children}

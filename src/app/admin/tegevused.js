@@ -14,6 +14,7 @@ import { kasSisseLoginud, loguSisse, loguValja } from "@/admin/turve";
 import { laeSisu, puhasta, salvestaSisu, vaikimisiSisu } from "@/sisu/lae";
 import { markiLoetuks } from "@/broneering/salvesta";
 import { salvestaKalender } from "@/broneering/kalender";
+import { salvestaKujundus } from "@/kujundus/lae";
 
 /*
   Kuju valideerimine (puhasta) elab failis src/sisu/lae.js, sest sama kontroll
@@ -162,6 +163,28 @@ export async function salvestaKalendriTegevus(andmed) {
     return {
       ok: false,
       viga: "Salvestamine ebaõnnestus: faili data/kalender.json ei õnnestunud kirjutada.",
+    };
+  }
+}
+
+/*
+  KUJUNDUS.
+  Kuju ja väärtused puhastatakse salvestamisel (vt src/kujundus/lae.js) —
+  see on oluline, sest need lähevad CSS-i sisse.
+*/
+export async function salvestaKujundusTegevus(uus) {
+  const keeld = await noudaSessiooni();
+  if (keeld) return keeld;
+
+  try {
+    const salvestatud = await salvestaKujundus(uus);
+    /* Kujundus on juurpaigutuses, seega kogu leht vajab värskendust */
+    revalidatePath("/", "layout");
+    return { ok: true, kujundus: salvestatud };
+  } catch {
+    return {
+      ok: false,
+      viga: "Salvestamine ebaõnnestus: faili data/kujundus.json ei õnnestunud kirjutada.",
     };
   }
 }

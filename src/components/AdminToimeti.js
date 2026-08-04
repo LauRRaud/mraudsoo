@@ -191,6 +191,13 @@ const MALLID = {
   read: { millest: "", milleks: "" },
   loend: { nimi: "", kirjeldus: "" },
   navi: { nimi: "", tee: "" },
+  lehed: {
+    slug: "",
+    pealkiri: "",
+    silt: "",
+    sissejuhatus: "",
+    plokid: [{ pealkiri: "", loigud: [""] }],
+  },
 };
 
 /* ------------------------------------------------------------------ */

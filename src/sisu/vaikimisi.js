@@ -697,6 +697,15 @@ export const vaikimisiSisu = {
   */
   postitused: [],
 
+  /*
+    OMALOODUD LEHED.
+
+    Marta lisab neid admin-lehelt. Iga leht saab aadressi /<slug> ja koosneb
+    plokkidest. Menüüsse lisamiseks tuleb lisada rida ka navi alla, tee kujul
+    "/minu-leht" — nii jaab kontroll selle ule, mis menuus nahtaval on.
+  */
+  lehed: [],
+
   broneerimine: {
     hero: {
       silt: "Broneerimine",

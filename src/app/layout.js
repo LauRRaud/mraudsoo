@@ -1,34 +1,17 @@
-import { Cormorant_Garamond, Poppins } from "next/font/google";
 import { cache } from "react";
 import "./globals.css";
 import Pais from "@/components/Pais";
 import Jalus from "@/components/Jalus";
 import { laeSisu } from "@/sisu/lae";
-
-/*
-  Kuvakiri — kõrge kontrastiga elegantne serif, vastab Marta olemasolevale visuaalile.
-  latin-ext on eesti tähtede (õ ä ö ü š ž) jaoks kohustuslik.
-*/
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500"],
-  display: "swap",
-});
-
-/* Põhikiri — pehme geomeetriline sans, sama joon mis Marta Instagramis */
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500"],
-  display: "swap",
-});
+import { koikFondiKlassid } from "@/kujundus/fondid";
+import { kujundusCss, laeKujundus } from "@/kujundus/lae";
 
 /*
   Sama päringu jooksul loeme sisu ainult korra: generateMetadata ja
   RootLayout renderdatakse samas päringus, React cache jagab tulemuse.
 */
 const laeSisuKordKorras = cache(laeSisu);
+const laeKujundusKordKorras = cache(laeKujundus);
 
 /*
   Pealkiri ja kirjeldus tulevad sisupuust (sisu.meta), seepärast ei saa siin
@@ -59,12 +42,18 @@ export async function generateMetadata() {
 
 export default async function RootLayout({ children }) {
   const sisu = await laeSisuKordKorras();
+  const kujundus = await laeKujundusKordKorras();
 
   return (
-    <html
-      lang="et"
-      className={`${cormorant.variable} ${poppins.variable} h-full antialiased`}
-    >
+    <html lang="et" className={`${koikFondiKlassid} h-full antialiased`}>
+      <head>
+        {/*
+          Admin-lehelt salvestatud kujundus kirjutab :root muutujad üle.
+          Väärtused on puhastatud (vt src/kujundus/lae.js), seega siia ei saa
+          suvalist CSS-i sattuda.
+        */}
+        <style>{kujundusCss(kujundus)}</style>
+      </head>
       <body className="flex min-h-full flex-col">
         {/* Pais on kliendikomponent — sisu jõuab sinna ainult propsidena */}
         <Pais navi={sisu.navi} saidiNimi={sisu.meta.saidiNimi} />

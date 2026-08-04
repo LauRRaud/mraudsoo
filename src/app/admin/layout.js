@@ -56,6 +56,7 @@ export default async function AdminPaigutus({ children }) {
                   { tee: "/admin", nimi: "Sisu" },
                   { tee: "/admin/broneeringud", nimi: "Broneeringud" },
                   { tee: "/admin/kalender", nimi: "Kalender" },
+                  { tee: "/admin/kujundus", nimi: "Kujundus" },
                 ].map((punkt) => (
                   <li key={punkt.tee}>
                     <Link

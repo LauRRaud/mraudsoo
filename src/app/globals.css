@@ -11,7 +11,15 @@
   hele suurtele pealkirjadele, tume tekstisuuruses kasutuseks.
 */
 
-@theme inline {
+/*
+  TÄHELEPANU: siin on `@theme`, MITTE `@theme inline`.
+
+  `inline` kirjutaks värvi otse klassi sisse (bg-bone -> background:#fff) ja siis
+  ei saaks seda enam jooksvalt muuta. Ilma `inline`-ita tekitab Tailwind
+  :root muutujad ja klassid viitavad neile var()-iga — nii saab admin-lehelt
+  salvestatud kujundus need üle kirjutada (vt src/kujundus/).
+*/
+@theme {
   /* Pinnad — valgest tumedama halli suunas */
   --color-bone: #ffffff; /* lehe põhitaust: valge */
   --color-linen: #f7f6f4; /* vaevumärgatav paneel */
@@ -39,8 +47,29 @@
   --color-ink-soft: #3b3b3b; /* põhitekst (11:1 valgel) */
   --color-ink-faint: #6e6e6e; /* meta-tekst, sildid (5.1:1 valgel) */
 
-  --font-display: var(--font-cormorant);
-  --font-sans: var(--font-poppins);
+  /*
+    Fondid. Väärtus tuleb --kuva-font / --tekst-font kaudu, mille määrab
+    juurpaigutus valitud fondi järgi (vt src/kujundus/fondid.js).
+  */
+  --font-display: var(--kuva-font);
+  --font-sans: var(--tekst-font);
+}
+
+/*
+  MUUDETAVAD MÕÕDUD.
+
+  Need on eraldi CSS-muutujad, sest admin-leht kirjutab need üle. Siin on
+  vaikimisi väärtused — kui admin ei ole midagi salvestanud, kehtivad need.
+*/
+:root {
+  --silt-suurus: 1.125rem;
+  --mikro-suurus: 1.0625rem;
+  --tekst-suurus: 1.125rem;
+  --tekst-suur-suurus: 1.25rem;
+
+  --silt-vahe: 0.2em;
+  --mikro-vahe: 0.14em;
+  --nimi-vahe: 0.06em;
 }
 
 @layer base {
@@ -102,7 +131,7 @@
     font-family: var(--font-display);
     font-weight: 400;
     line-height: 1.15;
-    letter-spacing: 0.06em;
+    letter-spacing: var(--nimi-vahe);
   }
 
   /*
@@ -110,9 +139,9 @@
     Suurus hoitakse siin ühes kohas — kogu lehe sildid muutuvad korraga.
   */
   .silt {
-    font-size: 1.125rem;
+    font-size: var(--silt-suurus);
     font-weight: 400;
-    letter-spacing: 0.2em;
+    letter-spacing: var(--silt-vahe);
     text-transform: uppercase;
     color: var(--color-gold-deep);
   }
@@ -122,10 +151,19 @@
     et iga kasutuskoht saaks ise värvi määrata.
   */
   .mikro {
-    font-size: 1.0625rem;
+    font-size: var(--mikro-suurus);
     font-weight: 400;
-    letter-spacing: 0.14em;
+    letter-spacing: var(--mikro-vahe);
     text-transform: uppercase;
+  }
+
+  /* Põhitekst — suurus tuleb muutujast, et admin saaks seda muuta */
+  .tekst {
+    font-size: var(--tekst-suurus);
+  }
+
+  .tekst-suur {
+    font-size: var(--tekst-suur-suurus);
   }
 
   /* Juuksekarva peenusega joon — asendab kaarte ja varje */
