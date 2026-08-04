@@ -85,8 +85,9 @@ export default async function Minust() {
       <Sektsioon taust="linen" id="lugu">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-28">
           <div className="lg:sticky lg:top-32 lg:self-start">
+            {/* Silti pealkirja kohal ei ole — see oleks sama sõna kaks korda */}
             <Ilmub>
-              <Pealkiri silt={lugu.silt}>{lugu.pealkiri}</Pealkiri>
+              <Pealkiri>{lugu.pealkiri}</Pealkiri>
               <div className="joon mt-9 max-w-28" />
             </Ilmub>
           </div>

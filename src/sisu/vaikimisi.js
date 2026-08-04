@@ -158,10 +158,15 @@ export const vaikimisiSisu = {
         "Pakun inimestele ruumi, kus on võimalik peatuda, olla kuuldud ja märgata uuesti seda, mis on elus oluline.",
     },
 
-    /* Marta enda lugu Instagramist — kutsumuse sünd */
+    /*
+      Marta enda lugu Instagramist — kutsumuse sünd.
+      Pealkiri on lihtsalt „Minu lugu”: varem seisis siin „Igatsus kohtuda
+      iseenda unikaalsusega”, mis oli minu kirjutatud kokkuvõte (pealkiri
+      TEKSTID-KOIK.md-st), mitte ühelgi pildil olev tekst.
+    */
     lugu: {
       silt: "Minu lugu",
-      pealkiri: "Igatsus kohtuda iseenda unikaalsusega",
+      pealkiri: "Minu lugu",
       loigud: [
         "Nii kaua kui ma ennast mäletan, olen ma igatsenud kohtuda iseenda unikaalsusega. Mitte lihtsalt oma stiili, välimuse või rollide kaudu, vaid selle tõelise minaga — inimesega, kelleks JUMAL on mind loonud.",
         "Olen alateadlikult tundnud kutset ja tõmmet mõista: milline on see kordumatu „mina”, kelle Jumal on loonud?",
@@ -193,7 +198,8 @@ export const vaikimisiSisu = {
     */
     pooordumine: {
       silt: "Süda igatseb tõde",
-      pealkiri: "Täna ma näen selgemalt kui iial varem",
+      /* Pildi (IG 112) pealkiri koos punktireaga, mis seob selle alloleva lõiguga */
+      pealkiri: "Täna ma näen selgemalt kui iial varem …",
       loigud: [
         "Inimese sees on kaks reaalsust korraga.",
         "Igatsus elada õigesti, soov olla aus, vajadus rahu ja lihtsuse järele - süda tunneb ära, mis on õige …",
