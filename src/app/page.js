@@ -149,9 +149,9 @@ export default async function Avaleht() {
       <Sektsioon taust="bone">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-24">
           <div className="lg:sticky lg:top-32 lg:self-start">
+            {/* Pealkiri algab ise sõnaga „essents” — eraldi silti pole vaja */}
             <Ilmub>
-              <p className="silt">{essents.silt}</p>
-              <h2 className="kuva mt-6 text-[clamp(2rem,4.4vw,3.3rem)] text-ink">
+              <h2 className="kuva text-[clamp(2.2rem,4.6vw,3.5rem)] text-ink">
                 {essents.pealkiri}
               </h2>
               <div className="joon mt-10 max-w-28" />
@@ -178,10 +178,9 @@ export default async function Avaleht() {
 
       {/* Teenused — nummerdatud register */}
       <Sektsioon taust="linen">
+        {/* Pealkiri ütleb „kuus viisi” ise — eraldi silti pole vaja */}
         <Ilmub className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
-          <Pealkiri silt={teenusedPlokk.silt} className="max-w-xl">
-            {teenusedPlokk.pealkiri}
-          </Pealkiri>
+          <Pealkiri className="max-w-xl">{teenusedPlokk.pealkiri}</Pealkiri>
           <NooleLink href="/teenused">{teenusedPlokk.linkTekst}</NooleLink>
         </Ilmub>
 
@@ -192,7 +191,7 @@ export default async function Avaleht() {
                 href={`/teenused/${teenus.slug}`}
                 /* Negatiivne veeris + sama polsterdus: hover-taust ulatub
                    sektsiooni servani, muidu jääb mulje äralõigatud kastist */
-                className="group -mx-6 grid grid-cols-1 items-center gap-x-10 gap-y-4 border-t border-gold/25 px-6 py-8 transition-colors duration-300 hover:bg-bone sm:grid-cols-[1.1fr_1fr] sm:py-10 lg:-mx-12 lg:px-12"
+                className="group -mx-6 grid grid-cols-1 items-center gap-x-14 gap-y-4 border-t border-gold/25 px-6 py-8 transition-colors duration-300 hover:bg-bone sm:grid-cols-[minmax(0,26rem)_1fr] sm:py-10 lg:-mx-12 lg:px-12"
               >
                 <div>
                   <h3 className="kuva text-[clamp(1.55rem,3.1vw,2.4rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
@@ -203,7 +202,8 @@ export default async function Avaleht() {
                     {teenus.alapealkiri}
                   </p>
                 </div>
-                <p className="max-w-[46ch] text-lg leading-relaxed text-ink-soft sm:justify-self-end">
+                {/* Kirjeldus algab kohe nime järel, mitte lehe paremast servast */}
+                <p className="max-w-[46ch] text-lg leading-relaxed text-ink-soft">
                   {teenus.luhike}
                 </p>
               </Link>
@@ -226,8 +226,9 @@ export default async function Avaleht() {
           </div>
 
           <div>
+            {/* Pealkiri kõneleb ise — „Minust” silt oleks kordus */}
             <Ilmub>
-              <Pealkiri silt={minustPlokk.silt}>{minustPlokk.pealkiri}</Pealkiri>
+              <Pealkiri>{minustPlokk.pealkiri}</Pealkiri>
             </Ilmub>
             <Ilmub ruhm className="mt-8 space-y-6">
               {minustPlokk.loigud.map((loik) => (

@@ -49,7 +49,9 @@ export default async function Teenused() {
                 <Link
                   href={`/teenused/${teenus.slug}`}
                   /* Negatiivne veeris: hover-taust ulatub sektsiooni servani */
-                  className="group -mx-6 grid grid-cols-1 gap-x-12 gap-y-4 border-t border-gold/25 px-6 py-10 transition-colors duration-300 hover:bg-bone sm:grid-cols-[1.05fr_1fr] sm:py-12 lg:-mx-12 lg:px-12"
+                  /* Kirjeldus algab kohe nime veeru järel, mitte lehe paremast
+                     servast — kaks veergu peavad lugema ühe reana */
+                  className="group -mx-6 grid grid-cols-1 gap-x-14 gap-y-4 border-t border-gold/25 px-6 py-10 transition-colors duration-300 hover:bg-bone sm:grid-cols-[minmax(0,28rem)_1fr] sm:py-12 lg:-mx-12 lg:px-12"
                 >
                   <div>
                     <h2 className="kuva text-[clamp(1.75rem,3.6vw,2.8rem)] text-ink transition-all duration-500 group-hover:translate-x-1.5 group-hover:text-gold-deep">
@@ -61,7 +63,7 @@ export default async function Teenused() {
                     </p>
                   </div>
 
-                  <div className="sm:self-center sm:justify-self-end">
+                  <div className="sm:self-center">
                     <p className="max-w-[46ch] text-lg leading-relaxed text-ink-soft">
                       {teenus.luhike}
                     </p>

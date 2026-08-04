@@ -61,7 +61,7 @@ export function Pealkiri({
         className={`kuva ${tume ? "text-luu" : "text-ink"} ${
           Tase === "h1"
             ? "text-[clamp(2.5rem,5.5vw,4.25rem)]"
-            : "text-[clamp(1.9rem,3.6vw,3rem)]"
+            : "text-[clamp(2.1rem,4vw,3.4rem)]"
         } ${silt ? "mt-5" : ""}`}
       >
         {children}
