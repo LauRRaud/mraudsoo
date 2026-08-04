@@ -92,6 +92,13 @@
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    /*
+      Leht lõpeb jalusega. Ilma selleta saab telefonis lõpust veel edasi
+      kerida ja tumeda jaluse alt paistab keha hele taust — leht näeb välja,
+      nagu jätkuks tühjusesse. Dokumendi kõrgus on õige (kontrollitud:
+      jaluse alaserv = scrollHeight), asi on ainult kummipaelas.
+    */
+    overscroll-behavior-y: none;
   }
 
   /* Kerimine jääb alles; ainult brauseri nähtav kerimisriba kaob. */
@@ -399,13 +406,18 @@
   }
 
   /*
-    Mobiilis on nupud täislaiuses ja üksteise all. Muidu määras laiuse teksti
-    pikkus ja kaks kõrvutist nuppu („Broneeri aeg” / „Vaata hinnakirja”) jäid
-    eri laiusega ning rida loksus. Väike päisenupp jääb omal laiusel.
+    Mobiilis on nupud ühesuurused, keskel ja KITSAMAD kui ekraan. Täislaiuses
+    nupp tähendab, et iga puude sellel kõrgusel tabab nuppu — kerimiseks peab
+    jääma nupu kõrvale vaba äär. Laius on kindel (mitte auto), sest muidu
+    määrab pikkuse tekst ja kaks kõrvutist nuppu jäävad eri laiusega.
+    Väike päisenupp jääb omal laiusel.
   */
   @media (max-width: 639px) {
     .nupp:not(.nupp-vaike) {
       width: 100%;
+      max-width: 16.5rem;
+      margin-inline: auto;
+      padding-inline: 1.5rem;
     }
   }
 
