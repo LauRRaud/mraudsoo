@@ -2,6 +2,7 @@ import Foto from "@/components/Foto";
 import Ilmub from "@/components/Ilmub";
 import { NooleLink, Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
+import { varvija } from "@/sisu/tekstivarvid";
 
 /* Metaandmed tulevad samast sisupuust, mis leht ise */
 export async function generateMetadata() {
@@ -33,6 +34,9 @@ export default async function Minust() {
     lopp,
   } = sisu.minust;
 
+  /* Admin-lehelt antud üksikute tekstide värvid */
+  const v = varvija(sisu.tekstiVarvid, "minust");
+
   return (
     <>
       {/*
@@ -43,10 +47,12 @@ export default async function Minust() {
       <section className="overflow-hidden bg-bone">
         <div className="mx-auto grid max-w-[1400px] items-start gap-14 px-6 pb-16 pt-10 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
           <div className="lg:pt-14">
-            <p className="sisene silt">{hero.silt}</p>
+            <p className="sisene silt" style={v("hero.silt")}>
+              {hero.silt}
+            </p>
             <h1
               className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
-              style={{ "--viive": "90ms" }}
+              style={{ "--viive": "90ms", ...v("hero.pealkiri") }}
             >
               {hero.pealkiri}
             </h1>
@@ -55,7 +61,9 @@ export default async function Minust() {
               style={{ "--viive": "200ms" }}
             />
             <div className="sisene" style={{ "--viive": "300ms" }}>
-              <Tekst suur>{hero.tekst}</Tekst>
+              <Tekst suur stiil={v("hero.tekst")}>
+                {hero.tekst}
+              </Tekst>
             </div>
             <div className="sisene" style={{ "--viive": "400ms" }}>
               {/* Sõnastus on loo sektsiooni enda silt (lugu.silt) */}
@@ -87,7 +95,7 @@ export default async function Minust() {
           <div className="lg:sticky lg:top-32 lg:self-start">
             {/* Silti pealkirja kohal ei ole — see oleks sama sõna kaks korda */}
             <Ilmub>
-              <Pealkiri>{lugu.pealkiri}</Pealkiri>
+              <Pealkiri stiil={v("lugu.pealkiri")}>{lugu.pealkiri}</Pealkiri>
               <div className="joon mt-9 max-w-28" />
             </Ilmub>
           </div>
@@ -96,6 +104,7 @@ export default async function Minust() {
             {lugu.loigud.map((loik, jrk) => (
               <p
                 key={loik}
+                style={v(`lugu.loigud.${jrk}`)}
                 /* Esimene lõik on loo sissejuhatus — pisut suurem ja tumedam */
                 className={
                   jrk === 0
@@ -117,6 +126,9 @@ export default async function Minust() {
             viide={kirjakoht.viide}
             tekst={kirjakoht.tekst}
             selgitus={kirjakoht.selgitus}
+            viiteStiil={v("kirjakoht.viide")}
+            stiil={v("kirjakoht.tekst")}
+            selgituseStiil={v("kirjakoht.selgitus")}
           />
         </Ilmub>
       </Sektsioon>
@@ -130,8 +142,13 @@ export default async function Minust() {
       <Sektsioon taust="mets">
         <Ilmub className="mx-auto max-w-3xl text-center">
           <div aria-hidden="true" className="pystjoon pystjoon-tume" />
-          <p className="silt silt-tume mt-7">{pooordumine.silt}</p>
-          <h2 className="kuva mt-6 text-[clamp(2rem,4.2vw,3.2rem)] text-luu">
+          <p className="silt silt-tume mt-7" style={v("pooordumine.silt")}>
+            {pooordumine.silt}
+          </p>
+          <h2
+            className="kuva mt-6 text-[clamp(2rem,4.2vw,3.2rem)] text-luu"
+            style={v("pooordumine.pealkiri")}
+          >
             {pooordumine.pealkiri}
           </h2>
         </Ilmub>
@@ -140,6 +157,7 @@ export default async function Minust() {
           {pooordumine.loigud.map((loik, jrk) => (
             <p
               key={loik}
+              style={v(`pooordumine.loigud.${jrk}`)}
               /* whitespace-pre-line: Marta reavahetused pildilt jäävad alles */
               className={`whitespace-pre-line ${
                 jrk === 0
@@ -159,7 +177,10 @@ export default async function Minust() {
         {pooordumine.tsitaat && (
           <Ilmub className="mx-auto mt-16 max-w-3xl text-center sm:mt-20">
             <div aria-hidden="true" className="pystjoon pystjoon-tume" />
-            <blockquote className="kuva mt-8 text-[clamp(1.35rem,2.7vw,1.9rem)] leading-[1.45] text-kuld-hele">
+            <blockquote
+              className="kuva mt-8 text-[clamp(1.35rem,2.7vw,1.9rem)] leading-[1.45] text-kuld-hele"
+              style={v("pooordumine.tsitaat")}
+            >
               {pooordumine.tsitaat}
             </blockquote>
           </Ilmub>
@@ -172,12 +193,15 @@ export default async function Minust() {
       */}
       <Sektsioon taust="linen" laius="kitsas">
         <div className="space-y-20 sm:space-y-24">
-          {pooordumine.kirjakohad.map((koht) => (
+          {pooordumine.kirjakohad.map((koht, jrk) => (
             <Ilmub key={koht.viide}>
               <Salm
                 viide={koht.viide}
                 tekst={koht.tekst}
                 selgitus={koht.selgitus}
+                viiteStiil={v(`pooordumine.kirjakohad.${jrk}.viide`)}
+                stiil={v(`pooordumine.kirjakohad.${jrk}.tekst`)}
+                selgituseStiil={v(`pooordumine.kirjakohad.${jrk}.selgitus`)}
               />
             </Ilmub>
           ))}
@@ -187,20 +211,33 @@ export default async function Minust() {
       {/* Annid */}
       <Sektsioon taust="bone">
         <Ilmub>
-          <Pealkiri silt={annid.silt} className="max-w-2xl">
+          <Pealkiri
+            silt={annid.silt}
+            className="max-w-2xl"
+            siltStiil={v("annid.silt")}
+            stiil={v("annid.pealkiri")}
+          >
             {annid.pealkiri}
           </Pealkiri>
-          <Tekst className="mt-8">{annid.sissejuhatus}</Tekst>
+          <Tekst className="mt-8" stiil={v("annid.sissejuhatus")}>
+            {annid.sissejuhatus}
+          </Tekst>
         </Ilmub>
 
         {/* Ilma ülajoonteta — kuvakirjas nimed kannavad plokke ise */}
         <Ilmub ruhm as="dl" className="mt-12 grid gap-x-16 gap-y-10 sm:grid-cols-2">
-          {annid.loend.map((and) => (
+          {annid.loend.map((and, jrk) => (
             <div key={and.nimi}>
-              <dt className="kuva text-[clamp(1.4rem,2.6vw,1.85rem)] text-ink">
+              <dt
+                className="kuva text-[clamp(1.4rem,2.6vw,1.85rem)] text-ink"
+                style={v(`annid.loend.${jrk}.nimi`)}
+              >
                 {and.nimi}
               </dt>
-              <dd className="mt-3 text-lg leading-relaxed text-ink-soft">
+              <dd
+                className="mt-3 text-lg leading-relaxed text-ink-soft"
+                style={v(`annid.loend.${jrk}.kirjeldus`)}
+              >
                 {and.kirjeldus}
               </dd>
             </div>
@@ -219,7 +256,10 @@ export default async function Minust() {
             />
 
             <Ilmub viive={150}>
-              <blockquote className="kuva mt-12 max-w-4xl text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.4] text-gold-deep">
+              <blockquote
+                className="kuva mt-12 max-w-4xl text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.4] text-gold-deep"
+                style={v("tsitaat.tekst")}
+              >
                 {tsitaat.tekst}
               </blockquote>
             </Ilmub>
@@ -232,15 +272,20 @@ export default async function Minust() {
         <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-20 sm:py-28 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24 lg:px-12 lg:py-36">
           <div>
             <Ilmub>
-              <Pealkiri silt={terviklikkus.silt}>
+              <Pealkiri
+                silt={terviklikkus.silt}
+                siltStiil={v("terviklikkus.silt")}
+                stiil={v("terviklikkus.pealkiri")}
+              >
                 {terviklikkus.pealkiri}
               </Pealkiri>
             </Ilmub>
             {/* Suurem kiri ja hõredam vahe, et tekstiveerg ei jääks pildi kõrval kokkusurutuks */}
             <Ilmub ruhm className="mt-9 space-y-7">
-              {terviklikkus.loigud.map((loik) => (
+              {terviklikkus.loigud.map((loik, jrk) => (
                 <p
                   key={loik}
+                  style={v(`terviklikkus.loigud.${jrk}`)}
                   /* whitespace-pre-line: Marta reavahetused pildilt jäävad alles */
                   className="max-w-[52ch] whitespace-pre-line text-xl leading-[1.75] text-ink/85"
                 >
@@ -265,7 +310,10 @@ export default async function Minust() {
       <Sektsioon taust="linen" laius="kitsas" polsterdus="ohuke" className="text-center">
         <Ilmub>
           <div aria-hidden="true" className="pystjoon" />
-          <blockquote className="kuva mx-auto mt-8 max-w-3xl text-[clamp(1.55rem,3.2vw,2.4rem)] leading-[1.35] text-ink">
+          <blockquote
+            className="kuva mx-auto mt-8 max-w-3xl text-[clamp(1.55rem,3.2vw,2.4rem)] leading-[1.35] text-ink"
+            style={v("lopp.tsitaat")}
+          >
             {lopp.tsitaat}
           </blockquote>
         </Ilmub>

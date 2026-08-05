@@ -2,6 +2,7 @@ import { Salm, Sektsioon, Tekst } from "@/components/ui";
 import BroneeriVorm from "@/components/BroneeriVorm";
 import Ilmub from "@/components/Ilmub";
 import { laeSisu } from "@/sisu/lae";
+import { varvija } from "@/sisu/tekstivarvid";
 import { laeKalender } from "@/broneering/kalender";
 
 /* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
@@ -19,14 +20,19 @@ export default async function Broneerimine() {
   const kalender = await laeKalender();
   const { broneerimine, kontakt, teenused, teekond } = sisu;
 
+  /* Admin-lehelt antud üksikute tekstide värvid */
+  const v = varvija(sisu.tekstiVarvid, "broneerimine");
+
   return (
     <>
       <Sektsioon taust="bone" polsterdus="ohuke">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          <p className="sisene silt">{broneerimine.hero.silt}</p>
+          <p className="sisene silt" style={v("hero.silt")}>
+            {broneerimine.hero.silt}
+          </p>
           <h1
             className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
-            style={{ "--viive": "90ms" }}
+            style={{ "--viive": "90ms", ...v("hero.pealkiri") }}
           >
             {broneerimine.hero.pealkiri}
           </h1>
@@ -35,7 +41,9 @@ export default async function Broneerimine() {
             style={{ "--viive": "200ms" }}
           />
           <div className="sisene" style={{ "--viive": "300ms" }}>
-            <Tekst suur>{broneerimine.hero.tekst}</Tekst>
+            <Tekst suur stiil={v("hero.tekst")}>
+              {broneerimine.hero.tekst}
+            </Tekst>
           </div>
         </div>
       </Sektsioon>
@@ -43,7 +51,9 @@ export default async function Broneerimine() {
       <section className="bg-linen">
         <div className="mx-auto grid max-w-[1400px] gap-16 px-6 py-20 sm:py-28 lg:grid-cols-[1.3fr_0.7fr] lg:gap-24 lg:px-12 lg:py-36">
           <Ilmub>
-            <p className="silt">{broneerimine.vormSilt}</p>
+            <p className="silt" style={v("vormSilt")}>
+              {broneerimine.vormSilt}
+            </p>
             <div className="mt-10">
               <BroneeriVorm
                 email={kontakt.email}
@@ -60,7 +70,9 @@ export default async function Broneerimine() {
             viive={150}
             className="lg:border-l lg:border-gold/25 lg:pl-16"
           >
-            <p className="silt">{broneerimine.kontaktSilt}</p>
+            <p className="silt" style={v("kontaktSilt")}>
+              {broneerimine.kontaktSilt}
+            </p>
 
             <ul className="mt-8 space-y-6">
               <li>
@@ -96,7 +108,10 @@ export default async function Broneerimine() {
 
             <div className="joon my-10" />
 
-            <p className="max-w-[44ch] text-lg leading-[1.85] text-ink-soft">
+            <p
+              className="max-w-[44ch] text-lg leading-[1.85] text-ink-soft"
+              style={v("markus")}
+            >
               {broneerimine.markus}
             </p>
           </Ilmub>
@@ -111,6 +126,9 @@ export default async function Broneerimine() {
               viide={broneerimine.kirjakoht.viide}
               tekst={broneerimine.kirjakoht.tekst}
               selgitus={broneerimine.kirjakoht.selgitus}
+              viiteStiil={v("kirjakoht.viide")}
+              stiil={v("kirjakoht.tekst")}
+              selgituseStiil={v("kirjakoht.selgitus")}
             />
           </Ilmub>
         </Sektsioon>

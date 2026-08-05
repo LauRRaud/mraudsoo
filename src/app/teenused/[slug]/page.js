@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Ilmub from "@/components/Ilmub";
 import { Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu, laeSisuSync } from "@/sisu/lae";
+import { varvija } from "@/sisu/tekstivarvid";
 
 /* Teenuse otsimine slugi järgi — massiiv võib admini kaudu olla asendatud */
 function leiaTeenus(teenused, slug) {
@@ -92,7 +93,16 @@ export default async function TeenuseLeht({ params }) {
   } = sisu.teenuseLeht;
 
   const jrk = teenused.findIndex((t) => t.slug === slug);
-  const jargmine = teenused[(jrk + 1) % teenused.length];
+  const jargmiseJrk = (jrk + 1) % teenused.length;
+  const jargmine = teenused[jargmiseJrk];
+
+  /*
+    Admin-lehelt antud üksikute tekstide värvid. Teenuse omad käivad läbi
+    massiivi indeksi (teenused.2.sissejuhatus), ühised tekstid teenuseLeht'i alt.
+  */
+  const v = varvija(sisu.tekstiVarvid, `teenused.${jrk}`);
+  const vj = varvija(sisu.tekstiVarvid, `teenused.${jargmiseJrk}`);
+  const vl = varvija(sisu.tekstiVarvid, "teenuseLeht");
 
   /* Massiivid kindlustatud: admin võib teenuse ilma mõne väljata salvestada */
   const loigud = Array.isArray(teenus.loigud) ? teenus.loigud : [];
@@ -152,11 +162,15 @@ export default async function TeenuseLeht({ params }) {
               className={`sisene kuva max-w-[36ch] italic text-[clamp(1.2rem,2.3vw,1.6rem)] leading-[1.4] ${
                 tume ? "text-luu/90" : "text-ink/70"
               }`}
+              style={v("alapealkiri")}
             >
               {teenus.alapealkiri}
             </p>
           ) : (
-            <p className={`sisene silt ${tume ? "silt-tume" : "!text-ink/70"}`}>
+            <p
+              className={`sisene silt ${tume ? "silt-tume" : "!text-ink/70"}`}
+              style={v("alapealkiri")}
+            >
               {teenus.alapealkiri}
             </p>
           )}
@@ -174,7 +188,7 @@ export default async function TeenuseLeht({ params }) {
             className={`sisene mt-8 max-w-[55ch] text-xl leading-[1.75] sm:text-2xl ${
               tume ? "text-luu/95" : "text-ink/85"
             }`}
-            style={{ "--viive": "200ms" }}
+            style={{ "--viive": "200ms", ...v("luhike") }}
           >
             {teenus.luhike}
           </p>
@@ -184,15 +198,20 @@ export default async function TeenuseLeht({ params }) {
       {/* Sissejuhatus — kuldne juhtmõte ja lõigud */}
       <Sektsioon taust="bone" laius="kitsas">
         <Ilmub>
-          <p className="kuva text-[clamp(1.55rem,3.2vw,2.3rem)] leading-[1.35] text-gold-deep">
+          <p
+            className="kuva text-[clamp(1.55rem,3.2vw,2.3rem)] leading-[1.35] text-gold-deep"
+            style={v("sissejuhatus")}
+          >
             {teenus.sissejuhatus}
           </p>
         </Ilmub>
 
         {loigud.length > 0 && (
           <Ilmub ruhm className="mt-10 space-y-6">
-            {loigud.map((loik) => (
-              <Tekst key={loik}>{loik}</Tekst>
+            {loigud.map((loik, loiguJrk) => (
+              <Tekst key={loik} stiil={v(`loigud.${loiguJrk}`)}>
+                {loik}
+              </Tekst>
             ))}
           </Ilmub>
         )}
@@ -219,10 +238,18 @@ export default async function TeenuseLeht({ params }) {
 
                 {salm ? (
                   <Ilmub>
+                    {/*
+                      Kirjakohaploki viide on ploki PEALKIRI ja salm on esimene
+                      lõik (vt kirjakohaOsad) — värvitee järgib sama loogikat.
+                    */}
                     <Salm
                       viide={salm.viide}
                       tekst={salm.tekst}
                       selgitus={salm.selgitus}
+                      viiteStiil={v(`plokid.${i}.pealkiri`)}
+                      stiil={v(`plokid.${i}.loigud.0`)}
+                      /* Selgitus = loigud alates teisest, seepärast jrk + 1 */
+                      selgituseStiil={(jrk) => v(`plokid.${i}.loigud.${jrk + 1}`)}
                     />
                   </Ilmub>
                 ) : (
@@ -230,13 +257,18 @@ export default async function TeenuseLeht({ params }) {
                     as="article"
                     className="grid gap-5 sm:grid-cols-[1fr_1.65fr] sm:gap-12"
                   >
-                    <h2 className="kuva text-[clamp(1.35rem,2.8vw,1.9rem)] leading-[1.25] text-gold-deep sm:pt-1">
+                    <h2
+                      className="kuva text-[clamp(1.35rem,2.8vw,1.9rem)] leading-[1.25] text-gold-deep sm:pt-1"
+                      style={v(`plokid.${i}.pealkiri`)}
+                    >
                       {plokk.pealkiri}
                     </h2>
 
                     <div className="space-y-5">
-                      {plokiLoigud.map((loik) => (
-                        <Tekst key={loik}>{loik}</Tekst>
+                      {plokiLoigud.map((loik, loiguJrk) => (
+                        <Tekst key={loik} stiil={v(`plokid.${i}.loigud.${loiguJrk}`)}>
+                          {loik}
+                        </Tekst>
                       ))}
                     </div>
                   </Ilmub>
@@ -254,7 +286,12 @@ export default async function TeenuseLeht({ params }) {
       {tsitaat && (
         <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
           <Ilmub>
-            <Salm tekst={tsitaat.tekst} selgitus={tsitaat.selgitus} />
+            <Salm
+              tekst={tsitaat.tekst}
+              selgitus={tsitaat.selgitus}
+              stiil={v("tsitaat.tekst")}
+              selgituseStiil={v("tsitaat.selgitus")}
+            />
           </Ilmub>
         </Sektsioon>
       )}
@@ -262,17 +299,23 @@ export default async function TeenuseLeht({ params }) {
       {nimekiri.length > 0 && (
         <Sektsioon taust="shell">
           <Ilmub>
-            <Pealkiri silt={nimekirjaSilt} className="max-w-2xl">
+            <Pealkiri
+              silt={nimekirjaSilt}
+              className="max-w-2xl"
+              siltStiil={vl("nimekirjaSilt")}
+              stiil={v("nimekirjaPealkiri")}
+            >
               {teenus.nimekirjaPealkiri}
             </Pealkiri>
           </Ilmub>
 
           {/* Litaania, mitte tabel: kuvakirjas read ilma joonteta */}
           <Ilmub ruhm as="ul" className="mt-11 max-w-3xl space-y-5">
-            {nimekiri.map((punkt) => (
+            {nimekiri.map((punkt, punktJrk) => (
               <li
                 key={punkt}
                 className="kuva italic text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink"
+                style={v(`nimekiri.${punktJrk}`)}
               >
                 {punkt}
               </li>
@@ -285,8 +328,16 @@ export default async function TeenuseLeht({ params }) {
       <Sektsioon taust={kutseTaust}>
         <div className="grid gap-14 lg:grid-cols-2 lg:gap-24">
           <Ilmub>
-            <Pealkiri silt={kutseSilt}>{kutsePealkiri}</Pealkiri>
-            <Tekst className="mt-7">{kutseTekst}</Tekst>
+            <Pealkiri
+              silt={kutseSilt}
+              siltStiil={vl("kutseSilt")}
+              stiil={vl("kutsePealkiri")}
+            >
+              {kutsePealkiri}
+            </Pealkiri>
+            <Tekst className="mt-7" stiil={vl("kutseTekst")}>
+              {kutseTekst}
+            </Tekst>
             <div className="mt-10 flex flex-wrap gap-4">
               <Nupp href="/broneerimine" nool>
                 {nuppEsmane}
@@ -310,7 +361,10 @@ export default async function TeenuseLeht({ params }) {
                 <h2 className="kuva text-[clamp(1.75rem,3.4vw,2.5rem)] text-ink transition-all duration-500 group-hover:translate-x-1.5 group-hover:text-gold-deep">
                   {jargmine.nimi}
                 </h2>
-                <p className="mt-3 max-w-[42ch] text-lg leading-relaxed text-ink-soft">
+                <p
+                  className="mt-3 max-w-[42ch] text-lg leading-relaxed text-ink-soft"
+                  style={vj("luhike")}
+                >
                   {jargmine.luhike}
                 </p>
                 <span className="mikro mt-6 inline-flex items-center gap-3 text-gold-deep">

@@ -12,12 +12,20 @@
     AdminToimeti     — sisu muutmise vaade (vaikimisi eksport)
 */
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useActionState,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   lahtestaTegevus,
   loguSisseTegevus,
   salvestaTegevus,
 } from "@/app/admin/tegevused";
+import { TEKSTIVARVIDE_VOTI, onVarvitav } from "@/sisu/tekstivarvid";
 
 /* ------------------------------------------------------------------ */
 /* Sõnastikud                                                          */
@@ -277,6 +285,65 @@ const NUPP_AARIS =
 const NUPP_VAIKE =
   "inline-flex h-8 w-8 items-center justify-center border border-clay text-ink-faint transition-colors hover:border-rohe hover:text-rohe disabled:cursor-not-allowed disabled:opacity-40";
 
+const NUPP_TEKST =
+  "mikro text-[0.65rem] text-ink-faint underline underline-offset-4 transition-colors hover:text-rohe";
+
+/* ------------------------------------------------------------------ */
+/* Tekstivärvid                                                        */
+/* ------------------------------------------------------------------ */
+
+/*
+  Värvikaart ja selle muutja käivad kontekstiga, mitte propsidena: nii ei pea
+  Valjad ja Massiiv neid iga taseme kaudu edasi andma. Muutmine käib täpselt
+  samamoodi nagu tekstil — kirje läheb sisupuu külge ja salvestub sama
+  „Salvesta” nupuga.
+*/
+const VarviKontekst = createContext(null);
+
+/* Uue värvi lähtepunkt on lehe kuld — tavalisim esiletõst */
+const VAIKE_ESILETOST = "#8a6f20";
+
+function Varvivalija({ tee }) {
+  const kontekst = useContext(VarviKontekst);
+  if (!kontekst) return null;
+
+  const { varvid, muudaVarv } = kontekst;
+  const varv = varvid[tee];
+
+  /* Värvita väli ei näita valijat — muidu näeks vaikimisi seis välja nagu valik */
+  if (!varv) {
+    return (
+      <button
+        type="button"
+        onClick={() => muudaVarv(tee, VAIKE_ESILETOST)}
+        className={`${NUPP_TEKST} mt-2`}
+      >
+        Anna sellele tekstile värv
+      </button>
+    );
+  }
+
+  return (
+    <div className="mt-2 flex flex-wrap items-center gap-3">
+      <input
+        type="color"
+        value={varv}
+        onChange={(sundmus) => muudaVarv(tee, sundmus.target.value)}
+        aria-label="Teksti värv"
+        className="h-8 w-10 cursor-pointer border border-clay bg-transparent p-1"
+      />
+      <span className="text-[0.8rem] text-ink-faint">{varv}</span>
+      <button
+        type="button"
+        onClick={() => muudaVarv(tee, null)}
+        className={NUPP_TEKST}
+      >
+        Tagasi vaikimisi värvile
+      </button>
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* Sisselogimine                                                       */
 /* ------------------------------------------------------------------ */
@@ -366,13 +433,21 @@ function KasvavTekstiala({ id, vaartus, muuda, readOnly }) {
   Üks tekstiväli. Sisendi ja tekstiala vahel otsustame ÜKS KORD, välja
   loomisel — muidu vahetuks element keset kirjutamist ja fookus kaoks.
 */
-function Tekstivali({ id, voti, vaartus, muuda, siltTekst }) {
+function Tekstivali({ id, voti, vaartus, muuda, siltTekst, tee }) {
   const [pikk] = useState(
     () =>
       PIKAD_VOTMED.has(voti) || vaartus.length > 90 || vaartus.includes("\n"),
   );
   const tehniline = TEHNILISED.has(voti);
   const readOnly = AINULT_LOETAV.has(voti);
+
+  /*
+    Värvivalija ilmub ainult nendele väljadele, mis on lehel päriselt värviga
+    ühendatud (vt src/sisu/tekstivarvid.js VARVITAVAD) — muidu saaks värvi
+    valida ja lehel ei juhtuks midagi.
+  */
+  const varviTee = Array.isArray(tee) ? tee.join(".") : null;
+  const varvitav = !readOnly && varviTee !== null && onVarvitav(varviTee);
 
   return (
     <div>
@@ -415,6 +490,8 @@ function Tekstivali({ id, voti, vaartus, muuda, siltTekst }) {
           Seda välja muudetakse ainult koodis.
         </p>
       )}
+
+      {varvitav && <Varvivalija tee={varviTee} />}
     </div>
   );
 }
@@ -538,6 +615,7 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
                   <Tekstivali
                     id={`${id}-${indeks}`}
                     voti={voti}
+                    tee={[...tee, indeks]}
                     vaartus={typeof element === "string" ? element : ""}
                     muuda={(uus) => muuda([...tee, indeks], uus)}
                     siltTekst={`Rida ${indeks + 1}`}
@@ -589,6 +667,7 @@ function Valjad({ vaartus, tee, muuda, sugavus = 0 }) {
           key={id}
           id={id}
           voti={voti}
+          tee={alamTee}
           vaartus={alamVaartus}
           muuda={(uus) => muuda(alamTee, uus)}
         />
@@ -668,6 +747,24 @@ export default function AdminToimeti({ algsisu }) {
     setTeade(null);
   }
 
+  /*
+    Ühe teksti värv. varv === null tähendab „tagasi vaikimisi” — siis võti
+    kustutatakse, mitte ei salvestata tühja väärtust.
+  */
+  function muudaVarv(tee, varv) {
+    setSisu((eelmine) => {
+      const kaart = { ...(eelmine[TEKSTIVARVIDE_VOTI] ?? {}) };
+      if (varv) {
+        kaart[tee] = varv;
+      } else {
+        delete kaart[tee];
+      }
+      return { ...eelmine, [TEKSTIVARVIDE_VOTI]: kaart };
+    });
+    setMuudetud(true);
+    setTeade(null);
+  }
+
   async function salvesta() {
     setTootab(true);
     setTeade(null);
@@ -725,6 +822,9 @@ export default function AdminToimeti({ algsisu }) {
   }
 
   return (
+    <VarviKontekst.Provider
+      value={{ varvid: sisu[TEKSTIVARVIDE_VOTI] ?? {}, muudaVarv }}
+    >
     <div className="mx-auto w-full max-w-[1360px] px-6 py-10 lg:px-10">
       <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-14">
         {/* Mobiilis vormi kohal, laual vasakul ja püsiv */}
@@ -789,6 +889,7 @@ export default function AdminToimeti({ algsisu }) {
                   <Tekstivali
                     id={tee}
                     voti={tee}
+                    tee={[tee]}
                     vaartus={sisu[tee]}
                     muuda={(uus) => muuda([tee], uus)}
                   />
@@ -843,5 +944,6 @@ export default function AdminToimeti({ algsisu }) {
         </div>
       </div>
     </div>
+    </VarviKontekst.Provider>
   );
 }

@@ -13,11 +13,11 @@ import Image from "next/image";
   lisa siia ka selle mõõdud — nii ei teki lehe laadimisel hüppamist.
 */
 const MOODUD = {
-  "marta-portree": { laius: 1462, korgus: 2047 },
-  "marta-seistes": { laius: 1378, korgus: 2046 },
-  "marta-diivanil": { laius: 1366, korgus: 2049 },
-  "marta-tutrega": { laius: 1366, korgus: 2049 },
-  "marta-lamades": { laius: 2048, korgus: 1365 },
+  "marta-portree": { laius: 2845, korgus: 3984 },
+  "marta-seistes": { laius: 2537, korgus: 3768 },
+  "marta-diivanil": { laius: 2976, korgus: 4464 },
+  "marta-tutrega": { laius: 2976, korgus: 4464 },
+  "marta-lamades": { laius: 4464, korgus: 2976 },
 };
 
 export default function Foto({

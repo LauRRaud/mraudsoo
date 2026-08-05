@@ -16,6 +16,10 @@ import { readFileSync } from "node:fs";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { vaikimisiSisu } from "./vaikimisi.js";
+import {
+  TEKSTIVARVIDE_VOTI,
+  puhastaTekstiVarvid,
+} from "./tekstivarvid.js";
 
 export { vaikimisiSisu };
 
@@ -54,6 +58,63 @@ function onObjekt(vaartus) {
   return (
     typeof vaartus === "object" && vaartus !== null && !Array.isArray(vaartus)
   );
+}
+
+/* Kuju alles, tekstid tühjaks — mall ei tohi kanda ühegi elemendi sisu */
+function tyhjendaKuju(vaartus) {
+  if (Array.isArray(vaartus)) {
+    return vaartus.length > 0 ? [liidaKujud(vaartus.map(tyhjendaKuju))] : [];
+  }
+
+  if (onObjekt(vaartus)) {
+    const tulemus = {};
+    for (const [voti, alam] of Object.entries(vaartus)) {
+      if (KEELATUD_VOTMED.has(voti)) continue;
+      tulemus[voti] = tyhjendaKuju(alam);
+    }
+    return tulemus;
+  }
+
+  return "";
+}
+
+/* Kahe juba tühjendatud kuju liit: võtmed mõlemast */
+function liidaKaks(a, b) {
+  if (a === undefined) return b;
+  if (b === undefined) return a;
+
+  if (Array.isArray(a) && Array.isArray(b)) {
+    const koos = [...a, ...b];
+    return koos.length > 0 ? [liidaKujud(koos)] : [];
+  }
+
+  if (onObjekt(a) && onObjekt(b)) {
+    const tulemus = { ...a };
+    for (const [voti, alam] of Object.entries(b)) {
+      tulemus[voti] = liidaKaks(tulemus[voti], alam);
+    }
+    return tulemus;
+  }
+
+  return a;
+}
+
+function liidaKujud(kujud) {
+  return kujud.reduce(liidaKaks, undefined);
+}
+
+/*
+  MASSIIVI MALL.
+
+  Mall peab katma KÕIGI vaikimisi elementide kuju, mitte ainult esimese oma.
+  Esimesest üksi ei piisa: teenustest on nt „tsitaat” ainult osal ja kuna
+  esimesel (Püha Ruum) seda ei ole, kadus see salvestamisel teistelt ära.
+
+  Väärtused on tühjad — mall on KUJU, mitte sisu. Muidu päriks element
+  puuduva välja kohale mõne teise elemendi teksti.
+*/
+function massiiviMall(vaikimisiMassiiv) {
+  return liidaKujud(vaikimisiMassiiv.map(tyhjendaKuju));
 }
 
 /*
@@ -106,13 +167,20 @@ export function puhasta(vaikimisi, uus, sugavus = 0, voti = "") {
     throw new Error("Sisu on liiga sügavalt pesastatud.");
   }
 
+  /*
+    Tekstivärvid on vaba kujuga kaart (tee -> värv), mitte vaikimisi puu järgi
+    valideeritav haru. Kuju järgi käies kaoks siin iga võti, sest vaikimisi
+    väärtus on tühi objekt — seepärast oma puhastus (src/sisu/tekstivarvid.js).
+  */
+  if (voti === TEKSTIVARVIDE_VOTI) return puhastaTekstiVarvid(uus);
+
   if (Array.isArray(vaikimisi)) {
     if (!Array.isArray(uus)) return vaikimisi;
 
-    /* Mall: massiivi esimene vaikimisi element, tühja massiivi puhul MALLID */
+    /* Mall: kõigi vaikimisi elementide kuju liit, tühja massiivi puhul MALLID */
     const mall =
       vaikimisi.length > 0
-        ? vaikimisi[0]
+        ? massiiviMall(vaikimisi)
         : Object.hasOwn(MALLID, voti)
           ? MALLID[voti]
           : undefined;

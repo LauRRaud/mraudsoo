@@ -53,11 +53,19 @@ export function Pealkiri({
   tase: Tase = "h2",
   tume = false,
   className = "",
+  /* Admin-lehelt antud tekstivärv (vt src/sisu/tekstivarvid.js) */
+  stiil,
+  siltStiil,
 }) {
   return (
     <div className={className}>
-      {silt && <p className={`silt${tume ? " silt-tume" : ""}`}>{silt}</p>}
+      {silt && (
+        <p className={`silt${tume ? " silt-tume" : ""}`} style={siltStiil}>
+          {silt}
+        </p>
+      )}
       <Tase
+        style={stiil}
         className={`kuva ${tume ? "text-luu" : "text-ink"} ${
           Tase === "h1"
             ? "text-[clamp(2.5rem,5.5vw,4.25rem)]"
@@ -139,9 +147,17 @@ export function NooleLink({ href, children, tume = false, className = "" }) {
 }
 
 /* Pikem tekstiplokk — loetav rea pikkus ja hingav reavahe */
-export function Tekst({ children, suur = false, tume = false, className = "" }) {
+export function Tekst({
+  children,
+  suur = false,
+  tume = false,
+  className = "",
+  /* Admin-lehelt antud tekstivärv (vt src/sisu/tekstivarvid.js) */
+  stiil,
+}) {
   return (
     <p
+      style={stiil}
       /* .tekst / .tekst-suur loevad suuruse CSS-muutujast, mille admin saab muuta */
       className={`max-w-[60ch] ${suur ? "tekst-suur" : "tekst"} leading-[1.85] ${
         tume ? "text-luu/90" : "text-ink-soft"
@@ -157,21 +173,44 @@ export function Tekst({ children, suur = false, tume = false, className = "" }) 
   salm kuvakirjas, Marta selgitus all. Kasutusel lehel „Minust” ja
   teenuselehtede plokkides.
 */
-export function Salm({ viide, tekst, selgitus = [], tume = false, className = "" }) {
+export function Salm({
+  viide,
+  tekst,
+  selgitus = [],
+  tume = false,
+  className = "",
+  /* Admin-lehelt antud tekstivärvid (vt src/sisu/tekstivarvid.js) */
+  viiteStiil,
+  stiil,
+  selgituseStiil,
+}) {
   const selgitused = (Array.isArray(selgitus) ? selgitus : [selgitus]).filter(
     Boolean
   );
   const pikk = typeof tekst === "string" && tekst.length > 120;
 
+  /*
+    selgituseStiil võib olla üks stiil (kõigile lõikudele) või funktsioon
+    (jrk) => stiil, kui igal lõigul on sisupuus oma värv.
+  */
+  const selgituseStiilil =
+    typeof selgituseStiil === "function"
+      ? selgituseStiil
+      : () => selgituseStiil;
+
   return (
     <figure className={`text-center ${className}`}>
       <div aria-hidden="true" className={`pystjoon${tume ? " pystjoon-tume" : ""}`} />
       {viide && (
-        <figcaption className={`silt mt-7${tume ? " silt-tume" : ""}`}>
+        <figcaption
+          style={viiteStiil}
+          className={`silt mt-7${tume ? " silt-tume" : ""}`}
+        >
           {viide}
         </figcaption>
       )}
       <blockquote
+        style={stiil}
         className={`kuva mx-auto max-w-2xl leading-[1.3] ${viide ? "mt-6" : "mt-8"} ${
           tume ? "text-luu" : "text-ink"
         } ${
@@ -185,9 +224,10 @@ export function Salm({ viide, tekst, selgitus = [], tume = false, className = ""
 
       {selgitused.length > 0 && (
         <div className="mx-auto mt-8 max-w-[54ch] space-y-4">
-          {selgitused.map((loik) => (
+          {selgitused.map((loik, jrk) => (
             <p
               key={loik}
+              style={selgituseStiilil(jrk)}
               className={`text-lg leading-[1.8] ${
                 tume ? "text-luu/85" : "text-ink-soft"
               }`}

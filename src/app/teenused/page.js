@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Ilmub from "@/components/Ilmub";
-import { Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
+import { Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
+import { varvija } from "@/sisu/tekstivarvid";
 
 export async function generateMetadata() {
   const sisu = await laeSisu();
@@ -20,14 +21,20 @@ export default async function Teenused() {
   /* Admin võib teenuste massiivi tervikuna asendada — kindlustame kuju */
   const teenused = Array.isArray(sisu.teenused) ? sisu.teenused : [];
 
+  /* Admin-lehelt antud üksikute tekstide värvid */
+  const v = varvija(sisu.tekstiVarvid, "teenusedLeht");
+  const vt = varvija(sisu.tekstiVarvid, "teenused");
+
   return (
     <>
       <Sektsioon taust="bone" polsterdus="ohuke">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          <p className="sisene silt">{hero.silt}</p>
+          <p className="sisene silt" style={v("hero.silt")}>
+            {hero.silt}
+          </p>
           <h1
             className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
-            style={{ "--viive": "90ms" }}
+            style={{ "--viive": "90ms", ...v("hero.pealkiri") }}
           >
             {hero.pealkiri}
           </h1>
@@ -36,7 +43,9 @@ export default async function Teenused() {
             style={{ "--viive": "200ms" }}
           />
           <div className="sisene" style={{ "--viive": "300ms" }}>
-            <Tekst suur>{hero.tekst}</Tekst>
+            <Tekst suur stiil={v("hero.tekst")}>
+              {hero.tekst}
+            </Tekst>
           </div>
         </div>
       </Sektsioon>
@@ -53,18 +62,24 @@ export default async function Teenused() {
             as="ul"
             className="grid gap-x-20 gap-y-16 pt-16 sm:grid-cols-2 sm:pt-20 lg:gap-x-28 lg:gap-y-20 lg:pt-24"
           >
-            {teenused.map((teenus) => (
+            {teenused.map((teenus, jrk) => (
               <li key={teenus.slug}>
                 <Link href={`/teenused/${teenus.slug}`} className="group block">
                   <h2 className="kuva text-[clamp(2.15rem,7vw,2.6rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
                     {teenus.nimi}
                   </h2>
                   {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust, eriti mobiilis */}
-                  <p className="kuva mt-1 italic text-[clamp(1.5rem,5.2vw,1.75rem)] text-ink-soft">
+                  <p
+                    className="kuva mt-1 italic text-[clamp(1.5rem,5.2vw,1.75rem)] text-ink-soft"
+                    style={vt(`${jrk}.alapealkiri`)}
+                  >
                     {teenus.alapealkiri}
                   </p>
                   {/* „Loe lähemalt” siin ei ole — kogu plokk on juba link, sama mis avalehel */}
-                  <p className="mt-5 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
+                  <p
+                    className="mt-5 max-w-[46ch] text-lg leading-relaxed text-ink-soft"
+                    style={vt(`${jrk}.luhike`)}
+                  >
                     {teenus.luhike}
                   </p>
                 </Link>
@@ -78,17 +93,27 @@ export default async function Teenused() {
       {tsitaat && (
         <Sektsioon taust="shell" laius="kitsas" polsterdus="ohuke">
           <Ilmub>
-            <Salm viide={tsitaadiSilt} tekst={tsitaat} />
+            <Salm
+              viide={tsitaadiSilt}
+              tekst={tsitaat}
+              viiteStiil={v("tsitaadiSilt")}
+              stiil={v("tsitaat")}
+            />
           </Ilmub>
         </Sektsioon>
       )}
 
       <Sektsioon taust="bone" laius="kitsas" polsterdus="ohuke" className="text-center">
         <Ilmub>
-          <p className="kuva mx-auto max-w-2xl text-[clamp(1.7rem,3.4vw,2.5rem)] leading-[1.28] text-ink">
+          <p
+            className="kuva mx-auto max-w-2xl text-[clamp(1.7rem,3.4vw,2.5rem)] leading-[1.28] text-ink"
+            style={v("lopp.pealkiri")}
+          >
             {lopp.pealkiri}
           </p>
-          <Tekst className="mx-auto mt-6 text-center">{lopp.tekst}</Tekst>
+          <Tekst className="mx-auto mt-6 text-center" stiil={v("lopp.tekst")}>
+            {lopp.tekst}
+          </Tekst>
         </Ilmub>
         <Ilmub viive={180} className="mt-11 flex flex-wrap justify-center gap-4">
           <Nupp href="/broneerimine" nool>

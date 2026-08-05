@@ -12,6 +12,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { kasSisseLoginud, loguSisse, loguValja } from "@/admin/turve";
 import { laeSisu, puhasta, salvestaSisu, vaikimisiSisu } from "@/sisu/lae";
+import { TEKSTIVARVIDE_VOTI, eemaldaHaru } from "@/sisu/tekstivarvid";
 import { markiLoetuks } from "@/broneering/salvesta";
 import { salvestaKalender } from "@/broneering/kalender";
 import { salvestaKujundus } from "@/kujundus/lae";
@@ -106,6 +107,12 @@ export async function lahtestaTegevus(tee) {
   const uusSisu = puhasta(vaikimisiSisu, {
     ...praegune,
     [tee]: structuredClone(vaikimisiSisu[tee]),
+    /*
+      Sektsiooni tekstivärvid lähevad koos tekstidega. Muidu jääks kaardile
+      kirje teksti kohta, mida enam ei ole, ja järgmine sama teega tekst
+      päriks võõra värvi.
+    */
+    [TEKSTIVARVIDE_VOTI]: eemaldaHaru(praegune[TEKSTIVARVIDE_VOTI], tee),
   });
 
   try {
