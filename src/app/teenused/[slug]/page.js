@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Ilmub from "@/components/Ilmub";
 import { Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu, laeSisuSync } from "@/sisu/lae";
-import { varvija } from "@/sisu/tekstivarvid";
+import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
 /* Teenuse otsimine slugi järgi — massiiv võib admini kaudu olla asendatud */
 function leiaTeenus(teenused, slug) {
@@ -97,12 +97,15 @@ export default async function TeenuseLeht({ params }) {
   const jargmine = teenused[jargmiseJrk];
 
   /*
-    Admin-lehelt antud üksikute tekstide värvid. Teenuse omad käivad läbi
+    Admin-lehelt antud üksikute tekstide kuju. Teenuse omad käivad läbi
     massiivi indeksi (teenused.2.sissejuhatus), ühised tekstid teenuseLeht'i alt.
   */
-  const v = varvija(sisu.tekstiVarvid, `teenused.${jrk}`);
-  const vj = varvija(sisu.tekstiVarvid, `teenused.${jargmiseJrk}`);
-  const vl = varvija(sisu.tekstiVarvid, "teenuseLeht");
+  const v = plokiStiil(sisu.tekstiKujud, `teenused.${jrk}`);
+  const s = tekstiKuju(sisu.tekstiKujud, `teenused.${jrk}`);
+  const vj = plokiStiil(sisu.tekstiKujud, `teenused.${jargmiseJrk}`);
+  const sj = tekstiKuju(sisu.tekstiKujud, `teenused.${jargmiseJrk}`);
+  const vl = plokiStiil(sisu.tekstiKujud, "teenuseLeht");
+  const sl = tekstiKuju(sisu.tekstiKujud, "teenuseLeht");
 
   /* Massiivid kindlustatud: admin võib teenuse ilma mõne väljata salvestada */
   const loigud = Array.isArray(teenus.loigud) ? teenus.loigud : [];
@@ -142,9 +145,16 @@ export default async function TeenuseLeht({ params }) {
   */
   const tsitaat = teenus.tsitaat?.tekst ? teenus.tsitaat : null;
 
+  /*
+    Heledaid pindu on kolm ja kaks ühesugust järjest ei tohi kohtuda.
+    Nimekirja ees on kas tsitaat (sage), plokid (linen) või sissejuhatus
+    (bone) — seega piisab tsitaadi vaatamisest.
+  */
+  const nimekirjaTaust = tsitaat ? "linen" : "sage";
+
   const eelnevTaust =
     nimekiri.length > 0
-      ? "shell"
+      ? nimekirjaTaust
       : tsitaat
         ? "sage"
         : plokid.length > 0
@@ -154,8 +164,8 @@ export default async function TeenuseLeht({ params }) {
 
   return (
     <>
-      {/* Heero — sügav toon saab tumeda pinna, soe toon rahuliku savi */}
-      <Sektsioon taust={tume ? "mets" : "clay"} polsterdus="ohuke">
+      {/* Heero — sügav toon saab tumeda pinna, soe toon rõhutatud paneeli */}
+      <Sektsioon taust={tume ? "mets" : "sage"} polsterdus="ohuke">
         <div className="max-w-3xl pt-6 sm:pt-10">
           {alapealkiriOnLause ? (
             <p
@@ -164,14 +174,14 @@ export default async function TeenuseLeht({ params }) {
               }`}
               style={v("alapealkiri")}
             >
-              {teenus.alapealkiri}
+              {s("alapealkiri", teenus.alapealkiri)}
             </p>
           ) : (
             <p
               className={`sisene silt ${tume ? "silt-tume" : "!text-ink/70"}`}
               style={v("alapealkiri")}
             >
-              {teenus.alapealkiri}
+              {s("alapealkiri", teenus.alapealkiri)}
             </p>
           )}
 
@@ -190,7 +200,7 @@ export default async function TeenuseLeht({ params }) {
             }`}
             style={{ "--viive": "200ms", ...v("luhike") }}
           >
-            {teenus.luhike}
+            {s("luhike", teenus.luhike)}
           </p>
         </div>
       </Sektsioon>
@@ -202,14 +212,18 @@ export default async function TeenuseLeht({ params }) {
             className="kuva text-[clamp(1.55rem,3.2vw,2.3rem)] leading-[1.35] text-gold-deep"
             style={v("sissejuhatus")}
           >
-            {teenus.sissejuhatus}
+            {s("sissejuhatus", teenus.sissejuhatus)}
           </p>
         </Ilmub>
 
         {loigud.length > 0 && (
           <Ilmub ruhm className="mt-10 space-y-6">
             {loigud.map((loik, loiguJrk) => (
-              <Tekst key={loik} stiil={v(`loigud.${loiguJrk}`)}>
+              <Tekst
+                key={loik}
+                stiil={v(`loigud.${loiguJrk}`)}
+                kuju={s.kuju(`loigud.${loiguJrk}`)}
+              >
                 {loik}
               </Tekst>
             ))}
@@ -250,6 +264,11 @@ export default async function TeenuseLeht({ params }) {
                       stiil={v(`plokid.${i}.loigud.0`)}
                       /* Selgitus = loigud alates teisest, seepärast jrk + 1 */
                       selgituseStiil={(jrk) => v(`plokid.${i}.loigud.${jrk + 1}`)}
+                      viiteKuju={s.kuju(`plokid.${i}.pealkiri`)}
+                      kuju={s.kuju(`plokid.${i}.loigud.0`)}
+                      selgituseKuju={(jrk) =>
+                        s.kuju(`plokid.${i}.loigud.${jrk + 1}`)
+                      }
                     />
                   </Ilmub>
                 ) : (
@@ -261,12 +280,16 @@ export default async function TeenuseLeht({ params }) {
                       className="kuva text-[clamp(1.35rem,2.8vw,1.9rem)] leading-[1.25] text-gold-deep sm:pt-1"
                       style={v(`plokid.${i}.pealkiri`)}
                     >
-                      {plokk.pealkiri}
+                      {s(`plokid.${i}.pealkiri`, plokk.pealkiri)}
                     </h2>
 
                     <div className="space-y-5">
                       {plokiLoigud.map((loik, loiguJrk) => (
-                        <Tekst key={loik} stiil={v(`plokid.${i}.loigud.${loiguJrk}`)}>
+                        <Tekst
+                          key={loik}
+                          stiil={v(`plokid.${i}.loigud.${loiguJrk}`)}
+                          kuju={s.kuju(`plokid.${i}.loigud.${loiguJrk}`)}
+                        >
                           {loik}
                         </Tekst>
                       ))}
@@ -291,33 +314,37 @@ export default async function TeenuseLeht({ params }) {
               selgitus={tsitaat.selgitus}
               stiil={v("tsitaat.tekst")}
               selgituseStiil={v("tsitaat.selgitus")}
+              kuju={s.kuju("tsitaat.tekst")}
+              selgituseKuju={s.kuju("tsitaat.selgitus")}
             />
           </Ilmub>
         </Sektsioon>
       )}
 
       {nimekiri.length > 0 && (
-        <Sektsioon taust="shell">
+        <Sektsioon taust={nimekirjaTaust}>
           <Ilmub>
             <Pealkiri
               silt={nimekirjaSilt}
               className="max-w-2xl"
               siltStiil={vl("nimekirjaSilt")}
               stiil={v("nimekirjaPealkiri")}
+              siltKuju={sl.kuju("nimekirjaSilt")}
+              kuju={s.kuju("nimekirjaPealkiri")}
             >
               {teenus.nimekirjaPealkiri}
             </Pealkiri>
           </Ilmub>
 
-          {/* Litaania, mitte tabel: kuvakirjas read ilma joonteta */}
+          {/* Litaania, mitte tabel: kuvakirjas read ilma joonteta. Mobiilis keskel, laiemal ekraanil vasakus servas */}
           <Ilmub ruhm as="ul" className="mt-11 max-w-3xl space-y-5">
             {nimekiri.map((punkt, punktJrk) => (
               <li
                 key={punkt}
-                className="kuva italic text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink"
+                className="kuva text-center text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink sm:text-left"
                 style={v(`nimekiri.${punktJrk}`)}
               >
-                {punkt}
+                {s(`nimekiri.${punktJrk}`, punkt)}
               </li>
             ))}
           </Ilmub>
@@ -332,10 +359,16 @@ export default async function TeenuseLeht({ params }) {
               silt={kutseSilt}
               siltStiil={vl("kutseSilt")}
               stiil={vl("kutsePealkiri")}
+              siltKuju={sl.kuju("kutseSilt")}
+              kuju={sl.kuju("kutsePealkiri")}
             >
               {kutsePealkiri}
             </Pealkiri>
-            <Tekst className="mt-7" stiil={vl("kutseTekst")}>
+            <Tekst
+              className="mt-7"
+              stiil={vl("kutseTekst")}
+              kuju={sl.kuju("kutseTekst")}
+            >
               {kutseTekst}
             </Tekst>
             <div className="mt-10 flex flex-wrap gap-4">
@@ -365,7 +398,7 @@ export default async function TeenuseLeht({ params }) {
                   className="mt-3 max-w-[42ch] text-lg leading-relaxed text-ink-soft"
                   style={vj("luhike")}
                 >
-                  {jargmine.luhike}
+                  {sj("luhike", jargmine.luhike)}
                 </p>
                 <span className="mikro mt-6 inline-flex items-center gap-3 text-gold-deep">
                   {loeLahemalt}

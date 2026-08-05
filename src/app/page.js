@@ -3,15 +3,16 @@ import Foto from "@/components/Foto";
 import Ilmub from "@/components/Ilmub";
 import { Nupp, NooleLink, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
-import { varvija } from "@/sisu/tekstivarvid";
+import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
 /*
   AVALEHT.
 
   Kogu tekst tuleb sisupuust (src/sisu/vaikimisi.js + data/sisu.json).
-  Taustade kaar: bone → linen → METS (tume) → bone → linen → shell → clay,
-  nii et kaks kõrvutist sektsiooni ei ole kunagi sama pinnaga ja lehe
-  keskel seisab üks sügav tume hetk (liikumine).
+  Taustade kaar: bone → linen → METS (tume) → bone → sage → linen → bone →
+  sage, nii et kaks kõrvutist sektsiooni ei ole kunagi sama pinnaga ja lehe
+  keskel seisab üks sügav tume hetk (liikumine). Heledaid pindu on kolm —
+  vt src/kujundus/vaikimisi.js.
 */
 export default async function Avaleht() {
   const sisu = await laeSisu();
@@ -26,9 +27,11 @@ export default async function Avaleht() {
     kutse,
   } = sisu.avaleht;
 
-  /* Admin-lehelt antud üksikute tekstide värvid */
-  const v = varvija(sisu.tekstiVarvid, "avaleht");
-  const vt = varvija(sisu.tekstiVarvid, "teenused");
+  /* Admin-lehelt antud üksikute tekstide kuju */
+  const v = plokiStiil(sisu.tekstiKujud, "avaleht");
+  const s = tekstiKuju(sisu.tekstiKujud, "avaleht");
+  const vt = plokiStiil(sisu.tekstiKujud, "teenused");
+  const st = tekstiKuju(sisu.tekstiKujud, "teenused");
 
   return (
     <>
@@ -37,19 +40,19 @@ export default async function Avaleht() {
         <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 pb-16 pt-10 sm:pt-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
           <div>
             <p className="sisene silt" style={v("hero.silt")}>
-              {hero.silt}
+              {s("hero.silt", hero.silt)}
             </p>
             <h1
               className="sisene kuva mt-6 text-[clamp(3.25rem,9vw,6.5rem)] leading-[0.98] text-ink"
               style={{ "--viive": "90ms", ...v("hero.pealkiri") }}
             >
-              {hero.pealkiri}
+              {s("hero.pealkiri", hero.pealkiri)}
             </h1>
             <p
               className="sisene kuva mt-5 italic text-[clamp(1.5rem,3vw,2.25rem)] text-gold"
               style={{ "--viive": "180ms", ...v("hero.alapealkiri") }}
             >
-              {hero.alapealkiri}
+              {s("hero.alapealkiri", hero.alapealkiri)}
             </p>
 
             <div
@@ -58,7 +61,7 @@ export default async function Avaleht() {
             />
 
             <div className="sisene" style={{ "--viive": "360ms" }}>
-              <Tekst suur stiil={v("hero.tekst")}>
+              <Tekst suur stiil={v("hero.tekst")} kuju={s.kuju("hero.tekst")}>
                 {hero.tekst}
               </Tekst>
             </div>
@@ -101,13 +104,13 @@ export default async function Avaleht() {
           <div className="lg:sticky lg:top-32 lg:self-start">
             <Ilmub>
               <p className="silt" style={v("kutsumus.silt")}>
-                {kutsumus.silt}
+                {s("kutsumus.silt", kutsumus.silt)}
               </p>
               <blockquote
                 className="kuva mt-6 text-[clamp(1.7rem,3.4vw,2.6rem)] leading-[1.3] text-ink"
                 style={v("kutsumus.tsitaat")}
               >
-                {kutsumus.tsitaat}
+                {s("kutsumus.tsitaat", kutsumus.tsitaat)}
               </blockquote>
               <div className="joon mt-10 max-w-28" />
             </Ilmub>
@@ -116,7 +119,11 @@ export default async function Avaleht() {
           <div className="lg:pt-2">
             <Ilmub ruhm className="space-y-6">
               {kutsumus.loigud.map((loik, jrk) => (
-                <Tekst key={loik} stiil={v(`kutsumus.loigud.${jrk}`)}>
+                <Tekst
+                  key={loik}
+                  stiil={v(`kutsumus.loigud.${jrk}`)}
+                  kuju={s.kuju(`kutsumus.loigud.${jrk}`)}
+                >
                   {loik}
                 </Tekst>
               ))}
@@ -127,7 +134,10 @@ export default async function Avaleht() {
               read voolavad sissejuhatuse jätkuna kuvakirjas, ilma joonteta.
             */}
             <Ilmub className="mt-12">
-              <Tekst stiil={v("kutsumus.valjendusSissejuhatus")}>
+              <Tekst
+                stiil={v("kutsumus.valjendusSissejuhatus")}
+                kuju={s.kuju("kutsumus.valjendusSissejuhatus")}
+              >
                 {kutsumus.valjendusSissejuhatus}
               </Tekst>
             </Ilmub>
@@ -138,7 +148,7 @@ export default async function Avaleht() {
                   className="kuva italic text-[clamp(1.35rem,2.4vw,1.8rem)] leading-[1.35] text-ink"
                   style={v(`kutsumus.valjendus.${jrk}`)}
                 >
-                  {punkt}
+                  {s(`kutsumus.valjendus.${jrk}`, punkt)}
                 </li>
               ))}
             </Ilmub>
@@ -155,13 +165,13 @@ export default async function Avaleht() {
         <Ilmub className="text-center">
           <div aria-hidden="true" className="pystjoon pystjoon-tume" />
           <p className="silt silt-tume mt-7" style={v("liikumine.silt")}>
-            {liikumine.silt}
+            {s("liikumine.silt", liikumine.silt)}
           </p>
           <blockquote
             className="kuva mx-auto mt-6 max-w-3xl text-[clamp(2rem,4.2vw,3.3rem)] text-luu"
             style={v("liikumine.pealkiri")}
           >
-            {liikumine.pealkiri}
+            {s("liikumine.pealkiri", liikumine.pealkiri)}
           </blockquote>
         </Ilmub>
 
@@ -181,7 +191,7 @@ export default async function Avaleht() {
                 className="mikro whitespace-nowrap text-[clamp(0.8rem,3.2vw,1.25rem)] tracking-[0.12em] text-luu/90 sm:tracking-[0.16em]"
                 style={v(`liikumine.read.${jrk}.millest`)}
               >
-                {rida.millest}
+                {s(`liikumine.read.${jrk}.millest`, rida.millest)}
               </span>
               <span
                 aria-hidden="true"
@@ -193,7 +203,7 @@ export default async function Avaleht() {
                 className="kuva whitespace-nowrap italic text-[clamp(1.7rem,7vw,3.2rem)] leading-[1.15] text-luu"
                 style={v(`liikumine.read.${jrk}.milleks`)}
               >
-                {rida.milleks}
+                {s(`liikumine.read.${jrk}.milleks`, rida.milleks)}
               </span>
             </li>
           ))}
@@ -216,14 +226,14 @@ export default async function Avaleht() {
                 className="kuva text-[clamp(2.2rem,4.6vw,3.5rem)] text-ink"
                 style={v("essents.pealkiri")}
               >
-                {essents.pealkiri}
+                {s("essents.pealkiri", essents.pealkiri)}
               </h2>
               {essents.alapealkiri && (
                 <p
                   className="kuva mt-3 italic text-[clamp(1.4rem,2.8vw,1.95rem)] leading-[1.3] text-gold-deep"
                   style={v("essents.alapealkiri")}
                 >
-                  {essents.alapealkiri}
+                  {s("essents.alapealkiri", essents.alapealkiri)}
                 </p>
               )}
               <div className="joon mt-10 max-w-28" />
@@ -242,7 +252,7 @@ export default async function Avaleht() {
                     : "tekst max-w-[60ch] leading-[1.85] text-ink-soft"
                 }
               >
-                {loik}
+                {s(`essents.loigud.${jrk}`, loik)}
               </p>
             ))}
 
@@ -252,7 +262,7 @@ export default async function Avaleht() {
                 className="kuva max-w-[52ch] pt-4 text-[clamp(1.5rem,3vw,2.1rem)] leading-[1.35] text-gold-deep"
                 style={v("essents.tsitaat")}
               >
-                {essents.tsitaat}
+                {s("essents.tsitaat", essents.tsitaat)}
               </blockquote>
             )}
           </Ilmub>
@@ -270,6 +280,9 @@ export default async function Avaleht() {
               viiteStiil={v("kirjakoht.viide")}
               stiil={v("kirjakoht.tekst")}
               selgituseStiil={v("kirjakoht.selgitus")}
+              viiteKuju={s.kuju("kirjakoht.viide")}
+              kuju={s.kuju("kirjakoht.tekst")}
+              selgituseKuju={s.kuju("kirjakoht.selgitus")}
             />
           </Ilmub>
         </Sektsioon>
@@ -279,7 +292,11 @@ export default async function Avaleht() {
       <Sektsioon taust="linen">
         {/* Pealkiri ütleb „kuus viisi” ise — eraldi silti pole vaja */}
         <Ilmub className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
-          <Pealkiri className="max-w-xl" stiil={v("teenusedPlokk.pealkiri")}>
+          <Pealkiri
+            className="max-w-xl"
+            stiil={v("teenusedPlokk.pealkiri")}
+            kuju={s.kuju("teenusedPlokk.pealkiri")}
+          >
             {teenusedPlokk.pealkiri}
           </Pealkiri>
           <NooleLink href="/teenused">{teenusedPlokk.linkTekst}</NooleLink>
@@ -306,13 +323,13 @@ export default async function Avaleht() {
                   className="kuva mt-1 italic text-[clamp(1.45rem,5vw,1.6rem)] text-ink-soft"
                   style={vt(`${jrk}.alapealkiri`)}
                 >
-                  {teenus.alapealkiri}
+                  {st(`${jrk}.alapealkiri`, teenus.alapealkiri)}
                 </p>
                 <p
                   className="mt-4 max-w-[44ch] text-lg leading-relaxed text-ink-soft"
                   style={vt(`${jrk}.luhike`)}
                 >
-                  {teenus.luhike}
+                  {st(`${jrk}.luhike`, teenus.luhike)}
                 </p>
               </Link>
             </li>
@@ -320,8 +337,8 @@ export default async function Avaleht() {
         </Ilmub>
       </Sektsioon>
 
-      {/* Minust */}
-      <section className="overflow-hidden bg-shell">
+      {/* Minust — eelnev teenuste register on linen, seega see läheb tagasi lehe taustale */}
+      <section className="overflow-hidden bg-bone">
         <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-20 sm:py-28 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24 lg:px-12 lg:py-36">
           <div className="w-full max-w-[440px] justify-self-center lg:justify-self-start">
             <Foto
@@ -336,18 +353,22 @@ export default async function Avaleht() {
             {/* Marta enda lause tervikuna — varem oli see pealkirjaks ja lõiguks pooleks murtud */}
             <Ilmub>
               <p className="silt" style={v("minustPlokk.silt")}>
-                {minustPlokk.silt}
+                {s("minustPlokk.silt", minustPlokk.silt)}
               </p>
               <blockquote
                 className="kuva mt-5 text-[clamp(1.5rem,2.9vw,2.15rem)] leading-[1.32] text-ink"
                 style={v("minustPlokk.tsitaat")}
               >
-                {minustPlokk.tsitaat}
+                {s("minustPlokk.tsitaat", minustPlokk.tsitaat)}
               </blockquote>
             </Ilmub>
             <Ilmub ruhm className="mt-8 space-y-6">
               {minustPlokk.loigud.map((loik, jrk) => (
-                <Tekst key={loik} stiil={v(`minustPlokk.loigud.${jrk}`)}>
+                <Tekst
+                  key={loik}
+                  stiil={v(`minustPlokk.loigud.${jrk}`)}
+                  kuju={s.kuju(`minustPlokk.loigud.${jrk}`)}
+                >
                   {loik}
                 </Tekst>
               ))}
@@ -362,17 +383,17 @@ export default async function Avaleht() {
       </section>
 
       {/* Kutse — tihedam polsterdus, et vaikne hetk ei mõjuks tühja auguna */}
-      <Sektsioon taust="clay" laius="kitsas" polsterdus="ohuke" className="text-center">
+      <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke" className="text-center">
         <Ilmub>
           <div aria-hidden="true" className="pystjoon" />
           <p className="silt mt-7" style={v("kutse.silt")}>
-            {kutse.silt}
+            {s("kutse.silt", kutse.silt)}
           </p>
           <blockquote
             className="kuva mx-auto mt-7 max-w-2xl text-[clamp(1.9rem,4vw,3.1rem)] leading-[1.22] text-ink"
             style={v("kutse.pealkiri")}
           >
-            {kutse.pealkiri}
+            {s("kutse.pealkiri", kutse.pealkiri)}
           </blockquote>
         </Ilmub>
         <Ilmub viive={180} className="mt-12 flex flex-wrap justify-center gap-4">

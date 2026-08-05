@@ -1,7 +1,7 @@
 import Ilmub from "@/components/Ilmub";
 import { Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
-import { varvija } from "@/sisu/tekstivarvid";
+import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
 /* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
 export async function generateMetadata() {
@@ -17,30 +17,33 @@ export default async function Hinnakiri() {
   const sisu = await laeSisu();
   const { hinnakiriLeht, hinnakiri, teekond } = sisu;
 
-  /* Admin-lehelt antud üksikute tekstide värvid */
-  const v = varvija(sisu.tekstiVarvid, "hinnakiriLeht");
-  const vr = varvija(sisu.tekstiVarvid, "hinnakiri");
-  const vte = varvija(sisu.tekstiVarvid, "teekond");
+  /* Admin-lehelt antud üksikute tekstide kuju */
+  const v = plokiStiil(sisu.tekstiKujud, "hinnakiriLeht");
+  const s = tekstiKuju(sisu.tekstiKujud, "hinnakiriLeht");
+  const vr = plokiStiil(sisu.tekstiKujud, "hinnakiri");
+  const sr = tekstiKuju(sisu.tekstiKujud, "hinnakiri");
+  const vte = plokiStiil(sisu.tekstiKujud, "teekond");
+  const ste = tekstiKuju(sisu.tekstiKujud, "teekond");
 
   return (
     <>
       <Sektsioon taust="bone" polsterdus="ohuke">
         <div className="max-w-3xl pt-6 sm:pt-10">
           <p className="sisene silt" style={v("hero.silt")}>
-            {hinnakiriLeht.hero.silt}
+            {s("hero.silt", hinnakiriLeht.hero.silt)}
           </p>
           <h1
             className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
             style={{ "--viive": "90ms", ...v("hero.pealkiri") }}
           >
-            {hinnakiriLeht.hero.pealkiri}
+            {s("hero.pealkiri", hinnakiriLeht.hero.pealkiri)}
           </h1>
           <div
             className="sisene joon mb-9 mt-9 max-w-28"
             style={{ "--viive": "200ms" }}
           />
           <div className="sisene" style={{ "--viive": "300ms" }}>
-            <Tekst suur stiil={v("hero.tekst")}>
+            <Tekst suur stiil={v("hero.tekst")} kuju={s.kuju("hero.tekst")}>
               {hinnakiriLeht.hero.tekst}
             </Tekst>
           </div>
@@ -52,7 +55,7 @@ export default async function Hinnakiri() {
         <div className="mx-auto max-w-[1400px] px-6 pb-20 sm:pb-28 lg:px-12 lg:pb-36">
           <Ilmub className="pt-16 sm:pt-20 lg:pt-24">
             <p className="silt" style={v("uksikudSilt")}>
-              {hinnakiriLeht.uksikudSilt}
+              {s("uksikudSilt", hinnakiriLeht.uksikudSilt)}
             </p>
           </Ilmub>
 
@@ -73,13 +76,13 @@ export default async function Hinnakiri() {
                     className="kuva text-[clamp(1.45rem,2.8vw,2rem)] text-ink"
                     style={vr(`${jrk}.nimi`)}
                   >
-                    {rida.nimi}
+                    {sr(`${jrk}.nimi`, rida.nimi)}
                   </h2>
                   <p
                     className="mt-2 max-w-[52ch] text-lg leading-relaxed text-ink-soft"
                     style={vr(`${jrk}.kirjeldus`)}
                   >
-                    {rida.kirjeldus}
+                    {sr(`${jrk}.kirjeldus`, rida.kirjeldus)}
                   </p>
                 </div>
 
@@ -88,10 +91,10 @@ export default async function Hinnakiri() {
                     className="kuva text-[clamp(1.4rem,2.5vw,1.9rem)] text-gold-deep"
                     style={vr(`${jrk}.hind`)}
                   >
-                    {rida.hind}
+                    {sr(`${jrk}.hind`, rida.hind)}
                   </p>
                   <p className="mikro mt-1 text-ink-faint" style={vr(`${jrk}.kestus`)}>
-                    {rida.kestus}
+                    {sr(`${jrk}.kestus`, rida.kestus)}
                   </p>
                 </div>
               </li>
@@ -106,26 +109,26 @@ export default async function Hinnakiri() {
         <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24">
           <Ilmub>
             <p className="silt silt-tume" style={v("teekondSilt")}>
-              {hinnakiriLeht.teekondSilt}
+              {s("teekondSilt", hinnakiriLeht.teekondSilt)}
             </p>
             <h2
               className="kuva mt-6 text-[clamp(2.1rem,4.2vw,3.3rem)] text-luu"
               style={vte("nimi")}
             >
-              {teekond.nimi}
+              {ste("nimi", teekond.nimi)}
             </h2>
             <p
               className="mt-7 max-w-[55ch] text-lg leading-[1.8] text-luu/90"
               style={vte("kirjeldus")}
             >
-              {teekond.kirjeldus}
+              {ste("kirjeldus", teekond.kirjeldus)}
             </p>
             <p className="mt-9 flex flex-wrap items-baseline gap-4">
               <span
                 className="kuva text-[clamp(1.8rem,3.4vw,2.6rem)] text-kuld-hele"
                 style={vte("hind")}
               >
-                {teekond.hind}
+                {ste("hind", teekond.hind)}
               </span>
               <span className="text-lg text-luu/60 line-through">
                 {teekond.vordlus}
@@ -135,7 +138,7 @@ export default async function Hinnakiri() {
 
           <Ilmub viive={150}>
             <p className="silt silt-tume" style={v("sisaldabSilt")}>
-              {hinnakiriLeht.sisaldabSilt}
+              {s("sisaldabSilt", hinnakiriLeht.sisaldabSilt)}
             </p>
             {/* Litaania, mitte tabel: kuvakirjas read ilma joonteta */}
             <ul className="mt-8 space-y-5">
@@ -145,7 +148,7 @@ export default async function Hinnakiri() {
                   className="kuva italic text-[clamp(1.2rem,2vw,1.5rem)] leading-[1.4] text-luu"
                   style={vte(`sisaldab.${jrk}`)}
                 >
-                  {punkt}
+                  {ste(`sisaldab.${jrk}`, punkt)}
                 </li>
               ))}
             </ul>
@@ -162,6 +165,8 @@ export default async function Hinnakiri() {
               tekst={hinnakiriLeht.tsitaat}
               viiteStiil={v("tsitaadiSilt")}
               stiil={v("tsitaat")}
+              viiteKuju={s.kuju("tsitaadiSilt")}
+              kuju={s.kuju("tsitaat")}
             />
           </Ilmub>
         </Sektsioon>
@@ -174,9 +179,13 @@ export default async function Hinnakiri() {
             className="kuva mx-auto mt-8 max-w-2xl text-[clamp(1.7rem,3.4vw,2.5rem)] leading-[1.28] text-ink"
             style={v("lopp.pealkiri")}
           >
-            {hinnakiriLeht.lopp.pealkiri}
+            {s("lopp.pealkiri", hinnakiriLeht.lopp.pealkiri)}
           </p>
-          <Tekst className="mx-auto mt-6 text-center" stiil={v("lopp.tekst")}>
+          <Tekst
+            className="mx-auto mt-6 text-center"
+            stiil={v("lopp.tekst")}
+            kuju={s.kuju("lopp.tekst")}
+          >
             {hinnakiriLeht.lopp.tekst}
           </Tekst>
         </Ilmub>

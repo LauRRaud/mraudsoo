@@ -46,7 +46,7 @@ export default async function AdminPaigutus({ children }) {
   return (
     <div className="bg-linen">
       <div className="mx-auto w-full max-w-[1360px] px-6 pt-10 lg:px-10">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-clay pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-sage pb-4">
           <p className="nimi text-xl text-ink">Marta Raudsoo · sisuhaldus</p>
 
           <div className="flex flex-wrap items-center gap-6">
@@ -74,7 +74,7 @@ export default async function AdminPaigutus({ children }) {
             <form action={loguValjaTegevus}>
               <button
                 type="submit"
-                className="mikro border border-clay px-4 py-2 text-[0.7rem] text-ink-faint transition-colors hover:border-rohe hover:text-rohe"
+                className="mikro border border-sage px-4 py-2 text-[0.7rem] text-ink-faint transition-colors hover:border-rohe hover:text-rohe"
               >
                 Logi välja
               </button>

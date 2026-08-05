@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { rakendaKuju } from "@/sisu/tekstikujud";
 
 /*
   Sektsiooni ümbris — ühtne laius ja vertikaalne rütm kogu lehel.
@@ -16,11 +17,14 @@ export function Sektsioon({
   className = "",
   id,
 }) {
+  /*
+    Heledaid pindu on kolm ja neid EI TOHI kõrvuti korrata — kaks ühesugust
+    sektsiooni järjest sulavad üheks pikaks alaks. Kui sektsioon on
+    tingimuslik, arvuta taust lehel (vt teenused/[slug] kutseTaust).
+  */
   const taustad = {
     bone: "bg-bone",
     linen: "bg-linen",
-    shell: "bg-shell",
-    clay: "bg-clay",
     sage: "bg-sage",
     mets: "bg-mets",
     metsSyva: "bg-mets-syva",
@@ -53,15 +57,17 @@ export function Pealkiri({
   tase: Tase = "h2",
   tume = false,
   className = "",
-  /* Admin-lehelt antud tekstivärv (vt src/sisu/tekstivarvid.js) */
+  /* Admin-lehelt antud tekstikuju (vt src/sisu/tekstikujud.js) */
   stiil,
   siltStiil,
+  kuju,
+  siltKuju,
 }) {
   return (
     <div className={className}>
       {silt && (
         <p className={`silt${tume ? " silt-tume" : ""}`} style={siltStiil}>
-          {silt}
+          {rakendaKuju(silt, siltKuju)}
         </p>
       )}
       <Tase
@@ -72,7 +78,7 @@ export function Pealkiri({
             : "text-[clamp(2.1rem,4vw,3.4rem)]"
         } ${silt ? "mt-5" : ""}`}
       >
-        {children}
+        {rakendaKuju(children, kuju)}
       </Tase>
     </div>
   );
@@ -152,8 +158,9 @@ export function Tekst({
   suur = false,
   tume = false,
   className = "",
-  /* Admin-lehelt antud tekstivärv (vt src/sisu/tekstivarvid.js) */
+  /* Admin-lehelt antud tekstikuju (vt src/sisu/tekstikujud.js) */
   stiil,
+  kuju,
 }) {
   return (
     <p
@@ -163,7 +170,7 @@ export function Tekst({
         tume ? "text-luu/90" : "text-ink-soft"
       } ${className}`}
     >
-      {children}
+      {rakendaKuju(children, kuju)}
     </p>
   );
 }
@@ -179,10 +186,13 @@ export function Salm({
   selgitus = [],
   tume = false,
   className = "",
-  /* Admin-lehelt antud tekstivärvid (vt src/sisu/tekstivarvid.js) */
+  /* Admin-lehelt antud tekstikujud (vt src/sisu/tekstikujud.js) */
   viiteStiil,
   stiil,
   selgituseStiil,
+  viiteKuju,
+  kuju,
+  selgituseKuju,
 }) {
   const selgitused = (Array.isArray(selgitus) ? selgitus : [selgitus]).filter(
     Boolean
@@ -198,6 +208,9 @@ export function Salm({
       ? selgituseStiil
       : () => selgituseStiil;
 
+  const selgituseKujul =
+    typeof selgituseKuju === "function" ? selgituseKuju : () => selgituseKuju;
+
   return (
     <figure className={`text-center ${className}`}>
       <div aria-hidden="true" className={`pystjoon${tume ? " pystjoon-tume" : ""}`} />
@@ -206,7 +219,7 @@ export function Salm({
           style={viiteStiil}
           className={`silt mt-7${tume ? " silt-tume" : ""}`}
         >
-          {viide}
+          {rakendaKuju(viide, viiteKuju)}
         </figcaption>
       )}
       <blockquote
@@ -219,7 +232,7 @@ export function Salm({
             : "text-[clamp(1.55rem,3.4vw,2.3rem)]"
         }`}
       >
-        {tekst}
+        {rakendaKuju(tekst, kuju)}
       </blockquote>
 
       {selgitused.length > 0 && (
@@ -232,7 +245,7 @@ export function Salm({
                 tume ? "text-luu/85" : "text-ink-soft"
               }`}
             >
-              {loik}
+              {rakendaKuju(loik, selgituseKujul(jrk))}
             </p>
           ))}
         </div>

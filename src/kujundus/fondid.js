@@ -1,13 +1,30 @@
 import {
   Cormorant_Garamond,
   EB_Garamond,
+  Inter,
   Jost,
+  Karla,
+  Libre_Baskerville,
   Lora,
   Marcellus,
   Playfair_Display,
   Poppins,
+  Spectral,
   Work_Sans,
 } from "next/font/google";
+
+/*
+  Nimekirjad (id, nimi, CSS-muutuja) elavad eraldi failis fondiNimekiri.js,
+  sest neid loeb ka sisu puhastus, mis ei tohi next/font'i kaasa tirida.
+*/
+import {
+  KOIK_FONDID,
+  KUVA_FONDID,
+  TEKSTI_FONDID,
+  leiaFont,
+} from "./fondiNimekiri";
+
+export { KOIK_FONDID, KUVA_FONDID, TEKSTI_FONDID, leiaFont };
 
 /*
   FONDID.
@@ -91,62 +108,46 @@ const workSans = Work_Sans({
 });
 
 /*
-  Nimekirjad admin-lehe jaoks. `muutuja` on see CSS-muutuja, mille next/font
-  tekitab; `nimi` on see, mida Marta admin-lehel näeb.
-*/
-export const KUVA_FONDID = [
-  {
-    id: "cormorant",
-    nimi: "Cormorant Garamond",
-    muutuja: "--font-cormorant",
-    kirjeldus: "elegantne, kõrge kontrastiga",
-  },
-  {
-    id: "playfair",
-    nimi: "Playfair Display",
-    muutuja: "--font-playfair",
-    kirjeldus: "tugevam, ajakirjalik",
-  },
-  {
-    id: "ebgaramond",
-    nimi: "EB Garamond",
-    muutuja: "--font-ebgaramond",
-    kirjeldus: "klassikaline, rahulik",
-  },
-  {
-    id: "marcellus",
-    nimi: "Marcellus",
-    muutuja: "--font-marcellus",
-    kirjeldus: "kivisse raiutud, väärikas",
-  },
-  {
-    id: "lora",
-    nimi: "Lora",
-    muutuja: "--font-lora",
-    kirjeldus: "pehme, hästi loetav",
-  },
-];
+  ÜKSIKU TEKSTI FONDID.
 
-export const TEKSTI_FONDID = [
-  {
-    id: "poppins",
-    nimi: "Poppins",
-    muutuja: "--font-poppins",
-    kirjeldus: "geomeetriline, ümar",
-  },
-  {
-    id: "jost",
-    nimi: "Jost",
-    muutuja: "--font-jost",
-    kirjeldus: "geomeetriline, kitsam",
-  },
-  {
-    id: "worksans",
-    nimi: "Work Sans",
-    muutuja: "--font-worksans",
-    kirjeldus: "neutraalne, hea pikas tekstis",
-  },
-];
+  Need on mõeldud erandiks — üksikule pealkirjale või tsitaadile admin-lehelt
+  valimiseks, mitte kogu lehe kandmiseks. Seepärast preload: false: fail
+  laaditakse alles siis, kui mõni tekst seda päriselt kasutab. Ilma selleta
+  eellaeks brauser iga kord kõik fondid, ka need, mida keegi ei vali.
+*/
+const spectral = Spectral({
+  variable: "--font-spectral",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+  preload: false,
+});
+
+const baskerville = Libre_Baskerville({
+  variable: "--font-baskerville",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  display: "swap",
+  preload: false,
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500"],
+  display: "swap",
+  preload: false,
+});
+
+const karla = Karla({
+  variable: "--font-karla",
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500"],
+  display: "swap",
+  preload: false,
+});
 
 /* Kõik klassid korraga <html> külge, et iga font oleks kättesaadav */
 export const koikFondiKlassid = [
@@ -155,9 +156,13 @@ export const koikFondiKlassid = [
   ebGaramond.variable,
   marcellus.variable,
   lora.variable,
+  spectral.variable,
+  baskerville.variable,
   poppins.variable,
   jost.variable,
   workSans.variable,
+  inter.variable,
+  karla.variable,
 ].join(" ");
 
 export function leiaKuvaFont(id) {

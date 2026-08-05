@@ -22,11 +22,15 @@ export const vaikimisiKujundus = {
     sidekriipsuks (goldDeep -> --color-gold-deep). Vt kujundusCss().
   */
   varvid: {
+    /*
+      Heledaid pindu on KOLM, mitte rohkem. Varem oli kuus (bone, linen,
+      shell, clay, claySoft, sage) — vahe kahe naabri vahel jäi ühe protsendi
+      kanti, seega admin-lehel oli kuus peaaegu ühesugust ruutu ja polnud
+      võimalik aru saada, kumb neist millise sektsiooni all on. Kolm astet
+      on ainsad, mis päriselt eristuvad.
+    */
     bone: "#fdfcf9",
     linen: "#f7f5ef",
-    shell: "#f0ede5",
-    clay: "#e8e4d9",
-    claySoft: "#f3f1ea",
     sage: "#e4e3d7",
     rohe: "#4a5a46",
     roheHele: "#5c6e57",
@@ -57,26 +61,65 @@ export const vaikimisiKujundus = {
   },
 };
 
-/* Inimloetavad nimed admin-lehe jaoks */
-export const VARVI_NIMED = {
-  bone: "Lehe põhitaust",
-  linen: "Hele paneel",
-  shell: "Tumedam paneel",
-  clay: "Rahulik paneel",
-  claySoft: "Kõige heledam paneel",
-  sage: "Tumedaim hele paneel",
-  rohe: "Nupud",
-  roheHele: "Nupud (hiirega peal)",
-  gold: "Kuld — suured pealkirjad",
-  goldDeep: "Kuld — sildid ja lingid",
-  mets: "Tume sektsioon",
-  metsSyva: "Jalus ja mobiilimenüü",
-  kuldHele: "Kuld tumedal taustal",
-  luu: "Tekst tumedal taustal",
-  ink: "Tekst — pealkirjad",
-  inkSoft: "Tekst — põhitekst",
-  inkFaint: "Tekst — kõrvaline",
-};
+/*
+  VÄRVID RÜHMADENA — admin-lehe jaoks.
+
+  Rühm ütleb, MIS ASJA värv on (pind, nupp, kiri), ja `kus` ütleb, KUS seda
+  lehel näeb. Ilma selleta on värvivalija seitseteist ühesugust ruutu ja
+  muutmine käib katse-eksituse teel.
+
+  Järjekord siin määrab järjekorra admin-lehel. Iga võti peab olema olemas
+  vaikimisiKujundus.varvid all — mida siin ei ole, seda ei saa ka muuta.
+*/
+export const VARVI_RUHMAD = [
+  {
+    nimi: "Pinnad",
+    selgitus:
+      "Sektsioonide taustad lehe heledas osas. Leht vaheldab neid, et kõrvuti sektsioonid teineteisest eristuksid — seepärast on neid kolm, mitte rohkem.",
+    varvid: [
+      { votme: "bone", nimi: "Lehe taust", kus: "Avaleht ülevalt, enamik sektsioone" },
+      { votme: "linen", nimi: "Vahelduv paneel", kus: "Iga teine sektsioon — teenuste register, lood, nimekirjad" },
+      { votme: "sage", nimi: "Rõhutatud paneel", kus: "Kirjakohad ja salmid, kutseplokid, teenuse päis" },
+    ],
+  },
+  {
+    nimi: "Tume pühamu",
+    selgitus:
+      "Lehe kõige isiklikumad kohad seisavad sügavrohelisel. Nendel pindadel vahetuvad ka tekstivärvid (vt „Kiri tumedal pinnal”).",
+    varvid: [
+      { votme: "mets", nimi: "Tume sektsioon", kus: "Liikumine avalehel, pöördumislugu, Stiiliteekond" },
+      { votme: "metsSyva", nimi: "Jalus ja mobiilimenüü", kus: "Lehe lõpp ja avatud menüü telefonis" },
+    ],
+  },
+  {
+    nimi: "Nupud",
+    selgitus: "Nupu täidis. Nupu kiri on valge, seepärast peab toon jääma tumedaks.",
+    varvid: [
+      { votme: "rohe", nimi: "Nupp", kus: "„Broneeri aeg” ja muud nupud" },
+      { votme: "roheHele", nimi: "Nupp hiire all", kus: "Sama nupp, kui hiir on peal" },
+    ],
+  },
+  {
+    nimi: "Kuld",
+    selgitus:
+      "Rõhuvärv. Hele kuld on loetav ainult suures kirjas, tume kuld ka tekstisuuruses — seepärast on neid kaks.",
+    varvid: [
+      { votme: "gold", nimi: "Kuld — suured pealkirjad", kus: "Kuvakirjas read, jooned, püstjooned" },
+      { votme: "goldDeep", nimi: "Kuld — sildid ja lingid", kus: "SUURTÄHTEDES sildid sektsioonide kohal" },
+      { votme: "kuldHele", nimi: "Kuld tumedal pinnal", kus: "Sildid ja jooned rohelistel sektsioonidel" },
+    ],
+  },
+  {
+    nimi: "Kiri",
+    selgitus: "Teksti värvid. Kolm esimest on heledal pinnal, viimane tumedal.",
+    varvid: [
+      { votme: "ink", nimi: "Pealkirjad", kus: "Suured pealkirjad ja tsitaadid" },
+      { votme: "inkSoft", nimi: "Põhitekst", kus: "Tavalised lõigud" },
+      { votme: "inkFaint", nimi: "Kõrvaline tekst", kus: "Kuupäevad, märkused, vaiksem info" },
+      { votme: "luu", nimi: "Kiri tumedal pinnal", kus: "Kogu tekst rohelistel sektsioonidel ja jaluses" },
+    ],
+  },
+];
 
 export const SUURUSE_NIMED = {
   silt: "Sektsioonisildid (KULDSED SUURTÄHED)",

@@ -16,10 +16,7 @@ import { readFileSync } from "node:fs";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { vaikimisiSisu } from "./vaikimisi.js";
-import {
-  TEKSTIVARVIDE_VOTI,
-  puhastaTekstiVarvid,
-} from "./tekstivarvid.js";
+import { TEKSTIKUJUDE_VOTI, puhastaTekstiKujud } from "./tekstikujud.js";
 
 export { vaikimisiSisu };
 
@@ -168,11 +165,11 @@ export function puhasta(vaikimisi, uus, sugavus = 0, voti = "") {
   }
 
   /*
-    Tekstivärvid on vaba kujuga kaart (tee -> värv), mitte vaikimisi puu järgi
+    Tekstikujud on vaba kujuga kaart (tee -> kuju), mitte vaikimisi puu järgi
     valideeritav haru. Kuju järgi käies kaoks siin iga võti, sest vaikimisi
-    väärtus on tühi objekt — seepärast oma puhastus (src/sisu/tekstivarvid.js).
+    väärtus on tühi objekt — seepärast oma puhastus (src/sisu/tekstikujud.js).
   */
-  if (voti === TEKSTIVARVIDE_VOTI) return puhastaTekstiVarvid(uus);
+  if (voti === TEKSTIKUJUDE_VOTI) return puhastaTekstiKujud(uus);
 
   if (Array.isArray(vaikimisi)) {
     if (!Array.isArray(uus)) return vaikimisi;

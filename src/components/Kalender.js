@@ -175,7 +175,7 @@ export default function Kalender({
                       ? "cursor-not-allowed text-ink-faint/50"
                       : taisTais
                         ? "cursor-not-allowed text-ink-faint"
-                        : "text-ink hover:bg-clay-soft"
+                        : "text-ink hover:bg-rohe/10"
               }`}
             >
               {paev}
@@ -224,7 +224,7 @@ export default function Kalender({
               <button
                 type="button"
                 onClick={() => onMuuda(valitud.filter((v) => v !== voti))}
-                className="text-ink-faint transition-colors hover:text-brick"
+                className="text-ink-faint transition-colors hover:text-gold-deep"
               >
                 <span className="sr-only">
                   Eemalda {vormindaKuupaev(voti)}

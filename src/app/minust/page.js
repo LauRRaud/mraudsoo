@@ -2,7 +2,7 @@ import Foto from "@/components/Foto";
 import Ilmub from "@/components/Ilmub";
 import { NooleLink, Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
-import { varvija } from "@/sisu/tekstivarvid";
+import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
 /* Metaandmed tulevad samast sisupuust, mis leht ise */
 export async function generateMetadata() {
@@ -34,8 +34,9 @@ export default async function Minust() {
     lopp,
   } = sisu.minust;
 
-  /* Admin-lehelt antud üksikute tekstide värvid */
-  const v = varvija(sisu.tekstiVarvid, "minust");
+  /* Admin-lehelt antud üksikute tekstide kuju */
+  const v = plokiStiil(sisu.tekstiKujud, "minust");
+  const s = tekstiKuju(sisu.tekstiKujud, "minust");
 
   return (
     <>
@@ -48,20 +49,20 @@ export default async function Minust() {
         <div className="mx-auto grid max-w-[1400px] items-start gap-14 px-6 pb-16 pt-10 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
           <div className="lg:pt-14">
             <p className="sisene silt" style={v("hero.silt")}>
-              {hero.silt}
+              {s("hero.silt", hero.silt)}
             </p>
             <h1
               className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
               style={{ "--viive": "90ms", ...v("hero.pealkiri") }}
             >
-              {hero.pealkiri}
+              {s("hero.pealkiri", hero.pealkiri)}
             </h1>
             <div
               className="sisene joon mb-9 mt-9 max-w-28"
               style={{ "--viive": "200ms" }}
             />
             <div className="sisene" style={{ "--viive": "300ms" }}>
-              <Tekst suur stiil={v("hero.tekst")}>
+              <Tekst suur stiil={v("hero.tekst")} kuju={s.kuju("hero.tekst")}>
                 {hero.tekst}
               </Tekst>
             </div>
@@ -95,7 +96,12 @@ export default async function Minust() {
           <div className="lg:sticky lg:top-32 lg:self-start">
             {/* Silti pealkirja kohal ei ole — see oleks sama sõna kaks korda */}
             <Ilmub>
-              <Pealkiri stiil={v("lugu.pealkiri")}>{lugu.pealkiri}</Pealkiri>
+              <Pealkiri
+                stiil={v("lugu.pealkiri")}
+                kuju={s.kuju("lugu.pealkiri")}
+              >
+                {lugu.pealkiri}
+              </Pealkiri>
               <div className="joon mt-9 max-w-28" />
             </Ilmub>
           </div>
@@ -112,7 +118,7 @@ export default async function Minust() {
                     : "text-lg leading-[1.85] text-ink-soft sm:text-xl"
                 }
               >
-                {loik}
+                {s(`lugu.loigud.${jrk}`, loik)}
               </p>
             ))}
           </Ilmub>
@@ -129,6 +135,9 @@ export default async function Minust() {
             viiteStiil={v("kirjakoht.viide")}
             stiil={v("kirjakoht.tekst")}
             selgituseStiil={v("kirjakoht.selgitus")}
+            viiteKuju={s.kuju("kirjakoht.viide")}
+            kuju={s.kuju("kirjakoht.tekst")}
+            selgituseKuju={s.kuju("kirjakoht.selgitus")}
           />
         </Ilmub>
       </Sektsioon>
@@ -143,13 +152,13 @@ export default async function Minust() {
         <Ilmub className="mx-auto max-w-3xl text-center">
           <div aria-hidden="true" className="pystjoon pystjoon-tume" />
           <p className="silt silt-tume mt-7" style={v("pooordumine.silt")}>
-            {pooordumine.silt}
+            {s("pooordumine.silt", pooordumine.silt)}
           </p>
           <h2
             className="kuva mt-6 text-[clamp(2rem,4.2vw,3.2rem)] text-luu"
             style={v("pooordumine.pealkiri")}
           >
-            {pooordumine.pealkiri}
+            {s("pooordumine.pealkiri", pooordumine.pealkiri)}
           </h2>
         </Ilmub>
 
@@ -165,7 +174,7 @@ export default async function Minust() {
                   : "text-lg leading-[1.85] text-luu/95 sm:text-xl"
               }`}
             >
-              {loik}
+              {s(`pooordumine.loigud.${jrk}`, loik)}
             </p>
           ))}
         </Ilmub>
@@ -181,7 +190,7 @@ export default async function Minust() {
               className="kuva mt-8 text-[clamp(1.35rem,2.7vw,1.9rem)] leading-[1.45] text-kuld-hele"
               style={v("pooordumine.tsitaat")}
             >
-              {pooordumine.tsitaat}
+              {s("pooordumine.tsitaat", pooordumine.tsitaat)}
             </blockquote>
           </Ilmub>
         )}
@@ -202,6 +211,9 @@ export default async function Minust() {
                 viiteStiil={v(`pooordumine.kirjakohad.${jrk}.viide`)}
                 stiil={v(`pooordumine.kirjakohad.${jrk}.tekst`)}
                 selgituseStiil={v(`pooordumine.kirjakohad.${jrk}.selgitus`)}
+                viiteKuju={s.kuju(`pooordumine.kirjakohad.${jrk}.viide`)}
+                kuju={s.kuju(`pooordumine.kirjakohad.${jrk}.tekst`)}
+                selgituseKuju={s.kuju(`pooordumine.kirjakohad.${jrk}.selgitus`)}
               />
             </Ilmub>
           ))}
@@ -216,10 +228,16 @@ export default async function Minust() {
             className="max-w-2xl"
             siltStiil={v("annid.silt")}
             stiil={v("annid.pealkiri")}
+            siltKuju={s.kuju("annid.silt")}
+            kuju={s.kuju("annid.pealkiri")}
           >
             {annid.pealkiri}
           </Pealkiri>
-          <Tekst className="mt-8" stiil={v("annid.sissejuhatus")}>
+          <Tekst
+            className="mt-8"
+            stiil={v("annid.sissejuhatus")}
+            kuju={s.kuju("annid.sissejuhatus")}
+          >
             {annid.sissejuhatus}
           </Tekst>
         </Ilmub>
@@ -232,13 +250,13 @@ export default async function Minust() {
                 className="kuva text-[clamp(1.4rem,2.6vw,1.85rem)] text-ink"
                 style={v(`annid.loend.${jrk}.nimi`)}
               >
-                {and.nimi}
+                {s(`annid.loend.${jrk}.nimi`, and.nimi)}
               </dt>
               <dd
                 className="mt-3 text-lg leading-relaxed text-ink-soft"
                 style={v(`annid.loend.${jrk}.kirjeldus`)}
               >
-                {and.kirjeldus}
+                {s(`annid.loend.${jrk}.kirjeldus`, and.kirjeldus)}
               </dd>
             </div>
           ))}
@@ -246,7 +264,7 @@ export default async function Minust() {
       </Sektsioon>
 
       {/* Horisontaalne foto oma loomulikus kuvasuhtes, tsitaat selle all */}
-      <section className="overflow-hidden bg-shell">
+      <section className="overflow-hidden bg-linen">
         <div className="mx-auto max-w-[1400px] px-6 py-20 sm:py-28 lg:px-12 lg:py-36">
           <div className="mx-auto max-w-[1000px]">
             <Foto
@@ -260,7 +278,7 @@ export default async function Minust() {
                 className="kuva mt-12 max-w-4xl text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.4] text-gold-deep"
                 style={v("tsitaat.tekst")}
               >
-                {tsitaat.tekst}
+                {s("tsitaat.tekst", tsitaat.tekst)}
               </blockquote>
             </Ilmub>
           </div>
@@ -268,7 +286,7 @@ export default async function Minust() {
       </section>
 
       {/* Terviklik inimene */}
-      <section className="overflow-hidden bg-clay">
+      <section className="overflow-hidden bg-sage">
         <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-20 sm:py-28 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24 lg:px-12 lg:py-36">
           <div>
             <Ilmub>
@@ -276,6 +294,8 @@ export default async function Minust() {
                 silt={terviklikkus.silt}
                 siltStiil={v("terviklikkus.silt")}
                 stiil={v("terviklikkus.pealkiri")}
+                siltKuju={s.kuju("terviklikkus.silt")}
+                kuju={s.kuju("terviklikkus.pealkiri")}
               >
                 {terviklikkus.pealkiri}
               </Pealkiri>
@@ -289,7 +309,7 @@ export default async function Minust() {
                   /* whitespace-pre-line: Marta reavahetused pildilt jäävad alles */
                   className="max-w-[52ch] whitespace-pre-line text-xl leading-[1.75] text-ink/85"
                 >
-                  {loik}
+                  {s(`terviklikkus.loigud.${jrk}`, loik)}
                 </p>
               ))}
             </Ilmub>
@@ -314,7 +334,7 @@ export default async function Minust() {
             className="kuva mx-auto mt-8 max-w-3xl text-[clamp(1.55rem,3.2vw,2.4rem)] leading-[1.35] text-ink"
             style={v("lopp.tsitaat")}
           >
-            {lopp.tsitaat}
+            {s("lopp.tsitaat", lopp.tsitaat)}
           </blockquote>
         </Ilmub>
         <Ilmub viive={180} className="mt-12">

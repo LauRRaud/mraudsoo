@@ -128,7 +128,7 @@ export default function KalendriHaldus({ algseis }) {
                 className={`h-12 w-12 border text-lg transition-colors ${
                   suletud
                     ? "border-ink bg-ink text-white"
-                    : "border-clay text-ink-soft hover:border-rohe hover:text-rohe"
+                    : "border-sage text-ink-soft hover:border-rohe hover:text-rohe"
                 }`}
               >
                 {p.lyhend}
@@ -149,7 +149,7 @@ export default function KalendriHaldus({ algseis }) {
           päevi ei ole vaja märkida — need on niikuinii suletud.
         </p>
 
-        <div className="mt-6 border border-clay bg-bone p-5 sm:p-7">
+        <div className="mt-6 border border-sage bg-bone p-5 sm:p-7">
           <div className="flex items-center justify-between">
             <button
               type="button"
@@ -210,8 +210,8 @@ export default function KalendriHaldus({ algseis }) {
                       : suletud
                         ? "bg-ink text-white"
                         : korduvaltSuletud
-                          ? "cursor-pointer bg-shell text-ink-faint"
-                          : "text-ink hover:bg-clay-soft"
+                          ? "cursor-pointer bg-sage text-ink-faint"
+                          : "text-ink hover:bg-rohe/10"
                   }`}
                 >
                   {paev}
@@ -241,7 +241,7 @@ export default function KalendriHaldus({ algseis }) {
                   key={voti}
                   type="button"
                   onClick={() => lylitaPaev(voti)}
-                  className="border border-clay px-3 py-1.5 text-base text-ink-soft transition-colors hover:border-rohe hover:text-rohe"
+                  className="border border-sage px-3 py-1.5 text-base text-ink-soft transition-colors hover:border-rohe hover:text-rohe"
                 >
                   {voti} <span aria-hidden="true">×</span>
                   <span className="sr-only">Ava see päev</span>

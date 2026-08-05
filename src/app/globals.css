@@ -24,13 +24,15 @@
   salvestatud kujundus need üle kirjutada (vt src/kujundus/).
 */
 @theme {
-  /* Pinnad — soe luuvalge, lina ja savi suunas */
+  /*
+    Pinnad — soe luuvalge, lina ja savi suunas. KOLM ASTET, mitte rohkem:
+    varem oli kuus ja naabrite vahe jäi ühe protsendi kanti, mis tähendas
+    admin-lehel kuut eristamatut ruutu. Uut heledat pinda ei lisata — kui
+    sektsioon vajab eristust, võtab ta ühe neist kolmest.
+  */
   --color-bone: #fdfcf9; /* lehe põhitaust */
-  --color-linen: #f7f5ef; /* vaevumärgatav paneel */
-  --color-shell: #f0ede5; /* pisut tumedam paneel */
-  --color-clay: #e8e4d9; /* rahulik paneel */
-  --color-clay-soft: #f3f1ea;
-  --color-sage: #e4e3d7; /* tumedaim hele paneel, kerge rohekas kuma */
+  --color-linen: #f7f5ef; /* vahelduv paneel */
+  --color-sage: #e4e3d7; /* rõhutatud paneel, kerge rohekas kuma */
 
   /*
     Nupuvärv — sügav murtud roheline. Valge tekst annab 7.3:1.
@@ -41,7 +43,6 @@
   /* Kuld — hele suurtele pealkirjadele, tume tekstisuuruses kasutuseks */
   --color-gold: #a6862f;
   --color-gold-deep: #8a6f20;
-  --color-brick: #8a6f20; /* ajalooline nimi — paletti ei kuulu, seega kuld */
 
   /*
     Tume pühamu — pehme metsaroheline, nupurohelisest vaid astme võrra

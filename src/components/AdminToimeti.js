@@ -25,7 +25,13 @@ import {
   loguSisseTegevus,
   salvestaTegevus,
 } from "@/app/admin/tegevused";
-import { TEKSTIVARVIDE_VOTI, onVarvitav } from "@/sisu/tekstivarvid";
+import {
+  SUURUSE_MAX,
+  SUURUSE_MIN,
+  TEKSTIKUJUDE_VOTI,
+  onKujundatav,
+} from "@/sisu/tekstikujud";
+import { KUVA_FONDID, TEKSTI_FONDID } from "@/kujundus/fondiNimekiri";
 
 /* ------------------------------------------------------------------ */
 /* Sõnastikud                                                          */
@@ -274,7 +280,7 @@ function plokiNimi(element, indeks) {
 /* ------------------------------------------------------------------ */
 
 const VALI_KLASS =
-  "w-full border border-clay bg-bone px-3 py-2 text-[0.95rem] leading-relaxed text-ink-soft transition-colors placeholder:text-ink-faint focus:border-rohe focus:outline-2 focus:outline-offset-2 focus:outline-rohe";
+  "w-full border border-sage bg-bone px-3 py-2 text-[0.95rem] leading-relaxed text-ink-soft transition-colors placeholder:text-ink-faint focus:border-rohe focus:outline-2 focus:outline-offset-2 focus:outline-rohe";
 
 const NUPP_ROHE =
   "mikro inline-flex items-center justify-center border border-rohe bg-rohe px-6 py-3 text-[0.8rem] text-white transition-colors hover:border-rohe-hele hover:bg-rohe-hele disabled:cursor-not-allowed disabled:opacity-50";
@@ -283,63 +289,234 @@ const NUPP_AARIS =
   "mikro inline-flex items-center justify-center border border-rohe px-5 py-2.5 text-[0.75rem] text-rohe transition-colors hover:bg-rohe hover:text-white disabled:cursor-not-allowed disabled:opacity-50";
 
 const NUPP_VAIKE =
-  "inline-flex h-8 w-8 items-center justify-center border border-clay text-ink-faint transition-colors hover:border-rohe hover:text-rohe disabled:cursor-not-allowed disabled:opacity-40";
+  "inline-flex h-8 w-8 items-center justify-center border border-sage text-ink-faint transition-colors hover:border-rohe hover:text-rohe disabled:cursor-not-allowed disabled:opacity-40";
 
 const NUPP_TEKST =
   "mikro text-[0.65rem] text-ink-faint underline underline-offset-4 transition-colors hover:text-rohe";
 
 /* ------------------------------------------------------------------ */
-/* Tekstivärvid                                                        */
+/* Ühe teksti kuju                                                     */
 /* ------------------------------------------------------------------ */
 
 /*
-  Värvikaart ja selle muutja käivad kontekstiga, mitte propsidena: nii ei pea
+  Kujukaart ja selle muutja käivad kontekstiga, mitte propsidena: nii ei pea
   Valjad ja Massiiv neid iga taseme kaudu edasi andma. Muutmine käib täpselt
   samamoodi nagu tekstil — kirje läheb sisupuu külge ja salvestub sama
   „Salvesta” nupuga.
 */
-const VarviKontekst = createContext(null);
+const KujuKontekst = createContext(null);
 
 /* Uue värvi lähtepunkt on lehe kuld — tavalisim esiletõst */
 const VAIKE_ESILETOST = "#8a6f20";
 
-function Varvivalija({ tee }) {
-  const kontekst = useContext(VarviKontekst);
+const JOONDUSE_NIMED = [
+  { vaartus: "vasak", nimi: "Vasakule" },
+  { vaartus: "kesk", nimi: "Keskele" },
+  { vaartus: "parem", nimi: "Paremale" },
+];
+
+/* Väike lülitusnupp paneeli sees */
+function Lyliti({ peal, muuda, children, silt }) {
+  return (
+    <button
+      type="button"
+      onClick={muuda}
+      aria-pressed={peal}
+      title={silt}
+      className={`mikro border px-3 py-1.5 text-[0.65rem] transition-colors ${
+        peal
+          ? "border-rohe bg-rohe text-white"
+          : "border-sage text-ink-faint hover:border-rohe hover:text-rohe"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/*
+  Kogu ühe teksti kuju ühes paneelis: värv, suurus, joondus, kaldkiri,
+  rasvane kiri, jutumärgid ja font. Paneel avaneb alles siis, kui Marta
+  seda küsib — muidu oleks iga tekstivälja all seitse juhtnuppu.
+*/
+function Kujupaneel({ tee }) {
+  const kontekst = useContext(KujuKontekst);
+  const [avatud, setAvatud] = useState(false);
+
   if (!kontekst) return null;
 
-  const { varvid, muudaVarv } = kontekst;
-  const varv = varvid[tee];
+  const { kujud, muudaKuju } = kontekst;
+  const kuju = kujud[tee] ?? {};
+  const midagiSeatud = Object.keys(kuju).length > 0;
 
-  /* Värvita väli ei näita valijat — muidu näeks vaikimisi seis välja nagu valik */
-  if (!varv) {
+  /* Ühe omaduse muutmine; sama väärtus uuesti = tagasi vaikimisi */
+  function sea(votme, vaartus) {
+    muudaKuju(tee, { ...kuju, [votme]: kuju[votme] === vaartus ? undefined : vaartus });
+  }
+
+  if (!avatud && !midagiSeatud) {
     return (
       <button
         type="button"
-        onClick={() => muudaVarv(tee, VAIKE_ESILETOST)}
+        onClick={() => setAvatud(true)}
         className={`${NUPP_TEKST} mt-2`}
       >
-        Anna sellele tekstile värv
+        Kujunda see tekst
       </button>
     );
   }
 
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-3">
-      <input
-        type="color"
-        value={varv}
-        onChange={(sundmus) => muudaVarv(tee, sundmus.target.value)}
-        aria-label="Teksti värv"
-        className="h-8 w-10 cursor-pointer border border-clay bg-transparent p-1"
-      />
-      <span className="text-[0.8rem] text-ink-faint">{varv}</span>
-      <button
-        type="button"
-        onClick={() => muudaVarv(tee, null)}
-        className={NUPP_TEKST}
-      >
-        Tagasi vaikimisi värvile
-      </button>
+    <div className="mt-3 space-y-3 border border-sage bg-linen p-3">
+      {/* Värv */}
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="mikro w-20 text-[0.65rem] text-ink-faint">Värv</span>
+        {kuju.varv ? (
+          <>
+            <input
+              type="color"
+              value={kuju.varv}
+              onChange={(sundmus) =>
+                muudaKuju(tee, { ...kuju, varv: sundmus.target.value })
+              }
+              aria-label="Teksti värv"
+              className="h-8 w-10 cursor-pointer border border-sage bg-transparent p-1"
+            />
+            <span className="text-[0.8rem] text-ink-faint">{kuju.varv}</span>
+            <button
+              type="button"
+              onClick={() => muudaKuju(tee, { ...kuju, varv: undefined })}
+              className={NUPP_TEKST}
+            >
+              vaikimisi
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            onClick={() => muudaKuju(tee, { ...kuju, varv: VAIKE_ESILETOST })}
+            className={NUPP_TEKST}
+          >
+            Vali värv
+          </button>
+        )}
+      </div>
+
+      {/*
+        Suurus on KORDAJA, mitte pikslid: tekstid saavad suuruse
+        responsiivsest clamp()-ist ja kordaja korrutab seda, seega
+        mobiilivaade jääb terveks.
+      */}
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="mikro w-20 text-[0.65rem] text-ink-faint">Suurus</span>
+        <input
+          type="range"
+          min={SUURUSE_MIN}
+          max={SUURUSE_MAX}
+          step={0.05}
+          value={kuju.suurus ?? 1}
+          onChange={(sundmus) =>
+            muudaKuju(tee, { ...kuju, suurus: Number(sundmus.target.value) })
+          }
+          aria-label="Teksti suurus"
+          className="h-8 w-40 cursor-pointer accent-rohe"
+        />
+        <span className="text-[0.8rem] text-ink-faint">
+          {Math.round((kuju.suurus ?? 1) * 100)} %
+        </span>
+      </div>
+
+      {/* Joondus */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="mikro w-20 text-[0.65rem] text-ink-faint">Joondus</span>
+        {JOONDUSE_NIMED.map((valik) => (
+          <Lyliti
+            key={valik.vaartus}
+            peal={(kuju.joondus ?? "vasak") === valik.vaartus}
+            muuda={() => muudaKuju(tee, { ...kuju, joondus: valik.vaartus })}
+            silt={valik.nimi}
+          >
+            {valik.nimi}
+          </Lyliti>
+        ))}
+      </div>
+
+      {/* Kirjapilt */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="mikro w-20 text-[0.65rem] text-ink-faint">Kiri</span>
+        <Lyliti
+          peal={kuju.kalle === "kaldu"}
+          muuda={() => sea("kalle", "kaldu")}
+          silt="Kaldkiri"
+        >
+          Kaldkiri
+        </Lyliti>
+        <Lyliti
+          peal={kuju.kaal === "rasvane"}
+          muuda={() => sea("kaal", "rasvane")}
+          silt="Rasvane"
+        >
+          Rasvane
+        </Lyliti>
+        <Lyliti
+          peal={kuju.jutumargid === true}
+          muuda={() => sea("jutumargid", true)}
+          silt="Paneb teksti ümber jutumärgid"
+        >
+          Jutumärgid
+        </Lyliti>
+      </div>
+
+      {/* Font */}
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="mikro w-20 text-[0.65rem] text-ink-faint">Font</span>
+        <select
+          value={kuju.font ?? ""}
+          onChange={(sundmus) =>
+            muudaKuju(tee, { ...kuju, font: sundmus.target.value || undefined })
+          }
+          aria-label="Teksti font"
+          className="border border-sage bg-bone px-2 py-1.5 text-[0.9rem] text-ink-soft"
+        >
+          <option value="">Vaikimisi</option>
+          <optgroup label="Pealkirjafondid">
+            {KUVA_FONDID.map((font) => (
+              <option key={font.id} value={font.id}>
+                {font.nimi}
+              </option>
+            ))}
+          </optgroup>
+          <optgroup label="Tekstifondid">
+            {TEKSTI_FONDID.map((font) => (
+              <option key={font.id} value={font.id}>
+                {font.nimi}
+              </option>
+            ))}
+          </optgroup>
+        </select>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-4 border-t border-sage pt-3">
+        <button
+          type="button"
+          onClick={() => {
+            muudaKuju(tee, null);
+            setAvatud(false);
+          }}
+          className={NUPP_TEKST}
+        >
+          Lähtesta kogu kuju
+        </button>
+        {!midagiSeatud && (
+          <button
+            type="button"
+            onClick={() => setAvatud(false)}
+            className={NUPP_TEKST}
+          >
+            Sulge
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -361,10 +538,10 @@ export function Sisselogimisvorm({ lukus = false }) {
 
       {lukus ? (
         /* Parooli pole serveris määratud — admin on lukus */
-        <div className="mt-8 border border-clay bg-linen p-6">
+        <div className="mt-8 border border-sage bg-linen p-6">
           <p className="text-[0.95rem] leading-relaxed text-ink-soft">
             Admin on lukus. Serveris ei ole määratud keskkonnamuutujat{" "}
-            <code className="bg-shell px-1 text-ink">ADMIN_PAROOL</code>. Lisa
+            <code className="bg-sage px-1 text-ink">ADMIN_PAROOL</code>. Lisa
             see serveri seadistusse ja käivita rakendus uuesti — alles siis saab
             sisse logida.
           </p>
@@ -442,12 +619,12 @@ function Tekstivali({ id, voti, vaartus, muuda, siltTekst, tee }) {
   const readOnly = AINULT_LOETAV.has(voti);
 
   /*
-    Värvivalija ilmub ainult nendele väljadele, mis on lehel päriselt värviga
-    ühendatud (vt src/sisu/tekstivarvid.js VARVITAVAD) — muidu saaks värvi
+    Kujupaneel ilmub ainult nendele väljadele, mis on lehel päriselt kujuga
+    ühendatud (vt src/sisu/tekstikujud.js KUJUNDATAVAD) — muidu saaks kuju
     valida ja lehel ei juhtuks midagi.
   */
-  const varviTee = Array.isArray(tee) ? tee.join(".") : null;
-  const varvitav = !readOnly && varviTee !== null && onVarvitav(varviTee);
+  const kujuTee = Array.isArray(tee) ? tee.join(".") : null;
+  const kujundatav = !readOnly && kujuTee !== null && onKujundatav(kujuTee);
 
   return (
     <div>
@@ -491,7 +668,7 @@ function Tekstivali({ id, voti, vaartus, muuda, siltTekst, tee }) {
         </p>
       )}
 
-      {varvitav && <Varvivalija tee={varviTee} />}
+      {kujundatav && <Kujupaneel tee={kujuTee} />}
     </div>
   );
 }
@@ -567,7 +744,7 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
   }
 
   return (
-    <fieldset className="border border-clay bg-bone p-4 sm:p-5">
+    <fieldset className="border border-sage bg-bone p-4 sm:p-5">
       <legend className="mikro px-2 text-[0.7rem] text-ink-faint">
         {silt(voti)}
       </legend>
@@ -582,7 +759,7 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
             key={`${id}-${indeks}`}
             className={
               objektid
-                ? "border border-clay bg-linen p-4"
+                ? "border border-sage bg-linen p-4"
                 : "flex items-start gap-3"
             }
           >
@@ -692,12 +869,12 @@ function Valjad({ vaartus, tee, muuda, sugavus = 0 }) {
         <details
           key={id}
           open={sugavus < 1}
-          className="border border-clay bg-bone"
+          className="border border-sage bg-bone"
         >
           <summary className="mikro cursor-pointer px-4 py-3 text-[0.7rem] text-ink-faint transition-colors hover:text-rohe">
             {silt(voti)}
           </summary>
-          <div className="space-y-4 border-t border-clay p-4 sm:p-5">
+          <div className="space-y-4 border-t border-sage p-4 sm:p-5">
             <Valjad
               vaartus={alamVaartus}
               tee={alamTee}
@@ -748,18 +925,30 @@ export default function AdminToimeti({ algsisu }) {
   }
 
   /*
-    Ühe teksti värv. varv === null tähendab „tagasi vaikimisi” — siis võti
-    kustutatakse, mitte ei salvestata tühja väärtust.
+    Ühe teksti kuju. null tähendab „lähtesta” — siis võti kustutatakse.
+    Tühjaks jäänud kuju (kõik omadused vaikimisi) kustutatakse samuti, et
+    kaardile ei koguneks tühje kirjeid.
   */
-  function muudaVarv(tee, varv) {
+  function muudaKuju(tee, uusKuju) {
     setSisu((eelmine) => {
-      const kaart = { ...(eelmine[TEKSTIVARVIDE_VOTI] ?? {}) };
-      if (varv) {
-        kaart[tee] = varv;
-      } else {
-        delete kaart[tee];
+      const kaart = { ...(eelmine[TEKSTIKUJUDE_VOTI] ?? {}) };
+
+      /* undefined-väärtused välja: need tähendavad „vaikimisi” */
+      const puhas = {};
+      for (const [votme, vaartus] of Object.entries(uusKuju ?? {})) {
+        if (vaartus === undefined || vaartus === null) continue;
+        if (votme === "joondus" && vaartus === "vasak") continue;
+        if (votme === "suurus" && Number(vaartus) === 1) continue;
+        puhas[votme] = vaartus;
       }
-      return { ...eelmine, [TEKSTIVARVIDE_VOTI]: kaart };
+
+      if (Object.keys(puhas).length === 0) {
+        delete kaart[tee];
+      } else {
+        kaart[tee] = puhas;
+      }
+
+      return { ...eelmine, [TEKSTIKUJUDE_VOTI]: kaart };
     });
     setMuudetud(true);
     setTeade(null);
@@ -822,8 +1011,8 @@ export default function AdminToimeti({ algsisu }) {
   }
 
   return (
-    <VarviKontekst.Provider
-      value={{ varvid: sisu[TEKSTIVARVIDE_VOTI] ?? {}, muudaVarv }}
+    <KujuKontekst.Provider
+      value={{ kujud: sisu[TEKSTIKUJUDE_VOTI] ?? {}, muudaKuju }}
     >
     <div className="mx-auto w-full max-w-[1360px] px-6 py-10 lg:px-10">
       <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-14">
@@ -836,7 +1025,7 @@ export default function AdminToimeti({ algsisu }) {
             {SEKTSIOONID.map((kirje) => {
               const aktiivne = kirje.id === valitud;
               return (
-                <li key={kirje.id} className="lg:border-b lg:border-clay">
+                <li key={kirje.id} className="lg:border-b lg:border-sage">
                   <button
                     type="button"
                     onClick={() => setValitud(kirje.id)}
@@ -844,7 +1033,7 @@ export default function AdminToimeti({ algsisu }) {
                     className={`mikro w-full border px-4 py-3 text-left text-[0.7rem] transition-colors lg:border-0 lg:px-0 ${
                       aktiivne
                         ? "border-rohe text-rohe"
-                        : "border-clay text-ink-faint hover:text-ink"
+                        : "border-sage text-ink-faint hover:text-ink"
                     }`}
                   >
                     {kirje.nimi}
@@ -911,7 +1100,7 @@ export default function AdminToimeti({ algsisu }) {
         Salvestusriba on lehe all ja jääb kerimisel nähtavale. Alla, mitte
         üles: lehe oma päis on juba sticky top-0 ja kaks riba kaklekisid seal.
       */}
-      <div className="sticky bottom-0 z-30 -mx-6 mt-12 border-t border-clay bg-bone/95 px-6 py-4 backdrop-blur lg:-mx-10 lg:px-10">
+      <div className="sticky bottom-0 z-30 -mx-6 mt-12 border-t border-sage bg-bone/95 px-6 py-4 backdrop-blur lg:-mx-10 lg:px-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-4">
             {muudetud ? (
@@ -944,6 +1133,6 @@ export default function AdminToimeti({ algsisu }) {
         </div>
       </div>
     </div>
-    </VarviKontekst.Provider>
+    </KujuKontekst.Provider>
   );
 }

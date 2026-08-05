@@ -71,7 +71,7 @@ export default async function BroneeringudLeht() {
             <li
               key={soov.id}
               className={`border-l-2 bg-bone px-6 py-5 ${
-                soov.loetud ? "border-clay" : "border-rohe"
+                soov.loetud ? "border-sage" : "border-rohe"
               }`}
             >
               <div className="flex flex-wrap items-baseline justify-between gap-4">
@@ -138,7 +138,7 @@ export default async function BroneeringudLeht() {
                 />
                 <button
                   type="submit"
-                  className="mikro border border-clay px-4 py-2 text-[0.7rem] text-ink-faint transition-colors hover:border-rohe hover:text-rohe"
+                  className="mikro border border-sage px-4 py-2 text-[0.7rem] text-ink-faint transition-colors hover:border-rohe hover:text-rohe"
                 >
                   {soov.loetud ? "Märgi uueks" : "Märgi loetuks"}
                 </button>

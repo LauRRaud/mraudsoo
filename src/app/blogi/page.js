@@ -2,7 +2,7 @@ import Link from "next/link";
 import Ilmub from "@/components/Ilmub";
 import { Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
-import { varvija } from "@/sisu/tekstivarvid";
+import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
 /* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
 export async function generateMetadata() {
@@ -31,28 +31,29 @@ export default async function Blogi() {
     (a, b) => new Date(b.kuupaev) - new Date(a.kuupaev)
   );
 
-  /* Admin-lehelt antud üksikute tekstide värvid */
-  const v = varvija(sisu.tekstiVarvid, "blogiLeht");
+  /* Admin-lehelt antud üksikute tekstide kuju */
+  const v = plokiStiil(sisu.tekstiKujud, "blogiLeht");
+  const s = tekstiKuju(sisu.tekstiKujud, "blogiLeht");
 
   return (
     <>
       <Sektsioon taust="bone" polsterdus="ohuke">
         <div className="max-w-3xl pt-6 sm:pt-10">
           <p className="sisene silt" style={v("hero.silt")}>
-            {blogiLeht.hero.silt}
+            {s("hero.silt", blogiLeht.hero.silt)}
           </p>
           <h1
             className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
             style={{ "--viive": "90ms", ...v("hero.pealkiri") }}
           >
-            {blogiLeht.hero.pealkiri}
+            {s("hero.pealkiri", blogiLeht.hero.pealkiri)}
           </h1>
           <div
             className="sisene joon mb-9 mt-9 max-w-28"
             style={{ "--viive": "200ms" }}
           />
           <div className="sisene" style={{ "--viive": "300ms" }}>
-            <Tekst suur stiil={v("hero.tekst")}>
+            <Tekst suur stiil={v("hero.tekst")} kuju={s.kuju("hero.tekst")}>
               {blogiLeht.hero.tekst}
             </Tekst>
           </div>
@@ -68,9 +69,13 @@ export default async function Blogi() {
               className="kuva mx-auto mt-8 text-[clamp(1.55rem,3.2vw,2.3rem)] leading-[1.3] text-ink"
               style={v("tyhiPealkiri")}
             >
-              {blogiLeht.tyhiPealkiri}
+              {s("tyhiPealkiri", blogiLeht.tyhiPealkiri)}
             </p>
-            <Tekst className="mx-auto mt-7 text-center" stiil={v("tyhiTekst")}>
+            <Tekst
+              className="mx-auto mt-7 text-center"
+              stiil={v("tyhiTekst")}
+              kuju={s.kuju("tyhiTekst")}
+            >
               {blogiLeht.tyhiTekst}
             </Tekst>
             <a

@@ -5,7 +5,7 @@ import { salvestaKujundusTegevus } from "@/app/admin/tegevused";
 import {
   SUURUSE_NIMED,
   TAHEVAHE_NIMED,
-  VARVI_NIMED,
+  VARVI_RUHMAD,
 } from "@/kujundus/vaikimisi";
 
 /*
@@ -44,13 +44,13 @@ function kontrast(a, b) {
   on 3:1, mitte 4.5:1.
 */
 const KONTROLLID = [
-  { tekst: "ink", taust: "bone", nimi: "Pealkirjad valgel" },
-  { tekst: "inkSoft", taust: "bone", nimi: "Põhitekst valgel" },
-  { tekst: "inkFaint", taust: "bone", nimi: "Kõrvaline tekst valgel" },
-  { tekst: "goldDeep", taust: "bone", nimi: "Sildid ja lingid valgel" },
+  { tekst: "ink", taust: "bone", nimi: "Pealkirjad lehe taustal" },
+  { tekst: "inkSoft", taust: "bone", nimi: "Põhitekst lehe taustal" },
+  { tekst: "inkFaint", taust: "bone", nimi: "Kõrvaline tekst lehe taustal" },
+  { tekst: "goldDeep", taust: "bone", nimi: "Sildid ja lingid lehe taustal" },
   { tekst: "gold", taust: "bone", nimi: "Kuldsed pealkirjad", suur: true },
-  { tekst: "inkSoft", taust: "linen", nimi: "Põhitekst heledal paneelil" },
-  { tekst: "inkSoft", taust: "clay", nimi: "Põhitekst rahulikul paneelil" },
+  { tekst: "inkSoft", taust: "linen", nimi: "Põhitekst vahelduval paneelil" },
+  { tekst: "inkSoft", taust: "sage", nimi: "Põhitekst rõhutatud paneelil" },
   { tekst: "luu", taust: "mets", nimi: "Tekst tumedal sektsioonil" },
   { tekst: "kuldHele", taust: "mets", nimi: "Kuld tumedal sektsioonil" },
   { tekst: "luu", taust: "metsSyva", nimi: "Tekst jaluses" },
@@ -138,7 +138,7 @@ export default function KujunduseHaldus({ algseis, kuvaFondid, tekstiFondid }) {
                   className={`${nupuStiil} block w-full ${
                     kujundus.fondid.kuva === f.id
                       ? "border-rohe bg-rohe/10"
-                      : "border-clay hover:border-rohe"
+                      : "border-sage hover:border-rohe"
                   }`}
                 >
                   <span
@@ -165,7 +165,7 @@ export default function KujunduseHaldus({ algseis, kuvaFondid, tekstiFondid }) {
                   className={`${nupuStiil} block w-full ${
                     kujundus.fondid.tekst === f.id
                       ? "border-rohe bg-rohe/10"
-                      : "border-clay hover:border-rohe"
+                      : "border-sage hover:border-rohe"
                   }`}
                 >
                   <span
@@ -182,30 +182,48 @@ export default function KujunduseHaldus({ algseis, kuvaFondid, tekstiFondid }) {
         </div>
       </section>
 
-      {/* Värvid */}
+      {/*
+        Värvid rühmadena. Rühmita oli see seitseteist ühesugust ruutu ja
+        muutmine käis katse-eksituse teel — eriti heledad pinnad, mida oli
+        varem kuus tükki üksteisest protsendi kaugusel.
+      */}
       <section className="mt-14">
         <h2 className="kuva text-2xl text-ink">Värvid</h2>
         <p className="mt-2 text-base leading-relaxed text-ink-soft">
-          Paneelid on sektsioonide taustad — leht vaheldab neid, et sektsioonid
-          eristuksid.
+          Värvid on rühmades selle järgi, mis asja nad on. Iga värvi all seisab,
+          kus seda lehel näeb.
         </p>
 
-        <div className="mt-6 grid gap-x-10 gap-y-4 sm:grid-cols-2">
-          {Object.entries(VARVI_NIMED).map(([votme, nimi]) => (
-            <label key={votme} className="flex items-center gap-4">
-              <input
-                type="color"
-                value={kujundus.varvid[votme]}
-                onChange={(e) => muudaVarv(votme, e.target.value)}
-                className="h-11 w-14 cursor-pointer border border-clay bg-transparent p-1"
-              />
-              <span className="flex-1">
-                <span className="block text-base text-ink">{nimi}</span>
-                <span className="block text-sm text-ink-faint">
-                  {kujundus.varvid[votme]}
-                </span>
-              </span>
-            </label>
+        <div className="mt-8 space-y-12">
+          {VARVI_RUHMAD.map((ruhm) => (
+            <div key={ruhm.nimi}>
+              <h3 className="silt">{ruhm.nimi}</h3>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-soft">
+                {ruhm.selgitus}
+              </p>
+
+              <div className="mt-5 grid gap-x-10 gap-y-4 sm:grid-cols-2">
+                {ruhm.varvid.map(({ votme, nimi, kus }) => (
+                  <label key={votme} className="flex items-center gap-4">
+                    <input
+                      type="color"
+                      value={kujundus.varvid[votme]}
+                      onChange={(e) => muudaVarv(votme, e.target.value)}
+                      className="h-11 w-14 shrink-0 cursor-pointer border border-sage bg-transparent p-1"
+                    />
+                    <span className="flex-1">
+                      <span className="block text-base text-ink">{nimi}</span>
+                      <span className="block text-sm leading-snug text-ink-faint">
+                        {kus}
+                      </span>
+                      <span className="block text-sm text-ink-faint">
+                        {kujundus.varvid[votme]}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
@@ -298,7 +316,7 @@ export default function KujunduseHaldus({ algseis, kuvaFondid, tekstiFondid }) {
           <button
             type="button"
             onClick={lahtesta}
-            className="mikro border border-clay px-4 py-3 text-[0.7rem] text-ink-faint transition-colors hover:border-rohe hover:text-rohe"
+            className="mikro border border-sage px-4 py-3 text-[0.7rem] text-ink-faint transition-colors hover:border-rohe hover:text-rohe"
           >
             Võta muudatused tagasi
           </button>

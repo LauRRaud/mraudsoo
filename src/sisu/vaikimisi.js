@@ -770,15 +770,16 @@ export const vaikimisiSisu = {
   },
 
   /*
-    ÜKSIKUTE TEKSTIDE VÄRVID.
+    ÜKSIKUTE TEKSTIDE KUJU.
 
-    Admin saab anda ühele tekstile oma värvi; kaardi võti on selle teksti tee
-    siin puus, punktidega ühendatud. Vaikimisi on kaart tühi — iga tekst
-    kannab oma sektsiooni tavavärvi.
+    Admin saab anda ühele tekstile oma värvi, suuruse, joonduse, kaldkirja,
+    rasvase kirja, jutumärgid ja fondi. Kaardi võti on selle teksti tee siin
+    puus, punktidega ühendatud. Vaikimisi on kaart tühi ja iga tekst kannab
+    oma sektsiooni tavakuju.
 
     See haru EI käi tavalist kuju valideerimist läbi (vaikimisi väärtus on
     tühi objekt ja siis kaoksid kõik võtmed) — tal on oma puhastus failis
-    src/sisu/tekstivarvid.js, mida src/sisu/lae.js eraldi kutsub.
+    src/sisu/tekstikujud.js, mida src/sisu/lae.js eraldi kutsub.
   */
-  tekstiVarvid: {},
+  tekstiKujud: {},
 };
