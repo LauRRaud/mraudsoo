@@ -47,7 +47,12 @@ export default async function Postitus({ params }) {
 
   return (
     <article>
-      <Sektsioon taust="bone" laius="kitsas" polsterdus="ohuke">
+      <Sektsioon
+        taust="bone"
+        laius="kitsas"
+        polsterdus="ohuke"
+        taustaVoti="blogiPostitus.hero"
+      >
         <div className="pt-6 sm:pt-10">
           <time
             dateTime={postitus.kuupaev}
@@ -70,7 +75,7 @@ export default async function Postitus({ params }) {
         </div>
       </Sektsioon>
 
-      <Sektsioon taust="linen" laius="kitsas">
+      <Sektsioon taust="linen" laius="kitsas" taustaVoti="blogiPostitus.sisu">
         <Ilmub ruhm className="space-y-7">
           {loigud.map((loik, indeks) => (
             <p

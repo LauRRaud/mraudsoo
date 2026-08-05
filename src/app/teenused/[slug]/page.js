@@ -165,7 +165,11 @@ export default async function TeenuseLeht({ params }) {
   return (
     <>
       {/* Heero — sügav toon saab tumeda pinna, soe toon rõhutatud paneeli */}
-      <Sektsioon taust={tume ? "mets" : "sage"} polsterdus="ohuke">
+      <Sektsioon
+        taust={tume ? "mets" : "sage"}
+        polsterdus="ohuke"
+        taustaVoti="teenuseLeht.hero"
+      >
         <div className="max-w-3xl pt-6 sm:pt-10">
           {alapealkiriOnLause ? (
             <p
@@ -185,13 +189,14 @@ export default async function TeenuseLeht({ params }) {
             </p>
           )}
 
+          {/* Heero pealkirjal hiirekursori üleminekut ei ole — värv käib tavaliselt */}
           <h1
             className={`sisene kuva mt-5 text-[clamp(2.75rem,7.5vw,5.5rem)] leading-[1.02] ${
               tume ? "text-luu" : "text-ink"
             }`}
-            style={{ "--viive": "90ms" }}
+            style={{ "--viive": "90ms", ...v("nimi") }}
           >
-            {teenus.nimi}
+            {s("nimi", teenus.nimi)}
           </h1>
 
           <p
@@ -206,7 +211,7 @@ export default async function TeenuseLeht({ params }) {
       </Sektsioon>
 
       {/* Sissejuhatus — kuldne juhtmõte ja lõigud */}
-      <Sektsioon taust="bone" laius="kitsas">
+      <Sektsioon taust="bone" laius="kitsas" taustaVoti="teenuseLeht.sissejuhatus">
         <Ilmub>
           <p
             className="kuva text-[clamp(1.55rem,3.2vw,2.3rem)] leading-[1.35] text-gold-deep"
@@ -240,7 +245,7 @@ export default async function TeenuseLeht({ params }) {
         salmid ning Püha Ruumi kaksteist plokki ei ole üks pikk tekstivall.
       */}
       {plokid.length > 0 && (
-        <Sektsioon taust="linen" laius="kitsas">
+        <Sektsioon taust="linen" laius="kitsas" taustaVoti="teenuseLeht.plokid">
           {plokid.map((plokk, i) => {
             const plokiLoigud = Array.isArray(plokk.loigud) ? plokk.loigud : [];
             const salm = salmid[i] ? kirjakohaOsad(plokk) : null;
@@ -307,7 +312,12 @@ export default async function TeenuseLeht({ params }) {
         Ilma viiteta salm: püstjoon, lause kuvakirjas, vajadusel järelmõte all.
       */}
       {tsitaat && (
-        <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
+        <Sektsioon
+          taust="sage"
+          laius="kitsas"
+          polsterdus="ohuke"
+          taustaVoti="teenuseLeht.tsitaat"
+        >
           <Ilmub>
             <Salm
               tekst={tsitaat.tekst}
@@ -322,7 +332,7 @@ export default async function TeenuseLeht({ params }) {
       )}
 
       {nimekiri.length > 0 && (
-        <Sektsioon taust={nimekirjaTaust}>
+        <Sektsioon taust={nimekirjaTaust} taustaVoti="teenuseLeht.nimekiri">
           <Ilmub>
             <Pealkiri
               silt={nimekirjaSilt}
@@ -352,7 +362,7 @@ export default async function TeenuseLeht({ params }) {
       )}
 
       {/* Kutse + järgmine teenus */}
-      <Sektsioon taust={kutseTaust}>
+      <Sektsioon taust={kutseTaust} taustaVoti="teenuseLeht.kutse">
         <div className="grid gap-14 lg:grid-cols-2 lg:gap-24">
           <Ilmub>
             <Pealkiri
@@ -391,8 +401,12 @@ export default async function TeenuseLeht({ params }) {
                 href={`/teenused/${jargmine.slug}`}
                 className="group mt-6 block"
               >
-                <h2 className="kuva text-[clamp(1.75rem,3.4vw,2.5rem)] text-ink transition-all duration-500 group-hover:translate-x-1.5 group-hover:text-gold-deep">
-                  {jargmine.nimi}
+                {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
+                <h2
+                  className="kuva text-[clamp(1.75rem,3.4vw,2.5rem)] text-[var(--oma-varv,var(--color-ink))] transition-all duration-500 group-hover:translate-x-1.5 group-hover:text-gold-deep"
+                  style={vj("nimi", { varvMuutujaks: true })}
+                >
+                  {sj("nimi", jargmine.nimi)}
                 </h2>
                 <p
                   className="mt-3 max-w-[42ch] text-lg leading-relaxed text-ink-soft"

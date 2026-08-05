@@ -68,8 +68,9 @@ export const vaikimisiKujundus = {
 
       pilt   — failinimi kaustas data/taustad (serveeritakse /taustad/<nimi>)
       kate   — sektsiooni pinnavärvi läbipaistmatus pildi peal, 0…1.
-               Mida kõrgem, seda vaiksem pilt. Alla 0,5 ei lasta, sest
-               tekst kaob.
+               0 (vaikimisi) = pilt täies tugevuses, 1 = paneeli värv on
+               täiesti tagasi ja pilti ei paista. Vahepealne toob värvi
+               pildi peale ja teeb teksti loetavamaks.
       asetus — mis osa pildist raami jääb (vt ASETUSED)
   */
   taustad: {},

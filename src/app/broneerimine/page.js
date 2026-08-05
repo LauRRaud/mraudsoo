@@ -1,4 +1,4 @@
-import { Salm, Sektsioon, Tekst } from "@/components/ui";
+import { KATTE_VARV, Salm, Sektsioon, Tekst } from "@/components/ui";
 import BroneeriVorm from "@/components/BroneeriVorm";
 import Ilmub from "@/components/Ilmub";
 import { laeSisu } from "@/sisu/lae";
@@ -26,7 +26,7 @@ export default async function Broneerimine() {
 
   return (
     <>
-      <Sektsioon taust="bone" polsterdus="ohuke">
+      <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="broneerimine.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
           <p className="sisene silt" style={v("hero.silt")}>
             {s("hero.silt", broneerimine.hero.silt)}
@@ -49,7 +49,11 @@ export default async function Broneerimine() {
         </div>
       </Sektsioon>
 
-      <section className="bg-linen">
+      <section
+        className="bg-linen"
+        data-taust="broneerimine.vorm"
+        style={{ "--kate-varv": KATTE_VARV.linen }}
+      >
         <div className="mx-auto grid max-w-[1400px] gap-16 px-6 py-20 sm:py-28 lg:grid-cols-[1.3fr_0.7fr] lg:gap-24 lg:px-12 lg:py-36">
           <Ilmub>
             <p className="silt" style={v("vormSilt")}>
@@ -121,7 +125,12 @@ export default async function Broneerimine() {
 
       {/* Kirjakoht lõpetuseks — kutse peatuda enne, kui kirjutad */}
       {broneerimine.kirjakoht?.tekst && (
-        <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
+        <Sektsioon
+          taust="sage"
+          laius="kitsas"
+          polsterdus="ohuke"
+          taustaVoti="broneerimine.kirjakoht"
+        >
           <Ilmub>
             <Salm
               viide={broneerimine.kirjakoht.viide}

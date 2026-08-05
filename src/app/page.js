@@ -332,8 +332,12 @@ export default async function Avaleht() {
           {sisu.teenused.map((teenus, jrk) => (
             <li key={teenus.slug}>
               <Link href={`/teenused/${teenus.slug}`} className="group block">
-                <h3 className="kuva text-[clamp(1.9rem,6vw,2.15rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
-                  {teenus.nimi}
+                {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
+                <h3
+                  className="kuva text-[clamp(1.9rem,6vw,2.15rem)] text-[var(--oma-varv,var(--color-ink))] transition-colors duration-300 group-hover:text-gold-deep"
+                  style={vt(`${jrk}.nimi`, { varvMuutujaks: true })}
+                >
+                  {st(`${jrk}.nimi`, teenus.nimi)}
                 </h3>
                 {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust, eriti mobiilis */}
                 <p

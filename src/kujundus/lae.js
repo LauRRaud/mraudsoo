@@ -84,8 +84,9 @@ export function puhastaKujundus(salvestatud) {
   SALVESTATU ja iga võtit kontrollitakse registri vastu — tundmatu võti,
   vigane failinimi või puuduv pilt kukub vaikselt välja.
 
-  Katte alampiir on 0,5. Madalamal muutub tekst pildi peal loetamatuks ja
-  see on ainus koht, kus kujunduse admin päriselt lehe katki teha saaks.
+  Kate on vaikimisi 0: valitud pilt paistab täies tugevuses ja alles liugur
+  toob paneeli värvi tagasi. Alampiiri ei ole — kui tekst pildi peal ei loe,
+  on see nähtav kohe admin-lehe eelvaates ja liugur on selle jaoks olemas.
 */
 function puhastaTaustad(salvestatud) {
   if (!salvestatud || typeof salvestatud !== "object") return {};
@@ -99,7 +100,7 @@ function puhastaTaustad(salvestatud) {
 
     taustad[votme] = {
       pilt: kirje.pilt,
-      kate: arv(kirje.kate, 0.5, 1, 0.85),
+      kate: arv(kirje.kate, 0, 1, 0),
       asetus: Object.hasOwn(ASETUSED, kirje.asetus) ? kirje.asetus : "keskel",
     };
   }

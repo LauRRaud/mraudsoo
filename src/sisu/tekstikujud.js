@@ -129,9 +129,11 @@ export const KUJUNDATAVAD = [
   "teenusedLeht.lopp.tekst",
 
   /*
-    Teenused. Nimi on meelega välja jäetud: registris on ta lingi sees ja
-    hiirega peal muutub kuldseks — inline-värv võidaks selle ülemineku ära.
+    Teenused. Nimi on registris lingi sees ja muutub hiirega peal kuldseks.
+    Selleks et inline-värv seda üleminekut ära ei sööks, antakse tema värv
+    CSS-muutujana — vt plokiStiil() valikut `varvMuutujaks`.
   */
+  "teenused.*.nimi",
   "teenused.*.alapealkiri",
   "teenused.*.luhike",
   "teenused.*.sissejuhatus",
@@ -314,16 +316,26 @@ function jutumarkidega(tekst) {
 
       const p = plokiStiil(sisu.tekstiKujud, "avaleht");
       <p style={p("kutsumus.valjendusSissejuhatus")}>…</p>
+
+  VALIK `varvMuutujaks`: mõni tekst (teenuse nimi registris) vahetab hiirega
+  peal värvi klassi kaudu. Inline `color` võidaks selle ülemineku ära, sest
+  inline-stiil on klassist tugevam. Siis anname värvi hoopis muutujana
+  `--oma-varv` ja element kirjutab klassi `text-[var(--oma-varv,…)]` — nii
+  jääb `group-hover:` peale, sest klassi spetsiifilisus on kõrgem kui
+  muutujaviitel.
 */
 export function plokiStiil(tekstiKujud, eesliide = "") {
   const kaart = tekstiKujud ?? {};
 
-  return function stiil(tee) {
+  return function stiil(tee, valikud) {
     const kuju = kaart[eesliide ? `${eesliide}.${tee}` : tee];
     if (!kuju) return undefined;
 
     const tulemus = {};
-    if (kuju.varv) tulemus.color = kuju.varv;
+    if (kuju.varv) {
+      if (valikud?.varvMuutujaks) tulemus["--oma-varv"] = kuju.varv;
+      else tulemus.color = kuju.varv;
+    }
     if (kuju.joondus === "kesk") tulemus.textAlign = "center";
     if (kuju.joondus === "parem") tulemus.textAlign = "right";
 

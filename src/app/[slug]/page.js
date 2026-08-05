@@ -43,7 +43,7 @@ export default async function OmaLeht({ params }) {
 
   return (
     <>
-      <Sektsioon taust="bone" polsterdus="ohuke">
+      <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="vabaLeht.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
           {leht.silt && <p className="sisene silt">{leht.silt}</p>}
           <h1

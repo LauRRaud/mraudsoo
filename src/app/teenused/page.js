@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Ilmub from "@/components/Ilmub";
-import { Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
+import { KATTE_VARV, Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
 import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
@@ -29,7 +29,7 @@ export default async function Teenused() {
 
   return (
     <>
-      <Sektsioon taust="bone" polsterdus="ohuke">
+      <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="teenused.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
           <p className="sisene silt" style={v("hero.silt")}>
             {s("hero.silt", hero.silt)}
@@ -52,7 +52,11 @@ export default async function Teenused() {
         </div>
       </Sektsioon>
 
-      <section className="bg-linen">
+      <section
+        className="bg-linen"
+        data-taust="teenused.register"
+        style={{ "--kate-varv": KATTE_VARV.linen }}
+      >
         <div className="mx-auto max-w-[1400px] px-6 pb-20 sm:pb-28 lg:px-12 lg:pb-36">
           {/*
             Register, mitte tabel: iga teenus on omaette plokk kahes veerus,
@@ -67,8 +71,12 @@ export default async function Teenused() {
             {teenused.map((teenus, jrk) => (
               <li key={teenus.slug}>
                 <Link href={`/teenused/${teenus.slug}`} className="group block">
-                  <h2 className="kuva text-[clamp(2.15rem,7vw,2.6rem)] text-ink transition-colors duration-300 group-hover:text-gold-deep">
-                    {teenus.nimi}
+                  {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
+                  <h2
+                    className="kuva text-[clamp(2.15rem,7vw,2.6rem)] text-[var(--oma-varv,var(--color-ink))] transition-colors duration-300 group-hover:text-gold-deep"
+                    style={vt(`${jrk}.nimi`, { varvMuutujaks: true })}
+                  >
+                    {st(`${jrk}.nimi`, teenus.nimi)}
                   </h2>
                   {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust, eriti mobiilis */}
                   <p
@@ -93,7 +101,12 @@ export default async function Teenused() {
 
       {/* Marta lause, mis kehtib kõigi teenuste kohta — mitte ainult ühe kohta */}
       {tsitaat && (
-        <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
+        <Sektsioon
+          taust="sage"
+          laius="kitsas"
+          polsterdus="ohuke"
+          taustaVoti="teenused.tsitaat"
+        >
           <Ilmub>
             <Salm
               viide={tsitaadiSilt}
@@ -107,7 +120,13 @@ export default async function Teenused() {
         </Sektsioon>
       )}
 
-      <Sektsioon taust="bone" laius="kitsas" polsterdus="ohuke" className="text-center">
+      <Sektsioon
+        taust="bone"
+        laius="kitsas"
+        polsterdus="ohuke"
+        className="text-center"
+        taustaVoti="teenused.lopp"
+      >
         <Ilmub>
           <p
             className="kuva mx-auto max-w-2xl text-[clamp(1.7rem,3.4vw,2.5rem)] leading-[1.28] text-ink"

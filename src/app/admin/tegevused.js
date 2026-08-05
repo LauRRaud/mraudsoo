@@ -15,7 +15,12 @@ import { laeSisu, puhasta, salvestaSisu, vaikimisiSisu } from "@/sisu/lae";
 import { TEKSTIKUJUDE_VOTI, eemaldaHaru } from "@/sisu/tekstikujud";
 import { markiLoetuks } from "@/broneering/salvesta";
 import { salvestaKalender } from "@/broneering/kalender";
-import { salvestaKujundus } from "@/kujundus/lae";
+import { laeKujundus, salvestaKujundus } from "@/kujundus/lae";
+import {
+  kustutaTaustaPilt,
+  laeTaustaPildid,
+  salvestaTaustaPilt,
+} from "@/kujundus/taustaPildid";
 
 /*
   Kuju valideerimine (puhasta) elab failis src/sisu/lae.js, sest sama kontroll
@@ -194,4 +199,51 @@ export async function salvestaKujundusTegevus(uus) {
       viga: "Salvestamine ebaõnnestus: faili data/kujundus.json ei õnnestunud kirjutada.",
     };
   }
+}
+
+/*
+  TAUSTAPILDI ÜLESLAADIMINE.
+
+  Fail tuleb FormData'ga, sest serveritegevus ei võta File-objekti muidu
+  vastu. Tüüp ja suurus kontrollitakse failisisu järgi (vt taustaPildid.js).
+  Pilt ainult jõuab kausta — millisele sektsioonile ta läheb, otsustab
+  Marta admin-lehel ja see salvestub alles „Salvesta” nupuga.
+*/
+export async function laeTaustaPiltTegevus(vormiAndmed) {
+  const keeld = await noudaSessiooni();
+  if (keeld) return keeld;
+
+  const fail = vormiAndmed.get("pilt");
+  const vastus = await salvestaTaustaPilt(fail);
+
+  if (!vastus.ok) return vastus;
+
+  return { ok: true, nimi: vastus.nimi, pildid: await laeTaustaPildid() };
+}
+
+/*
+  TAUSTAPILDI KUSTUTAMINE.
+
+  Kasutuses olevat pilti ei kustutata: muidu jääks kujundusse viide failile,
+  mida ei ole, ja sektsioon läheks tühjaks ilma et keegi aru saaks, miks.
+*/
+export async function kustutaTaustaPiltTegevus(nimi) {
+  const keeld = await noudaSessiooni();
+  if (keeld) return keeld;
+
+  const kujundus = await laeKujundus();
+  const kasutusel = Object.values(kujundus.taustad).some((t) => t.pilt === nimi);
+
+  if (kasutusel) {
+    return {
+      ok: false,
+      viga: "Pilt on mõne sektsiooni taustaks. Võta see enne sektsioonilt maha.",
+    };
+  }
+
+  if (!(await kustutaTaustaPilt(nimi))) {
+    return { ok: false, viga: "Pilti ei õnnestunud kustutada." };
+  }
+
+  return { ok: true, pildid: await laeTaustaPildid() };
 }

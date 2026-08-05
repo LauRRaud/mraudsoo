@@ -37,7 +37,7 @@ export default async function Blogi() {
 
   return (
     <>
-      <Sektsioon taust="bone" polsterdus="ohuke">
+      <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="blogi.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
           <p className="sisene silt" style={v("hero.silt")}>
             {s("hero.silt", blogiLeht.hero.silt)}
@@ -60,7 +60,7 @@ export default async function Blogi() {
         </div>
       </Sektsioon>
 
-      <Sektsioon taust="linen">
+      <Sektsioon taust="linen" taustaVoti="blogi.register">
         {jarjestatud.length === 0 ? (
           /* Tühi seis — postitused lisatakse admin-lehelt */
           <Ilmub className="mx-auto max-w-2xl text-center">

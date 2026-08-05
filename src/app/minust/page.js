@@ -1,6 +1,14 @@
 import Foto from "@/components/Foto";
 import Ilmub from "@/components/Ilmub";
-import { NooleLink, Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
+import {
+  KATTE_VARV,
+  NooleLink,
+  Nupp,
+  Pealkiri,
+  Salm,
+  Sektsioon,
+  Tekst,
+} from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
 import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
@@ -45,7 +53,11 @@ export default async function Minust() {
         keskkohast) ja lõpeb viitega loo juurde — nii on veerg fotoga
         tasakaalus ega jää „alla rippuma”.
       */}
-      <section className="overflow-hidden bg-bone">
+      <section
+        className="overflow-hidden bg-bone"
+        data-taust="minust.hero"
+        style={{ "--kate-varv": KATTE_VARV.bone }}
+      >
         <div className="mx-auto grid max-w-[1400px] items-start gap-14 px-6 pb-16 pt-10 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
           <div className="lg:pt-14">
             <p className="sisene silt" style={v("hero.silt")}>
@@ -91,7 +103,7 @@ export default async function Minust() {
         Minu lugu — pealkiri jääb laial ekraanil vasakule püsima, lugu voolab
         kõrval ühes kitsas veerus, et lõikude vahel oleks õhku ja lugemisrütmi.
       */}
-      <Sektsioon taust="linen" id="lugu">
+      <Sektsioon taust="linen" id="lugu" taustaVoti="minust.lugu">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-28">
           <div className="lg:sticky lg:top-32 lg:self-start">
             {/* Silti pealkirja kohal ei ole — see oleks sama sõna kaks korda */}
@@ -126,7 +138,7 @@ export default async function Minust() {
       </Sektsioon>
 
       {/* Kirjakoht — kogu lehe vaikseim hetk */}
-      <Sektsioon taust="sage" laius="kitsas">
+      <Sektsioon taust="sage" laius="kitsas" taustaVoti="minust.kirjakoht">
         <Ilmub>
           <Salm
             viide={kirjakoht.viide}
@@ -148,7 +160,7 @@ export default async function Minust() {
         Viimane lõik on kutsumuse kokkuvõte ja seisab kuvakirjas heledas
         kullas, et lugu lõppeks kõlaga, mitte poolel sõnal.
       */}
-      <Sektsioon taust="mets">
+      <Sektsioon taust="mets" taustaVoti="minust.poordumine">
         <Ilmub className="mx-auto max-w-3xl text-center">
           <div aria-hidden="true" className="pystjoon pystjoon-tume" />
           <p className="silt silt-tume mt-7" style={v("pooordumine.silt")}>
@@ -200,7 +212,7 @@ export default async function Minust() {
         Loo juurde kuuluvad kirjakohad — iga salm oma vaikse hetkena.
         Mõne salmi juures pildil selgitust ei olnud, siis jääb see lihtsalt ära.
       */}
-      <Sektsioon taust="linen" laius="kitsas">
+      <Sektsioon taust="linen" laius="kitsas" taustaVoti="minust.salmid">
         <div className="space-y-20 sm:space-y-24">
           {pooordumine.kirjakohad.map((koht, jrk) => (
             <Ilmub key={koht.viide}>
@@ -221,7 +233,7 @@ export default async function Minust() {
       </Sektsioon>
 
       {/* Annid */}
-      <Sektsioon taust="bone">
+      <Sektsioon taust="bone" taustaVoti="minust.annid">
         <Ilmub>
           <Pealkiri
             silt={annid.silt}
@@ -264,7 +276,11 @@ export default async function Minust() {
       </Sektsioon>
 
       {/* Horisontaalne foto oma loomulikus kuvasuhtes, tsitaat selle all */}
-      <section className="overflow-hidden bg-linen">
+      <section
+        className="overflow-hidden bg-linen"
+        data-taust="minust.foto"
+        style={{ "--kate-varv": KATTE_VARV.linen }}
+      >
         <div className="mx-auto max-w-[1400px] px-6 py-20 sm:py-28 lg:px-12 lg:py-36">
           <div className="mx-auto max-w-[1000px]">
             <Foto
@@ -286,7 +302,11 @@ export default async function Minust() {
       </section>
 
       {/* Terviklik inimene */}
-      <section className="overflow-hidden bg-sage">
+      <section
+        className="overflow-hidden bg-sage"
+        data-taust="minust.terviklikkus"
+        style={{ "--kate-varv": KATTE_VARV.sage }}
+      >
         <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-20 sm:py-28 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24 lg:px-12 lg:py-36">
           <div>
             <Ilmub>
@@ -327,7 +347,13 @@ export default async function Minust() {
       </section>
 
       {/* Lõpetuseks */}
-      <Sektsioon taust="linen" laius="kitsas" polsterdus="ohuke" className="text-center">
+      <Sektsioon
+        taust="linen"
+        laius="kitsas"
+        polsterdus="ohuke"
+        className="text-center"
+        taustaVoti="minust.lopetuseks"
+      >
         <Ilmub>
           <div aria-hidden="true" className="pystjoon" />
           <blockquote

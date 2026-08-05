@@ -1,5 +1,5 @@
 import Ilmub from "@/components/Ilmub";
-import { Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
+import { KATTE_VARV, Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
 import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
@@ -27,7 +27,7 @@ export default async function Hinnakiri() {
 
   return (
     <>
-      <Sektsioon taust="bone" polsterdus="ohuke">
+      <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="hinnakiri.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
           <p className="sisene silt" style={v("hero.silt")}>
             {s("hero.silt", hinnakiriLeht.hero.silt)}
@@ -51,7 +51,11 @@ export default async function Hinnakiri() {
       </Sektsioon>
 
       {/* Üksikteenused */}
-      <section className="bg-linen">
+      <section
+        className="bg-linen"
+        data-taust="hinnakiri.uksikteenused"
+        style={{ "--kate-varv": KATTE_VARV.linen }}
+      >
         <div className="mx-auto max-w-[1400px] px-6 pb-20 sm:pb-28 lg:px-12 lg:pb-36">
           <Ilmub className="pt-16 sm:pt-20 lg:pt-24">
             <p className="silt" style={v("uksikudSilt")}>
@@ -105,7 +109,7 @@ export default async function Hinnakiri() {
       </section>
 
       {/* Stiiliteekond — kolm sammu koos, lehe tume esiletõst */}
-      <Sektsioon taust="mets">
+      <Sektsioon taust="mets" taustaVoti="hinnakiri.teekond">
         <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24">
           <Ilmub>
             <p className="silt silt-tume" style={v("teekondSilt")}>
@@ -158,7 +162,12 @@ export default async function Hinnakiri() {
 
       {/* Marta lause väärtusest — hind ei ole see, mis inimese väärtuse määrab */}
       {hinnakiriLeht.tsitaat && (
-        <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
+        <Sektsioon
+          taust="sage"
+          laius="kitsas"
+          polsterdus="ohuke"
+          taustaVoti="hinnakiri.tsitaat"
+        >
           <Ilmub>
             <Salm
               viide={hinnakiriLeht.tsitaadiSilt}
@@ -172,7 +181,13 @@ export default async function Hinnakiri() {
         </Sektsioon>
       )}
 
-      <Sektsioon taust="bone" laius="kitsas" polsterdus="ohuke" className="text-center">
+      <Sektsioon
+        taust="bone"
+        laius="kitsas"
+        polsterdus="ohuke"
+        className="text-center"
+        taustaVoti="hinnakiri.lopp"
+      >
         <Ilmub>
           <div aria-hidden="true" className="pystjoon" />
           <p
