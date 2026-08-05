@@ -11,6 +11,7 @@ import path from "node:path";
 import { connection } from "next/server";
 import { vaikimisiKujundus } from "./vaikimisi";
 import { leiaKuvaFont, leiaTekstiFont } from "./fondid";
+import { ASETUSED, onTaustaVoti } from "./sektsioonid";
 
 const kaust = path.join(process.cwd(), "data");
 const failiTee = path.join(kaust, "kujundus.json");
@@ -18,6 +19,18 @@ const failiTee = path.join(kaust, "kujundus.json");
 /* #rgb või #rrggbb — muud ei lubata CSS-i sisse */
 function onVarv(vaartus) {
   return typeof vaartus === "string" && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(vaartus);
+}
+
+/*
+  Taustapildi failinimi. Nime annab serveripool ise (vt taustaPildid.js),
+  seega see kontroll on kaitse käsitsi muudetud kujundusfaili vastu: nimi
+  läheb nii failiteesse kui ka CSS-i url(…) sisse, seega kaldkriipsu,
+  punktipaari ega jutumärki seal olla ei tohi.
+*/
+const PILDI_NIMI = /^[a-z0-9][a-z0-9-]{0,63}\.(jpg|png|webp)$/;
+
+export function onPildiNimi(vaartus) {
+  return typeof vaartus === "string" && PILDI_NIMI.test(vaartus);
 }
 
 function arv(vaartus, min, max, vaikimisi) {
@@ -59,7 +72,39 @@ export function puhastaKujundus(salvestatud) {
     varvid,
     suurused,
     tahevahed,
+    taustad: puhastaTaustad(s.taustad),
   };
+}
+
+/*
+  TAUSTAPILDID.
+
+  Erinevalt ülejäänud kujundusest ei ole siin kindlat võtmehulka: kirje
+  tekib alles siis, kui Marta pildi valib. Seepärast käib puhastus üle
+  SALVESTATU ja iga võtit kontrollitakse registri vastu — tundmatu võti,
+  vigane failinimi või puuduv pilt kukub vaikselt välja.
+
+  Katte alampiir on 0,5. Madalamal muutub tekst pildi peal loetamatuks ja
+  see on ainus koht, kus kujunduse admin päriselt lehe katki teha saaks.
+*/
+function puhastaTaustad(salvestatud) {
+  if (!salvestatud || typeof salvestatud !== "object") return {};
+
+  const taustad = {};
+
+  for (const [votme, kirje] of Object.entries(salvestatud)) {
+    if (!onTaustaVoti(votme)) continue;
+    if (!kirje || typeof kirje !== "object") continue;
+    if (!onPildiNimi(kirje.pilt)) continue;
+
+    taustad[votme] = {
+      pilt: kirje.pilt,
+      kate: arv(kirje.kate, 0.5, 1, 0.85),
+      asetus: Object.hasOwn(ASETUSED, kirje.asetus) ? kirje.asetus : "keskel",
+    };
+  }
+
+  return taustad;
 }
 
 /* goldDeep -> gold-deep */
@@ -93,7 +138,37 @@ export function kujundusCss(kujundus) {
   read.push(`--kuva-font:var(${leiaKuvaFont(kujundus.fondid.kuva).muutuja})`);
   read.push(`--tekst-font:var(${leiaTekstiFont(kujundus.fondid.tekst).muutuja})`);
 
-  return `:root{${read.join(";")}}`;
+  return `:root{${read.join(";")}}${taustadeCss(kujundus.taustad)}`;
+}
+
+/*
+  TAUSTAPILDID CSS-INA.
+
+  Reegel tekib ainult sektsioonile, millel pilt päriselt on — nii ei kanna
+  leht kaasas tühja kihti iga sektsiooni kohal. Sektsioon ise annab
+  --kate-varv väärtuse (oma pinnavärvi), sest CSS-i genereerimise hetkel me
+  ei tea, millisel pinnal sektsioon seisab; kate peab olema sama värv, muidu
+  tekiks pildi ümber vale toon.
+
+  Väärtused on puhastatud (võti registrist, failinimi mustri järgi, kate
+  arv 0,5…1), seega siia ei saa midagi ootamatut sattuda.
+*/
+function taustadeCss(taustad) {
+  const kirjed = Object.entries(taustad ?? {});
+  if (kirjed.length === 0) return "";
+
+  return kirjed
+    .map(([votme, { pilt, kate, asetus }]) => {
+      const valik = `[data-taust="${votme}"]`;
+
+      return (
+        `${valik}{background-image:url("/taustad/${pilt}");` +
+        `background-size:cover;background-position:${ASETUSED[asetus]};` +
+        `background-repeat:no-repeat}` +
+        `${valik}::before{opacity:${kate}}`
+      );
+    })
+    .join("");
 }
 
 function loeFail() {

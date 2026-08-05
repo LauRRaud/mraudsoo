@@ -231,6 +231,31 @@
   }
 
   /*
+    SEKTSIOONI TAUSTAPILT.
+
+    Pilt ise ja katte tugevus tulevad admin-lehelt (vt kujundusCss →
+    taustadeCss); siin on ainult kiht, mille peale need käivad. Ilma pildita
+    on kate läbipaistmatuseta, seega sektsioon näeb välja täpselt nagu enne.
+
+    Kate on ::before, mitte eraldi <div>, sest nii ei pea ükski leht oma
+    ehitust muutma. `isolation: isolate` hoiab z-index: -1 elemendi SEES —
+    muidu kukuks kate vanema tausta alla ja poleks üldse näha.
+  */
+  [data-taust] {
+    position: relative;
+    isolation: isolate;
+  }
+
+  [data-taust]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--kate-varv, transparent);
+    opacity: 0;
+  }
+
+  /*
     Nuppude ja noolelinkide silt. Sama suur kui .silt, aga ilma värvita,
     et iga kasutuskoht saaks ise värvi määrata.
   */

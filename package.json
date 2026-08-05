@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sisu:too": "scp sotsiaalai:/home/ubuntu/apps/mraudsoo/data/*.json data/",
+    "sisu:varunda": "ssh sotsiaalai \"cd /home/ubuntu/apps/mraudsoo && mkdir -p data/varukoopiad && t=$(date +%Y%m%d-%H%M%S) && for f in data/*.json; do cp $f data/varukoopiad/$(basename $f .json)-$t.json; done && ls -1t data/varukoopiad | head -4\""
   },
   "dependencies": {
     "next": "16.2.12",

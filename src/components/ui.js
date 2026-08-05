@@ -16,6 +16,12 @@ export function Sektsioon({
   polsterdus = "tavaline",
   className = "",
   id,
+  /*
+    Taustapildi võti registrist (src/kujundus/sektsioonid.js). Pilt ise
+    tuleb admin-lehelt CSS-i kaudu — komponent ei pea kujundust laadima,
+    ainult ütlema, KES ta on.
+  */
+  taustaVoti,
 }) {
   /*
     Heledaid pindu on kolm ja neid EI TOHI kõrvuti korrata — kaks ühesugust
@@ -40,7 +46,12 @@ export function Sektsioon({
   };
 
   return (
-    <section id={id} className={`${taustad[taust]} ${className}`}>
+    <section
+      id={id}
+      data-taust={taustaVoti}
+      style={taustaVoti ? { "--kate-varv": KATTE_VARV[taust] } : undefined}
+      className={`${taustad[taust]} ${className}`}
+    >
       <div
         className={`mx-auto ${laiused[laius]} px-6 ${polsterdused[polsterdus]} lg:px-12`}
       >
@@ -49,6 +60,20 @@ export function Sektsioon({
     </section>
   );
 }
+
+/*
+  Katte värv taustapildi peal — sama, mis sektsiooni pind. Peab olema
+  var(), mitte kõva väärtus, sest admin-lehelt saab pinnavärvi muuta ja
+  kate peab kaasa tulema. Kasutavad nii Sektsioon kui ka need lehed, kus
+  sektsioon on käsitsi <section> (fotoplokid).
+*/
+export const KATTE_VARV = {
+  bone: "var(--color-bone)",
+  linen: "var(--color-linen)",
+  sage: "var(--color-sage)",
+  mets: "var(--color-mets)",
+  metsSyva: "var(--color-mets-syva)",
+};
 
 /* Sektsiooni pealkirjaplokk: väike silt + suur kuvakiri */
 export function Pealkiri({
