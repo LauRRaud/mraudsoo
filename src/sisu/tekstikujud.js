@@ -87,7 +87,6 @@ export const KUJUNDATAVAD = [
   "avaleht.kirjakoht.tekst",
   "avaleht.kirjakoht.selgitus",
   "avaleht.teenusedPlokk.pealkiri",
-  "avaleht.minustPlokk.silt",
   "avaleht.minustPlokk.tsitaat",
   "avaleht.minustPlokk.loigud.*",
   "avaleht.kutse.silt",

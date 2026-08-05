@@ -130,9 +130,11 @@ export const vaikimisiSisu = {
     /*
       Marta lause seisis siin pooleks murtuna: esimene pool oli pealkiri,
       teine pool eraldi lõik. Nüüd on see terve lause ühe tsitaadina.
+
+      Silti siin EI OLE: sõna „Minust” seisab juba menüüs ja ploki all
+      lingis, kolmas kordus samal ekraanil oli üleliigne.
     */
     minustPlokk: {
-      silt: "Minust",
       tsitaat:
         "„Kõik, mis minus on head, on Jumala kingitus. Minu soov ei ole juhtida inimesi enda juurde, vaid aidata neil kasvada oma suhtes Jumalaga.”",
       loigud: [

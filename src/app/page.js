@@ -1,7 +1,15 @@
 import Link from "next/link";
 import Foto from "@/components/Foto";
 import Ilmub from "@/components/Ilmub";
-import { Nupp, NooleLink, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
+import {
+  KATTE_VARV,
+  Nupp,
+  NooleLink,
+  Pealkiri,
+  Salm,
+  Sektsioon,
+  Tekst,
+} from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
 import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
@@ -36,7 +44,11 @@ export default async function Avaleht() {
   return (
     <>
       {/* Hero — usuline alus kohe ja selgelt, foto kirikuakna kaares */}
-      <section className="overflow-hidden bg-bone">
+      <section
+        className="overflow-hidden bg-bone"
+        data-taust="avaleht.hero"
+        style={{ "--kate-varv": KATTE_VARV.bone }}
+      >
         <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 pb-16 pt-10 sm:pt-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
           <div>
             <p className="sisene silt" style={v("hero.silt")}>
@@ -99,7 +111,7 @@ export default async function Avaleht() {
         litaania voolavad kõrval. Ühes kitsas tulbas seisid tsitaat, lõigud,
         joon ja litaania kõik eri laiusega ja sektsioon luges laialivalguvana.
       */}
-      <Sektsioon taust="linen">
+      <Sektsioon taust="linen" taustaVoti="avaleht.kutsumus">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-24">
           <div className="lg:sticky lg:top-32 lg:self-start">
             <Ilmub>
@@ -161,7 +173,7 @@ export default async function Avaleht() {
         all litaania: iga rida on üks hingetõmme, väike lähtekoht ja suur
         kaldkirjas sihtkoht samal joonel.
       */}
-      <Sektsioon taust="mets">
+      <Sektsioon taust="mets" taustaVoti="avaleht.liikumine">
         <Ilmub className="text-center">
           <div aria-hidden="true" className="pystjoon pystjoon-tume" />
           <p className="silt silt-tume mt-7" style={v("liikumine.silt")}>
@@ -214,7 +226,7 @@ export default async function Avaleht() {
         Essents — Marta enda sõnad sellest, mis on inimese unikaalne olemus.
         Pealkiri jääb laial ekraanil vasakule püsima, lõigud voolavad kõrval.
       */}
-      <Sektsioon taust="bone">
+      <Sektsioon taust="bone" taustaVoti="avaleht.essents">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-24">
           <div className="lg:sticky lg:top-32 lg:self-start">
             {/*
@@ -271,7 +283,12 @@ export default async function Avaleht() {
 
       {/* Kirjakoht — üks vaikne hetk enne teenuseid */}
       {kirjakoht?.tekst && (
-        <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke">
+        <Sektsioon
+          taust="sage"
+          laius="kitsas"
+          polsterdus="ohuke"
+          taustaVoti="avaleht.kirjakoht"
+        >
           <Ilmub>
             <Salm
               viide={kirjakoht.viide}
@@ -289,7 +306,7 @@ export default async function Avaleht() {
       )}
 
       {/* Teenused — register */}
-      <Sektsioon taust="linen">
+      <Sektsioon taust="linen" taustaVoti="avaleht.teenused">
         {/* Pealkiri ütleb „kuus viisi” ise — eraldi silti pole vaja */}
         <Ilmub className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
           <Pealkiri
@@ -338,7 +355,11 @@ export default async function Avaleht() {
       </Sektsioon>
 
       {/* Minust — eelnev teenuste register on linen, seega see läheb tagasi lehe taustale */}
-      <section className="overflow-hidden bg-bone">
+      <section
+        className="overflow-hidden bg-bone"
+        data-taust="avaleht.minust"
+        style={{ "--kate-varv": KATTE_VARV.bone }}
+      >
         <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-20 sm:py-28 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24 lg:px-12 lg:py-36">
           <div className="w-full max-w-[440px] justify-self-center lg:justify-self-start">
             <Foto
@@ -350,13 +371,14 @@ export default async function Avaleht() {
           </div>
 
           <div>
-            {/* Marta enda lause tervikuna — varem oli see pealkirjaks ja lõiguks pooleks murtud */}
+            {/*
+              Marta enda lause tervikuna — varem oli see pealkirjaks ja lõiguks
+              pooleks murtud. Silti „Minust” siin EI OLE: sama sõna seisab juba
+              menüüs ja ploki all lingis, kolmas kordus oli üleliigne.
+            */}
             <Ilmub>
-              <p className="silt" style={v("minustPlokk.silt")}>
-                {s("minustPlokk.silt", minustPlokk.silt)}
-              </p>
               <blockquote
-                className="kuva mt-5 text-[clamp(1.5rem,2.9vw,2.15rem)] leading-[1.32] text-ink"
+                className="kuva text-[clamp(1.5rem,2.9vw,2.15rem)] leading-[1.32] text-ink"
                 style={v("minustPlokk.tsitaat")}
               >
                 {s("minustPlokk.tsitaat", minustPlokk.tsitaat)}
@@ -383,7 +405,13 @@ export default async function Avaleht() {
       </section>
 
       {/* Kutse — tihedam polsterdus, et vaikne hetk ei mõjuks tühja auguna */}
-      <Sektsioon taust="sage" laius="kitsas" polsterdus="ohuke" className="text-center">
+      <Sektsioon
+        taust="sage"
+        laius="kitsas"
+        polsterdus="ohuke"
+        className="text-center"
+        taustaVoti="avaleht.kutse"
+      >
         <Ilmub>
           <div aria-hidden="true" className="pystjoon" />
           <p className="silt mt-7" style={v("kutse.silt")}>
