@@ -102,8 +102,22 @@ export default async function TeenuseLeht({ params }) {
   */
   const v = plokiStiil(sisu.tekstiKujud, `teenused.${jrk}`);
   const s = tekstiKuju(sisu.tekstiKujud, `teenused.${jrk}`);
-  const vj = plokiStiil(sisu.tekstiKujud, `teenused.${jargmiseJrk}`);
-  const sj = tekstiKuju(sisu.tekstiKujud, `teenused.${jargmiseJrk}`);
+  const vp = plokiStiil(
+    sisu.tekstiKujud,
+    `teenused.${jrk}.kuva.alamlehePais`,
+  );
+  const sp = tekstiKuju(
+    sisu.tekstiKujud,
+    `teenused.${jrk}.kuva.alamlehePais`,
+  );
+  const vj = plokiStiil(
+    sisu.tekstiKujud,
+    `teenused.${jargmiseJrk}.kuva.jargmineTeenus`,
+  );
+  const sj = tekstiKuju(
+    sisu.tekstiKujud,
+    `teenused.${jargmiseJrk}.kuva.jargmineTeenus`,
+  );
   const vl = plokiStiil(sisu.tekstiKujud, "teenuseLeht");
   const sl = tekstiKuju(sisu.tekstiKujud, "teenuseLeht");
 
@@ -176,16 +190,16 @@ export default async function TeenuseLeht({ params }) {
               className={`sisene kuva max-w-[36ch] italic text-[clamp(1.2rem,2.3vw,1.6rem)] leading-[1.4] ${
                 tume ? "text-luu/90" : "text-ink/70"
               }`}
-              style={v("alapealkiri")}
+              style={vp("alapealkiri")}
             >
-              {s("alapealkiri", teenus.alapealkiri)}
+              {sp("alapealkiri", teenus.alapealkiri)}
             </p>
           ) : (
             <p
               className={`sisene silt ${tume ? "silt-tume" : "!text-ink/70"}`}
-              style={v("alapealkiri")}
+              style={vp("alapealkiri")}
             >
-              {s("alapealkiri", teenus.alapealkiri)}
+              {sp("alapealkiri", teenus.alapealkiri)}
             </p>
           )}
 
@@ -194,18 +208,18 @@ export default async function TeenuseLeht({ params }) {
             className={`sisene kuva mt-5 text-[clamp(2.75rem,7.5vw,5.5rem)] leading-[1.02] ${
               tume ? "text-luu" : "text-ink"
             }`}
-            style={{ "--viive": "90ms", ...v("nimi") }}
+            style={{ "--viive": "90ms", ...vp("nimi") }}
           >
-            {s("nimi", teenus.nimi)}
+            {sp("nimi", teenus.nimi)}
           </h1>
 
           <p
             className={`sisene mt-8 max-w-[55ch] text-xl leading-[1.75] sm:text-2xl ${
               tume ? "text-luu/95" : "text-ink/85"
             }`}
-            style={{ "--viive": "200ms", ...v("luhike") }}
+            style={{ "--viive": "200ms", ...vp("luhike") }}
           >
-            {s("luhike", teenus.luhike)}
+            {sp("luhike", teenus.luhike)}
           </p>
         </div>
       </Sektsioon>

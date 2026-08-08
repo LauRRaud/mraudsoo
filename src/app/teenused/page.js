@@ -74,23 +74,28 @@ export default async function Teenused() {
                   {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
                   <h2
                     className="kuva text-[clamp(2.15rem,7vw,2.6rem)] text-[var(--oma-varv,var(--color-ink))] transition-colors duration-300 group-hover:text-gold-deep"
-                    style={vt(`${jrk}.nimi`, { varvMuutujaks: true })}
+                    style={vt(`${jrk}.kuva.teenusteLeht.nimi`, {
+                      varvMuutujaks: true,
+                    })}
                   >
-                    {st(`${jrk}.nimi`, teenus.nimi)}
+                    {st(`${jrk}.kuva.teenusteLeht.nimi`, teenus.nimi)}
                   </h2>
                   {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust, eriti mobiilis */}
                   <p
                     className="kuva mt-1 italic text-[clamp(1.5rem,5.2vw,1.75rem)] text-ink-soft"
-                    style={vt(`${jrk}.alapealkiri`)}
+                    style={vt(`${jrk}.kuva.teenusteLeht.alapealkiri`)}
                   >
-                    {st(`${jrk}.alapealkiri`, teenus.alapealkiri)}
+                    {st(
+                      `${jrk}.kuva.teenusteLeht.alapealkiri`,
+                      teenus.alapealkiri,
+                    )}
                   </p>
                   {/* „Loe lähemalt” siin ei ole — kogu plokk on juba link, sama mis avalehel */}
                   <p
                     className="mt-5 max-w-[46ch] text-lg leading-relaxed text-ink-soft"
-                    style={vt(`${jrk}.luhike`)}
+                    style={vt(`${jrk}.kuva.teenusteLeht.luhike`)}
                   >
-                    {st(`${jrk}.luhike`, teenus.luhike)}
+                    {st(`${jrk}.kuva.teenusteLeht.luhike`, teenus.luhike)}
                   </p>
                 </Link>
               </li>

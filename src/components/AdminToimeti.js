@@ -30,6 +30,7 @@ import {
   SUURUSE_MIN,
   TEKSTIKUJUDE_VOTI,
   onKujundatav,
+  teenuseKujuVariandid,
 } from "@/sisu/tekstikujud";
 import { KUVA_FONDID, TEKSTI_FONDID } from "@/kujundus/fondiNimekiri";
 
@@ -339,7 +340,7 @@ function Lyliti({ peal, muuda, children, silt }) {
   rasvane kiri, jutumärgid ja font. Paneel avaneb alles siis, kui Marta
   seda küsib — muidu oleks iga tekstivälja all seitse juhtnuppu.
 */
-function Kujupaneel({ tee }) {
+function Kujupaneel({ tee, nimi, kompaktne = false }) {
   const kontekst = useContext(KujuKontekst);
   const [avatud, setAvatud] = useState(false);
 
@@ -354,20 +355,28 @@ function Kujupaneel({ tee }) {
     muudaKuju(tee, { ...kuju, [votme]: kuju[votme] === vaartus ? undefined : vaartus });
   }
 
-  if (!avatud && !midagiSeatud) {
+  if (!avatud && (!midagiSeatud || kompaktne)) {
     return (
       <button
         type="button"
         onClick={() => setAvatud(true)}
+        aria-expanded="false"
         className={`${NUPP_TEKST} mt-2`}
       >
-        Kujunda see tekst
+        {nimi
+          ? `${nimi}${midagiSeatud ? " · kujundatud" : ""}`
+          : "Kujunda see tekst"}
       </button>
     );
   }
 
   return (
     <div className="mt-3 space-y-3 border border-sage bg-linen p-3">
+      {nimi && (
+        <p className="mikro text-[0.68rem] text-rohe" aria-live="polite">
+          {nimi}
+        </p>
+      )}
       {/* Värv */}
       <div className="flex flex-wrap items-center gap-3">
         <span className="mikro w-20 text-[0.65rem] text-ink-faint">Värv</span>
@@ -507,7 +516,7 @@ function Kujupaneel({ tee }) {
         >
           Lähtesta kogu kuju
         </button>
-        {!midagiSeatud && (
+        {(!midagiSeatud || kompaktne) && (
           <button
             type="button"
             onClick={() => setAvatud(false)}
@@ -624,7 +633,12 @@ function Tekstivali({ id, voti, vaartus, muuda, siltTekst, tee }) {
     valida ja lehel ei juhtuks midagi.
   */
   const kujuTee = Array.isArray(tee) ? tee.join(".") : null;
-  const kujundatav = !readOnly && kujuTee !== null && onKujundatav(kujuTee);
+  const kujuVariandid = readOnly ? [] : teenuseKujuVariandid(kujuTee);
+  const kujundatav =
+    !readOnly &&
+    kujuVariandid.length === 0 &&
+    kujuTee !== null &&
+    onKujundatav(kujuTee);
 
   return (
     <div>
@@ -669,6 +683,23 @@ function Tekstivali({ id, voti, vaartus, muuda, siltTekst, tee }) {
       )}
 
       {kujundatav && <Kujupaneel tee={kujuTee} />}
+      {kujuVariandid.length > 0 && (
+        <div className="mt-3 border-l border-sage pl-4">
+          <p className="mikro text-[0.65rem] text-ink-faint">
+            Kujundus eri kohtades
+          </p>
+          <div className="flex flex-col items-start">
+            {kujuVariandid.map((variant) => (
+              <Kujupaneel
+                key={variant.tee}
+                tee={variant.tee}
+                nimi={variant.nimi}
+                kompaktne
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

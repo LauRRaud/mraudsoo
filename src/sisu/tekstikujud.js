@@ -139,6 +139,21 @@ export const KUJUNDATAVAD = [
   "teenused.*.nimi",
   "teenused.*.alapealkiri",
   "teenused.*.luhike",
+  /*
+    Sama teenuse tekst ilmub mitmes eri suuruse ja taustaga kohas. Tekst ise
+    jääb ühiseks, kuid iga kuvamiskoht saab oma kuju.
+  */
+  "teenused.*.kuva.avaleht.nimi",
+  "teenused.*.kuva.avaleht.alapealkiri",
+  "teenused.*.kuva.avaleht.luhike",
+  "teenused.*.kuva.teenusteLeht.nimi",
+  "teenused.*.kuva.teenusteLeht.alapealkiri",
+  "teenused.*.kuva.teenusteLeht.luhike",
+  "teenused.*.kuva.alamlehePais.nimi",
+  "teenused.*.kuva.alamlehePais.alapealkiri",
+  "teenused.*.kuva.alamlehePais.luhike",
+  "teenused.*.kuva.jargmineTeenus.nimi",
+  "teenused.*.kuva.jargmineTeenus.luhike",
   "teenused.*.sissejuhatus",
   "teenused.*.loigud.*",
   "teenused.*.plokid.*.pealkiri",
@@ -217,6 +232,38 @@ export function onKujundatav(tee) {
 }
 
 /*
+  Teenuse nime, alapealkirja ja lühikirjelduse kuvamiskohad admini jaoks.
+  Sisuvälja tee jääb kujule `teenused.0.nimi`; kuju tee saab vahele `kuva`
+  ja koha nime. „Järgmine teenus” ei näita alapealkirja, seepärast seda valikut
+  alapealkirja juures ei ole.
+*/
+const TEENUSE_KUVA_KOHAD = [
+  { id: "avaleht", nimi: "Avalehe teenuste loendis" },
+  { id: "teenusteLeht", nimi: "Teenuste lehe loendis" },
+  { id: "alamlehePais", nimi: "Teenuse alamlehe päises" },
+  {
+    id: "jargmineTeenus",
+    nimi: "Alamlehe „Järgmine teenus” plokis",
+    valjad: new Set(["nimi", "luhike"]),
+  },
+];
+
+export function teenuseKujuVariandid(tee) {
+  if (typeof tee !== "string") return [];
+
+  const vaste = tee.match(/^teenused\.(\d+)\.(nimi|alapealkiri|luhike)$/);
+  if (!vaste) return [];
+
+  const [, indeks, vali] = vaste;
+  return TEENUSE_KUVA_KOHAD.filter(
+    (koht) => !koht.valjad || koht.valjad.has(vali),
+  ).map((koht) => ({
+    nimi: koht.nimi,
+    tee: `teenused.${indeks}.kuva.${koht.id}.${vali}`,
+  }));
+}
+
+/*
   Ühe kirje puhastus. Tundmatud võtmed ja vigased väärtused kukuvad vaikselt
   välja; vaikimisi tähendusega väärtusi (suurus 1, joondus vasak, kaal
   tavaline) ei salvestata, et kaart ei täituks tühja müraga.
@@ -270,6 +317,7 @@ export function puhastaTekstiKujud(kaart) {
   }
 
   const tulemus = {};
+  const vanadTeenuseKujud = [];
   let arv = 0;
 
   for (const [tee, kuju] of Object.entries(kaart)) {
@@ -279,8 +327,28 @@ export function puhastaTekstiKujud(kaart) {
     const puhas = puhastaKuju(kuju);
     if (!puhas) continue;
 
+    /*
+      Enne kuvamiskohtade lahutamist oli üks kuju kõigil teenuse kaartidel ja
+      alamlehe päisel ühine. Loeme vana võtme sisse, kuid jagame selle allpool
+      kõigile uutele kohtadele — nii ei muutu deploy'l praegune välimus.
+    */
+    if (teenuseKujuVariandid(tee).length > 0) {
+      vanadTeenuseKujud.push({ tee, kuju: puhas });
+      continue;
+    }
+
     tulemus[tee] = puhas;
     arv += 1;
+  }
+
+  /* Uus, juba eraldi salvestatud kuju võidab vana ühise kuju. */
+  for (const vana of vanadTeenuseKujud) {
+    for (const variant of teenuseKujuVariandid(vana.tee)) {
+      if (arv >= MAX_KIRJEID) break;
+      if (tulemus[variant.tee]) continue;
+      tulemus[variant.tee] = { ...vana.kuju };
+      arv += 1;
+    }
   }
 
   return tulemus;

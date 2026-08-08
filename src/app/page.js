@@ -335,22 +335,27 @@ export default async function Avaleht() {
                 {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
                 <h3
                   className="kuva text-[clamp(1.9rem,6vw,2.15rem)] text-[var(--oma-varv,var(--color-ink))] transition-colors duration-300 group-hover:text-gold-deep"
-                  style={vt(`${jrk}.nimi`, { varvMuutujaks: true })}
+                  style={vt(`${jrk}.kuva.avaleht.nimi`, {
+                    varvMuutujaks: true,
+                  })}
                 >
-                  {st(`${jrk}.nimi`, teenus.nimi)}
+                  {st(`${jrk}.kuva.avaleht.nimi`, teenus.nimi)}
                 </h3>
                 {/* Cormorant on väikeses kraadis peenike — kaldkirjas rida vajab suurust, eriti mobiilis */}
                 <p
                   className="kuva mt-1 italic text-[clamp(1.45rem,5vw,1.6rem)] text-ink-soft"
-                  style={vt(`${jrk}.alapealkiri`)}
+                  style={vt(`${jrk}.kuva.avaleht.alapealkiri`)}
                 >
-                  {st(`${jrk}.alapealkiri`, teenus.alapealkiri)}
+                  {st(
+                    `${jrk}.kuva.avaleht.alapealkiri`,
+                    teenus.alapealkiri,
+                  )}
                 </p>
                 <p
                   className="mt-4 max-w-[44ch] text-lg leading-relaxed text-ink-soft"
-                  style={vt(`${jrk}.luhike`)}
+                  style={vt(`${jrk}.kuva.avaleht.luhike`)}
                 >
-                  {st(`${jrk}.luhike`, teenus.luhike)}
+                  {st(`${jrk}.kuva.avaleht.luhike`, teenus.luhike)}
                 </p>
               </Link>
             </li>
