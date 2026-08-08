@@ -157,7 +157,7 @@ export default async function Avaleht() {
               {kutsumus.valjendus.map((punkt, jrk) => (
                 <li
                   key={punkt}
-                  className="kuva italic text-[clamp(1.35rem,2.4vw,1.8rem)] leading-[1.35] text-ink"
+                  className="kuva font-normal italic text-[clamp(1.35rem,2.4vw,1.8rem)] leading-[1.35] text-ink"
                   style={v(`kutsumus.valjendus.${jrk}`)}
                 >
                   {s(`kutsumus.valjendus.${jrk}`, punkt)}

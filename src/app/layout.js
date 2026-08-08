@@ -73,6 +73,7 @@ export default async function RootLayout({ children }) {
         <Pais
           navi={sisu.navi}
           saidiNimi={sisu.meta.saidiNimi}
+          tekstiKujud={sisu.tekstiKujud}
           kontakt={sisu.kontakt}
         />
         <main className="flex-1">{children}</main>

@@ -65,6 +65,9 @@ const LOPUMARGID = ["”", "“", "\"", "»", "‘", "’"];
   samas järjekorras nagu lehel.
 */
 export const KUJUNDATAVAD = [
+  /* Üldine */
+  "meta.saidiNimi",
+
   /* Avaleht */
   "avaleht.hero.silt",
   "avaleht.hero.pealkiri",

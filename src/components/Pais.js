@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
 /*
   Kliendikomponent ei loe sisu ise — navi, saidiNimi ja kontakt tulevad
@@ -12,7 +13,12 @@ import { useEffect, useRef, useState } from "react";
   Mobiilimenüü on täisekraani tume kiht (metsSyva), mille lingid ilmuvad
   astmeliselt; ESC sulgeb, taust ei keri.
 */
-export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo", kontakt = {} }) {
+export default function Pais({
+  navi = [],
+  saidiNimi = "Marta Raudsoo",
+  tekstiKujud = {},
+  kontakt = {},
+}) {
   const [avatud, setAvatud] = useState(false);
   const [peidus, setPeidus] = useState(false);
   const tee = usePathname();
@@ -82,6 +88,16 @@ export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo", kontakt =
   const tavalised = navi.filter((punkt) => punkt.tee !== "/broneerimine");
   const esile = navi.find((punkt) => punkt.tee === "/broneerimine");
 
+  /* Adminis „Saidi nimi” alla valitud kuju rakendub päise logotekstile. */
+  const saidiNimePlokiStiil = plokiStiil(tekstiKujud, "meta")(
+    "saidiNimi",
+    { varvMuutujaks: true },
+  );
+  const saidiNimeTekst = tekstiKuju(tekstiKujud, "meta");
+  const saidiNimeOmaVarv = Boolean(
+    tekstiKujud?.["meta.saidiNimi"]?.varv,
+  );
+
   function aktiivne(punkt) {
     return tee === punkt.tee || tee.startsWith(`${punkt.tee}/`);
   }
@@ -100,11 +116,16 @@ export default function Pais({ navi = [], saidiNimi = "Marta Raudsoo", kontakt =
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-5 lg:px-12">
         <Link
           href="/"
+          style={saidiNimePlokiStiil}
           className={`nimi text-2xl transition-colors sm:text-[1.7rem] ${
-            avatud ? "text-luu hover:text-kuld-hele" : "text-ink hover:text-gold-deep"
+            avatud
+              ? "text-luu hover:text-kuld-hele"
+              : saidiNimeOmaVarv
+                ? "text-[var(--oma-varv)] hover:text-gold-deep"
+                : "text-ink hover:text-gold-deep"
           }`}
         >
-          {saidiNimi}
+          {saidiNimeTekst("saidiNimi", saidiNimi)}
         </Link>
 
         {/* Töölaua navigatsioon */}
