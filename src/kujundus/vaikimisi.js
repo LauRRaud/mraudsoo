@@ -23,21 +23,19 @@ export const vaikimisiKujundus = {
   */
   varvid: {
     /*
-      Heledaid pindu on KOLM, mitte rohkem. Varem oli kuus (bone, linen,
-      shell, clay, claySoft, sage) — vahe kahe naabri vahel jäi ühe protsendi
-      kanti, seega admin-lehel oli kuus peaaegu ühesugust ruutu ja polnud
-      võimalik aru saada, kumb neist millise sektsiooni all on. Kolm astet
-      on ainsad, mis päriselt eristuvad.
+      Bone ja linen on teadlikult sama luuvalge: kõrvuti sektsioonide vahele
+      ei teki enam juhuslikku peaaegu-valget triipu. Sage on soe liivakarva
+      rõhupind, mitte külm hallikasroheline.
     */
-    bone: "#fdfcf9",
-    linen: "#f7f5ef",
-    sage: "#e4e3d7",
-    rohe: "#4a5a46",
-    roheHele: "#5c6e57",
+    bone: "#fbf8f1",
+    linen: "#fbf8f1",
+    sage: "#f0eadf",
+    rohe: "#315348",
+    roheHele: "#42685b",
     gold: "#a6862f",
     goldDeep: "#8a6f20",
-    mets: "#46543f",
-    metsSyva: "#3c4936",
+    mets: "#29483f",
+    metsSyva: "#20382f",
     kuldHele: "#dcc27a",
     luu: "#f4f1e8",
     ink: "#161613",
@@ -90,17 +88,17 @@ export const VARVI_RUHMAD = [
   {
     nimi: "Pinnad",
     selgitus:
-      "Sektsioonide taustad lehe heledas osas. Leht vaheldab neid, et kõrvuti sektsioonid teineteisest eristuksid — seepärast on neid kolm, mitte rohkem.",
+      "Lehe heledad pinnad. Esimesed kaks on sama luuvalge, et sektsioonide vahele ei tekiks juhuslikke toone; kolmas on soe liivakarva rõhupind.",
     varvid: [
       { votme: "bone", nimi: "Lehe taust", kus: "Avaleht ülevalt, enamik sektsioone" },
-      { votme: "linen", nimi: "Vahelduv paneel", kus: "Iga teine sektsioon — teenuste register, lood, nimekirjad" },
-      { votme: "sage", nimi: "Rõhutatud paneel", kus: "Kirjakohad ja salmid, kutseplokid, teenuse päis" },
+      { votme: "linen", nimi: "Lehe taust — teine roll", kus: "Teenuste register, lood ja nimekirjad; värvilt sama mis lehe taust" },
+      { votme: "sage", nimi: "Soe rõhupaneel", kus: "Kirjakohad ja salmid, kutseplokid, teenuse päis" },
     ],
   },
   {
     nimi: "Tume pühamu",
     selgitus:
-      "Lehe kõige isiklikumad kohad seisavad sügavrohelisel. Nendel pindadel vahetuvad ka tekstivärvid (vt „Kiri tumedal pinnal”).",
+      "Lehe kõige isiklikumad kohad seisavad sügaval eukalüptirohelisel. Nendel pindadel vahetuvad ka tekstivärvid (vt „Kiri tumedal pinnal”).",
     varvid: [
       { votme: "mets", nimi: "Tume sektsioon", kus: "Liikumine avalehel, pöördumislugu, Stiiliteekond" },
       { votme: "metsSyva", nimi: "Jalus ja mobiilimenüü", kus: "Lehe lõpp ja avatud menüü telefonis" },

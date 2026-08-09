@@ -3,10 +3,10 @@
 /*
   Marta Raudsoo — disainisüsteem „Püha Ruum”
 
-  Keel: vaikne pühamu. Soe luuvalge, tint ja kuld; lisaks ÜKS tume toon —
-  sügav metsaroheline —, mis kannab lehe kõige isiklikumaid hetki (liikumine,
-  pöördumislugu, jalus). Fotosid raamib kaar nagu kirikuakent; jooned on
-  juuspeened; liikumine on aeglane ja väärikas.
+  Keel: vaikne selgus. Soe pärgament, tint ja kuld; lisaks üks
+  eukalüptirohelise perekond, mis kannab nii nuppe kui lehe kõige isiklikumaid
+  hetki. Marta enda fotod on peamine visuaalne materjal; jooned on juuspeened
+  ja liikumine aeglane ning väärikas.
 
   Kordumotiivid:
     kaar      — foto ülaserv on poolkaar (.kaar)
@@ -25,33 +25,30 @@
 */
 @theme {
   /*
-    Pinnad — soe luuvalge, lina ja savi suunas. KOLM ASTET, mitte rohkem:
-    varem oli kuus ja naabrite vahe jäi ühe protsendi kanti, mis tähendas
-    admin-lehel kuut eristamatut ruutu. Uut heledat pinda ei lisata — kui
-    sektsioon vajab eristust, võtab ta ühe neist kolmest.
+    Pinnad — üks ühtne luuvalge lehepõhi ja üks soe liivakarva rõhupind.
+    Bone ja linen on teadlikult sama värv: kõrvuti sektsioonide vahele ei teki
+    enam juhuslikku peaaegu-valget triipu.
   */
-  --color-bone: #fdfcf9; /* lehe põhitaust */
-  --color-linen: #f7f5ef; /* vahelduv paneel */
-  --color-sage: #e4e3d7; /* rõhutatud paneel, kerge rohekas kuma */
+  --color-bone: #fbf8f1; /* lehe põhitaust */
+  --color-linen: #fbf8f1; /* sama lehepõhi, teine semantiline roll */
+  --color-sage: #f0eadf; /* soe liivakarva rõhupind */
 
   /*
     Nupuvärv — sügav murtud roheline. Valge tekst annab 7.3:1.
   */
-  --color-rohe: #4a5a46;
-  --color-rohe-hele: #5c6e57;
+  --color-rohe: #315348;
+  --color-rohe-hele: #42685b;
 
   /* Kuld — hele suurtele pealkirjadele, tume tekstisuuruses kasutuseks */
   --color-gold: #a6862f;
   --color-gold-deep: #8a6f20;
 
   /*
-    Tume pühamu — pehme metsaroheline, nupurohelisest vaid astme võrra
-    sügavam. Kannab liikumise sektsiooni, pöördumislugu, stiiliteekonda
-    ja jalust. Kuld ja luu on tumeda tausta paarilised: kuld-hele loetav
-    sildina (4.6:1), luu tekstina (7.1:1).
+    Tume pühamu — sama eukalüptipere sügavamad astmed. Nii ei teki nuppude,
+    sisusektsioonide ja jaluse vahel uut juhuslikku rohelist.
   */
-  --color-mets: #46543f;
-  --color-mets-syva: #3c4936;
+  --color-mets: #29483f;
+  --color-mets-syva: #20382f;
   --color-kuld-hele: #dcc27a;
   --color-luu: #f4f1e8;
 

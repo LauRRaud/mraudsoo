@@ -29,6 +29,33 @@ function onVarv(vaartus) {
 */
 const PILDI_NIMI = /^[a-z0-9][a-z0-9-]{0,63}\.(jpg|png|webp)$/;
 
+/*
+  VANA VAIKEPALETI ÜHEKORDNE ÜLEMINEK.
+
+  Kujundusfailis on ka vaikimisi värvid päriselt väärtustena kirjas. Ilma
+  üleminekuta jääks vana süsteemi salvestanud leht igavesti vana paleti peale,
+  kuigi koodis on uus vaikepalett. Muudame ainult väärtuse, mis on täpselt vana
+  süsteemi vaikevärv; Marta enda erinev käsitsi valitud toon jääb puutumata.
+*/
+const EELMISED_VAIKEVARVID = {
+  bone: ["#fdfcf9"],
+  linen: ["#f7f5ef", "#f3eee3"],
+  sage: ["#e4e3d7", "#dce5dc"],
+  rohe: ["#4a5a46"],
+  roheHele: ["#5c6e57"],
+  mets: ["#46543f"],
+  metsSyva: ["#3c4936"],
+};
+
+function puhastaVarv(votme, antud, vaikeVaartus) {
+  if (!onVarv(antud)) return vaikeVaartus;
+
+  const eelmised = EELMISED_VAIKEVARVID[votme] ?? [];
+  if (eelmised.includes(antud.toLowerCase())) return vaikeVaartus;
+
+  return antud;
+}
+
 export function onPildiNimi(vaartus) {
   return typeof vaartus === "string" && PILDI_NIMI.test(vaartus);
 }
@@ -50,7 +77,7 @@ export function puhastaKujundus(salvestatud) {
   const varvid = {};
   for (const [votme, vaikeVaartus] of Object.entries(alus.varvid)) {
     const antud = s.varvid?.[votme];
-    varvid[votme] = onVarv(antud) ? antud : vaikeVaartus;
+    varvid[votme] = puhastaVarv(votme, antud, vaikeVaartus);
   }
 
   const suurused = {};
