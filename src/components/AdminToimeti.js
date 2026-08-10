@@ -51,7 +51,7 @@ const SILDID = {
   minust: "Minust",
   teenusedLeht: "Teenuste koondleht",
   teenused: "Teenused",
-  teenuseLeht: "Teenuse alamlehe tekstid",
+  teenuseLeht: "Kõigi teenuse alamlehtede ühised tekstid",
   hinnakiriLeht: "Hinnakirja leht",
   hinnakiri: "Hinnakirja read",
   teekond: "Stiiliteekond",
@@ -104,9 +104,9 @@ const SILDID = {
   nuppTekst: "Nupu tekst",
   linkTekst: "Lingi tekst",
   loeLahemalt: "„Loe lähemalt” tekst",
-  nimekirjaPealkiri: "Nimekirja pealkiri",
-  nimekiri: "Nimekiri",
-  nimekirjaSilt: "Nimekirja silt",
+  nimekirjaPealkiri: "Ploki suur pealkiri",
+  nimekiri: "Ploki tekstiread",
+  nimekirjaSilt: "Ploki ülemine silt (nt „Mida see kogemus annab”)",
   kutseSilt: "Kutse silt",
   kutsePealkiri: "Kutse pealkiri",
   kutseTekst: "Kutse tekst",
@@ -142,7 +142,7 @@ const SEKTSIOONID = [
   {
     id: "teenused",
     nimi: "Teenused",
-    teed: ["teenusedLeht", "teenused", "teenuseLeht"],
+    teed: ["teenusedLeht", "teenuseLeht", "teenused"],
   },
   {
     id: "hinnakiri",
@@ -155,6 +155,35 @@ const SEKTSIOONID = [
   { id: "kontakt", nimi: "Kontakt", teed: ["kontakt", "meta"] },
   { id: "menyy", nimi: "Menüü", teed: ["navi"] },
 ];
+
+/*
+  VIITED — kus üks või teine tekst päriselt elab.
+
+  Sama sisu paistab tihti mitmel lehel, aga muuta saab teda ainult ühes
+  kohas. Teenuste register (Püha Ruum, 1:1 teekond …) on nii avalehel kui
+  teenuste lehel, tema tekstid aga sektsioonis „Teenused” — ilma viidata
+  otsitakse neid „Avaleht” alt ja ei leita. `siht` teeb viitest nupu, mis
+  hüppab kohe õigesse sektsiooni.
+*/
+const VIITED = {
+  avaleht: {
+    tekst:
+      "Avalehe teenuste register (Püha Ruum, 1:1 teekond …) ei ela siin — teenuste nimed, alapealkirjad ja lühikirjeldused on sektsioonis „Teenused”.",
+    siht: "teenused",
+  },
+  teenusedLeht: {
+    tekst:
+      "Siin on teenuste lehe oma tekstid: päis, tsitaat ja lõpuplokk. Register ise — teenuste nimed ja kirjeldused — on allpool, pealkirja „Teenused” all.",
+  },
+  teenused: {
+    tekst:
+      "Ava teenuse kaardil „Alamlehe tekstid”. Ploki „Mida see kogemus annab” suur pealkiri, eraldi read ja lõpulause on seal tõstetud kohe põhiväljade järele. Teenuse nimi, alapealkiri ja lühikirjeldus on kõigis kuvamiskohtades sama tekst.",
+  },
+  teenuseLeht: {
+    tekst:
+      "Need tekstid on ühised kõigil teenuse alamlehtedel. Väljal „Ploki ülemine silt” muudad näiteks teksti „Mida see kogemus annab …”; iga teenuse suur pealkiri ja selle all olevad read asuvad allpool vastava teenuse kaardil.",
+  },
+};
 
 /*
   Võtmed, mille sisu on alati pikk. Nende puhul kasutame kohe tekstiala,
@@ -231,6 +260,42 @@ function silt(voti) {
   return tekst.charAt(0).toUpperCase() + tekst.slice(1);
 }
 
+/*
+  Teenuse „Mida see annab” plokk peab olema leitav enne pikka sisublokkide
+  loendit. Muudame ainult toimeti kuvamisjärjekorda, sisupuu ise jääb samaks.
+*/
+const TEENUSE_VALJAJARJEKORD = [
+  "slug",
+  "nimi",
+  "alapealkiri",
+  "luhike",
+  "nimekirjaPealkiri",
+  "nimekiri",
+  "sissejuhatus",
+  "loigud",
+  "plokid",
+  "toon",
+  "tsitaat",
+];
+
+function valjadJarjekorras(vaartus, tee) {
+  const kirjed = Object.entries(vaartus);
+  const teenuseKaart =
+    tee.length === 2 && tee[0] === "teenused" && Number.isInteger(tee[1]);
+
+  if (!teenuseKaart) return kirjed;
+
+  const jarjekord = new Map(
+    TEENUSE_VALJAJARJEKORD.map((voti, indeks) => [voti, indeks]),
+  );
+
+  return kirjed.sort(
+    ([votiA], [votiB]) =>
+      (jarjekord.get(votiA) ?? Number.MAX_SAFE_INTEGER) -
+      (jarjekord.get(votiB) ?? Number.MAX_SAFE_INTEGER),
+  );
+}
+
 /* Uus väärtus teel — kõik puudutatud tasemed kopeeritakse, ülejäänu jääb samaks */
 function asendaTeel(juur, tee, uusVaartus) {
   if (tee.length === 0) return uusVaartus;
@@ -274,6 +339,21 @@ function plokiNimi(element, indeks) {
   if (typeof element === "string") return `Rida ${indeks + 1}`;
   const nimi = element?.nimi || element?.pealkiri || element?.millest;
   return nimi ? String(nimi) : `Plokk ${indeks + 1}`;
+}
+
+/*
+  Kas plokk on nii suur, et teda tasub kokku panna.
+
+  Suur = tema sees on veel massiive või objekte. Teenusel on lõigud, plokid
+  ja nimekiri, seega kuus lahtist teenust andsid lehe, kus üksiku teenuse
+  nimi kadus tuhandete pikslite sisse ära. Kokkupandult on kõik kuus korraga
+  näha ja õige avaneb ühe klõpsuga. Väikesed plokid — hinnakirja rida, menüü
+  kirje, anni nimi ja kirjeldus — jäävad lahti, neil ei ole midagi peita.
+*/
+function suurPlokk(element) {
+  return Object.values(element ?? {}).some(
+    (vaartus) => Array.isArray(vaartus) || onObjekt(vaartus),
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -746,6 +826,8 @@ function MassiiviNupud({ indeks, pikkus, liiguta, eemalda, nimetus }) {
 
 function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
   const id = tee.join("-");
+  const teenuseNimekirjaRead =
+    tee.length === 3 && tee[0] === "teenused" && voti === "nimekiri";
 
   /*
     Kas tegu on objektiplokkide või tekstiridade massiiviga. Tühja massiivi
@@ -780,6 +862,12 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
         {silt(voti)}
       </legend>
 
+      {teenuseNimekirjaRead && (
+        <p className="mb-4 border-l-2 border-gold-deep pl-4 text-[0.85rem] leading-relaxed text-ink-soft">
+          Iga rida kuvatakse avalikul lehel eraldi. Siin on ka ploki lõpulause.
+        </p>
+      )}
+
       {vaartus.length === 0 && (
         <p className="text-[0.9rem] text-ink-faint">Ridu veel ei ole.</p>
       )}
@@ -796,6 +884,10 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
           >
             {objektid ? (
               <>
+                {/*
+                  Nupud jäävad päisereale, väljapoole <details>-it: nii saab
+                  plokke ümber tõsta ja eemaldada ka siis, kui nad on kinni.
+                */}
                 <div className="flex items-start justify-between gap-4">
                   <p className="kuva text-lg text-ink">
                     {plokiNimi(element, indeks)}
@@ -808,14 +900,32 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
                     nimetus={`plokk ${indeks + 1}`}
                   />
                 </div>
-                <div className="mt-4 space-y-4">
-                  <Valjad
-                    vaartus={element}
-                    tee={[...tee, indeks]}
-                    muuda={muuda}
-                    sugavus={sugavus + 1}
-                  />
-                </div>
+                {suurPlokk(element) ? (
+                  <details className="mt-3">
+                    <summary className="mikro cursor-pointer text-[0.7rem] text-ink-faint transition-colors hover:text-rohe">
+                      {voti === "teenused"
+                        ? `Alamlehe tekstid · sh „${element.nimekirjaPealkiri || "Mida see annab"}”`
+                        : "Tekstid"}
+                    </summary>
+                    <div className="mt-4 space-y-4">
+                      <Valjad
+                        vaartus={element}
+                        tee={[...tee, indeks]}
+                        muuda={muuda}
+                        sugavus={sugavus + 1}
+                      />
+                    </div>
+                  </details>
+                ) : (
+                  <div className="mt-4 space-y-4">
+                    <Valjad
+                      vaartus={element}
+                      tee={[...tee, indeks]}
+                      muuda={muuda}
+                      sugavus={sugavus + 1}
+                    />
+                  </div>
+                )}
               </>
             ) : (
               <>
@@ -865,7 +975,7 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
 function Valjad({ vaartus, tee, muuda, sugavus = 0 }) {
   if (!onObjekt(vaartus)) return null;
 
-  return Object.entries(vaartus).map(([voti, alamVaartus]) => {
+  return valjadJarjekorras(vaartus, tee).map(([voti, alamVaartus]) => {
     const alamTee = [...tee, voti];
     const id = alamTee.join("-");
 
@@ -1076,54 +1186,77 @@ export default function AdminToimeti({ algsisu }) {
         </nav>
 
         <div className="min-w-0 flex-1 space-y-12">
-          {sektsioon.teed.map((tee) => (
-            <section key={tee} aria-labelledby={`sektsioon-${tee}`}>
-              <div className="flex flex-wrap items-end justify-between gap-4">
-                <h2
-                  id={`sektsioon-${tee}`}
-                  className="kuva text-[clamp(1.6rem,3vw,2.25rem)] text-ink"
-                >
-                  {silt(tee)}
-                </h2>
-                <button
-                  type="button"
-                  onClick={() => lahtesta(tee)}
-                  disabled={tootab}
-                  className={NUPP_AARIS}
-                >
-                  Lähtesta
-                </button>
-              </div>
-              <div className="joon mt-4 mb-6" />
+          {sektsioon.teed.map((tee) => {
+            const viide = VIITED[tee];
+            const sihtNimi = viide?.siht
+              ? (SEKTSIOONID.find((kirje) => kirje.id === viide.siht)?.nimi ??
+                viide.siht)
+              : null;
 
-              <div className="space-y-5">
-                {Array.isArray(sisu[tee]) ? (
-                  <Massiiv
-                    voti={tee}
-                    vaartus={sisu[tee]}
-                    tee={[tee]}
-                    muuda={muuda}
-                    sugavus={0}
-                  />
-                ) : typeof sisu[tee] === "string" ? (
-                  <Tekstivali
-                    id={tee}
-                    voti={tee}
-                    tee={[tee]}
-                    vaartus={sisu[tee]}
-                    muuda={(uus) => muuda([tee], uus)}
-                  />
-                ) : (
-                  <Valjad
-                    vaartus={sisu[tee]}
-                    tee={[tee]}
-                    muuda={muuda}
-                    sugavus={0}
-                  />
+            return (
+              <section key={tee} aria-labelledby={`sektsioon-${tee}`}>
+                <div className="flex flex-wrap items-end justify-between gap-4">
+                  <h2
+                    id={`sektsioon-${tee}`}
+                    className="kuva text-[clamp(1.6rem,3vw,2.25rem)] text-ink"
+                  >
+                    {silt(tee)}
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => lahtesta(tee)}
+                    disabled={tootab}
+                    className={NUPP_AARIS}
+                  >
+                    Lähtesta
+                  </button>
+                </div>
+                <div className="joon mt-4 mb-6" />
+
+                {viide && (
+                  <p className="mb-6 border border-sage bg-linen px-4 py-3 text-[0.85rem] leading-relaxed text-ink-soft">
+                    {viide.tekst}
+                    {sihtNimi && (
+                      <button
+                        type="button"
+                        onClick={() => setValitud(viide.siht)}
+                        className={`${NUPP_TEKST} ml-2`}
+                      >
+                        {`Ava „${sihtNimi}”`}
+                      </button>
+                    )}
+                  </p>
                 )}
-              </div>
-            </section>
-          ))}
+
+                <div className="space-y-5">
+                  {Array.isArray(sisu[tee]) ? (
+                    <Massiiv
+                      voti={tee}
+                      vaartus={sisu[tee]}
+                      tee={[tee]}
+                      muuda={muuda}
+                      sugavus={0}
+                    />
+                  ) : typeof sisu[tee] === "string" ? (
+                    <Tekstivali
+                      id={tee}
+                      voti={tee}
+                      tee={[tee]}
+                      vaartus={sisu[tee]}
+                      muuda={(uus) => muuda([tee], uus)}
+                    />
+                  ) : (
+                    <Valjad
+                      vaartus={sisu[tee]}
+                      tee={[tee]}
+                      muuda={muuda}
+                      sugavus={0}
+                    />
+                  )}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </div>
 

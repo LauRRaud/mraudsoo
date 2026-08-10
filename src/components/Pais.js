@@ -110,7 +110,7 @@ export default function Pais({
       } ${
         avatud
           ? "border-b border-transparent bg-transparent"
-          : "border-b border-gold/15 bg-bone/90 backdrop-blur-md"
+          : "border-b border-gold/15 bg-bone"
       }`}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-5 lg:px-12">
