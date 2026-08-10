@@ -102,14 +102,13 @@ export default async function TeenuseLeht({ params }) {
   */
   const v = plokiStiil(sisu.tekstiKujud, `teenused.${jrk}`);
   const s = tekstiKuju(sisu.tekstiKujud, `teenused.${jrk}`);
-  const vp = plokiStiil(
-    sisu.tekstiKujud,
-    `teenused.${jrk}.kuva.alamlehePais`,
-  );
-  const sp = tekstiKuju(
-    sisu.tekstiKujud,
-    `teenused.${jrk}.kuva.alamlehePais`,
-  );
+  /*
+    Teenuste koondleht on kõigi teenuse alamlehtede päise source of truth.
+    Nii ei saa üksiku teenuse vana värvi- või fondiseade päist teistsuguseks
+    muuta: taust, tüpograafia ja mõõdustik tulevad alati samast kolmest väljast.
+  */
+  const vp = plokiStiil(sisu.tekstiKujud, "teenusedLeht");
+  const sp = tekstiKuju(sisu.tekstiKujud, "teenusedLeht");
   const vj = plokiStiil(
     sisu.tekstiKujud,
     `teenused.${jargmiseJrk}.kuva.jargmineTeenus`,
@@ -125,21 +124,6 @@ export default async function TeenuseLeht({ params }) {
   const loigud = Array.isArray(teenus.loigud) ? teenus.loigud : [];
   const plokid = Array.isArray(teenus.plokid) ? teenus.plokid : [];
   const nimekiri = Array.isArray(teenus.nimekiri) ? teenus.nimekiri : [];
-
-  /*
-    Sügavama tooniga teenused (Püha Ruum, 1:1 teekond, fotograafia) saavad
-    tumeda metsarohelise heero — lehe kõige vaiksema ja sügavama pinna.
-  */
-  const tume = teenus.toon === "sygav";
-
-  /*
-    Alapealkiri on enamasti paar sõna ("Must-valge") ja seisab hõredalt
-    tähestatud sildina. 1:1 teekonna oma on terve lause — suurtähtedes ja
-    laia tähevahega muutuks see karjuvaks plokiks, seega laseme lausel
-    jääda lauseks (kaldkirjas kuvakiri).
-  */
-  const alapealkiriOnLause =
-    typeof teenus.alapealkiri === "string" && teenus.alapealkiri.length > 34;
 
   /* Kirjakohaplokid ette ära märgitud: eraldajad sõltuvad naabritest */
   const salmid = plokid.map(onKirjakoht);
@@ -178,49 +162,31 @@ export default async function TeenuseLeht({ params }) {
 
   return (
     <>
-      {/* Heero — sügav toon saab tumeda pinna, soe toon rõhutatud paneeli */}
-      <Sektsioon
-        taust={tume ? "mets" : "sage"}
-        polsterdus="ohuke"
-        taustaVoti="teenuseLeht.hero"
-      >
+      {/* Sama hele lehepäis nagu „Teenused” koondlehel. */}
+      <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="teenused.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          {alapealkiriOnLause ? (
-            <p
-              className={`sisene kuva max-w-[36ch] italic text-[clamp(1.2rem,2.3vw,1.6rem)] leading-[1.4] ${
-                tume ? "text-luu/90" : "text-ink/70"
-              }`}
-              style={vp("alapealkiri")}
-            >
-              {sp("alapealkiri", teenus.alapealkiri)}
-            </p>
-          ) : (
-            <p
-              className={`sisene silt ${tume ? "silt-tume" : "!text-ink/70"}`}
-              style={vp("alapealkiri")}
-            >
-              {sp("alapealkiri", teenus.alapealkiri)}
-            </p>
-          )}
-
-          {/* Heero pealkirjal hiirekursori üleminekut ei ole — värv käib tavaliselt */}
-          <h1
-            className={`sisene kuva mt-5 text-[clamp(2.75rem,7.5vw,5.5rem)] leading-[1.02] ${
-              tume ? "text-luu" : "text-ink"
-            }`}
-            style={{ "--viive": "90ms", ...vp("nimi") }}
-          >
-            {sp("nimi", teenus.nimi)}
-          </h1>
-
-          <p
-            className={`sisene mt-8 max-w-[55ch] text-xl leading-[1.75] sm:text-2xl ${
-              tume ? "text-luu/95" : "text-ink/85"
-            }`}
-            style={{ "--viive": "200ms", ...vp("luhike") }}
-          >
-            {sp("luhike", teenus.luhike)}
+          <p className="sisene silt" style={vp("hero.silt")}>
+            {sp("hero.silt", teenus.alapealkiri)}
           </p>
+          <h1
+            className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
+            style={{ "--viive": "90ms", ...vp("hero.pealkiri") }}
+          >
+            {sp("hero.pealkiri", teenus.nimi)}
+          </h1>
+          <div
+            className="sisene joon mb-9 mt-9 max-w-28"
+            style={{ "--viive": "200ms" }}
+          />
+          <div className="sisene" style={{ "--viive": "300ms" }}>
+            <Tekst
+              suur
+              stiil={vp("hero.tekst")}
+              kuju={sp.kuju("hero.tekst")}
+            >
+              {teenus.luhike}
+            </Tekst>
+          </div>
         </div>
       </Sektsioon>
 

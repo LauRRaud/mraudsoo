@@ -149,9 +149,6 @@ export const KUJUNDATAVAD = [
   "teenused.*.kuva.teenusteLeht.nimi",
   "teenused.*.kuva.teenusteLeht.alapealkiri",
   "teenused.*.kuva.teenusteLeht.luhike",
-  "teenused.*.kuva.alamlehePais.nimi",
-  "teenused.*.kuva.alamlehePais.alapealkiri",
-  "teenused.*.kuva.alamlehePais.luhike",
   "teenused.*.kuva.jargmineTeenus.nimi",
   "teenused.*.kuva.jargmineTeenus.luhike",
   "teenused.*.sissejuhatus",
@@ -240,7 +237,6 @@ export function onKujundatav(tee) {
 const TEENUSE_KUVA_KOHAD = [
   { id: "avaleht", nimi: "Avalehe teenuste loendis" },
   { id: "teenusteLeht", nimi: "Teenuste lehe loendis" },
-  { id: "alamlehePais", nimi: "Teenuse alamlehe päises" },
   {
     id: "jargmineTeenus",
     nimi: "Alamlehe „Järgmine teenus” plokis",
