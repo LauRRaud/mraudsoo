@@ -82,7 +82,6 @@ export default async function RootLayout({ children }) {
           kontakt={sisu.kontakt}
           saidiNimi={sisu.meta.saidiNimi}
           tutvustus={sisu.jalus.tutvustus}
-          tunnuslause={sisu.meta.tunnuslause}
         />
       </body>
     </html>

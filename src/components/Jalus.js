@@ -12,7 +12,6 @@ export default function Jalus({
   kontakt = {},
   saidiNimi = "Marta Raudsoo",
   tutvustus = "",
-  tunnuslause = "",
 }) {
   /* Täisheledad lingid — jalus peab olema loetav, mitte vaid aimatav */
   const link =
@@ -79,13 +78,11 @@ export default function Jalus({
         </div>
 
         <div className="joon-tume mt-16" />
-        <div className="mt-7 flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3">
+        {/* Üksainus rida — keskel, et jalus lõpeks tasakaalus */}
+        <div className="mt-7 text-center">
           <p className="text-[0.9375rem] text-luu/75">
             © {new Date().getFullYear()} {saidiNimi}
           </p>
-          {tunnuslause && (
-            <p className="text-[0.9375rem] text-luu/75">{tunnuslause}</p>
-          )}
         </div>
       </div>
     </footer>
