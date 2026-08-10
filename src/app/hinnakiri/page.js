@@ -1,7 +1,7 @@
 import Ilmub from "@/components/Ilmub";
 import { KATTE_VARV, Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
-import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
+import { plokiStiil, tekstiKuju, tumePlokiStiil } from "@/sisu/tekstikujud";
 
 /* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
 export async function generateMetadata() {
@@ -22,7 +22,13 @@ export default async function Hinnakiri() {
   const s = tekstiKuju(sisu.tekstiKujud, "hinnakiriLeht");
   const vr = plokiStiil(sisu.tekstiKujud, "hinnakiri");
   const sr = tekstiKuju(sisu.tekstiKujud, "hinnakiri");
-  const vte = plokiStiil(sisu.tekstiKujud, "teekond");
+  /*
+    Stiiliteekond on lehe tume sektsioon: nii tema oma tekstid kui ka kaks
+    „hinnakiriLeht” silti seisavad seal sügavrohelisel, seega värv käib läbi
+    tumeda paranduse (vt tumedaPinnaVarv).
+  */
+  const vTume = tumePlokiStiil(sisu.tekstiKujud, "hinnakiriLeht");
+  const vte = tumePlokiStiil(sisu.tekstiKujud, "teekond");
   const ste = tekstiKuju(sisu.tekstiKujud, "teekond");
 
   return (
@@ -112,7 +118,7 @@ export default async function Hinnakiri() {
       <Sektsioon taust="mets" taustaVoti="hinnakiri.teekond">
         <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24">
           <Ilmub>
-            <p className="silt silt-tume" style={v("teekondSilt")}>
+            <p className="silt silt-tume" style={vTume("teekondSilt")}>
               {s("teekondSilt", hinnakiriLeht.teekondSilt)}
             </p>
             <h2
@@ -141,7 +147,7 @@ export default async function Hinnakiri() {
           </Ilmub>
 
           <Ilmub viive={150}>
-            <p className="silt silt-tume" style={v("sisaldabSilt")}>
+            <p className="silt silt-tume" style={vTume("sisaldabSilt")}>
               {s("sisaldabSilt", hinnakiriLeht.sisaldabSilt)}
             </p>
             {/* Litaania, mitte tabel: kuvakirjas read ilma joonteta */}

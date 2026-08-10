@@ -10,7 +10,8 @@ import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
   propsidena juurpaigutusest (src/app/layout.js), kus sisu on failist loetud.
 
   Käitumine: päis peitub alla kerides ja tuleb üles kerides kohe tagasi.
-  Mobiilimenüü on täisekraani tume kiht (metsSyva), mille lingid ilmuvad
+  Mobiilimenüü on täisekraani tume kiht (menyy — oma värv, mitte jaluse oma,
+  vt kujundus/vaikimisi.js), mille lingid ilmuvad
   astmeliselt; ESC sulgeb, taust ei keri.
 */
 export default function Pais({
@@ -199,7 +200,7 @@ export default function Pais({
       */}
       {avatud && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="leht-sisenemine absolute inset-0 bg-mets-syva" />
+          <div className="leht-sisenemine absolute inset-0 bg-menyy" />
 
           <nav
             id="mobiilimenyy"

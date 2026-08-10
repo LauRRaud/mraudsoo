@@ -36,6 +36,8 @@ export const vaikimisiKujundus = {
     goldDeep: "#8a6f20",
     mets: "#29483f",
     metsSyva: "#20382f",
+    /* Mobiilimenüü — vaikimisi sama toon mis jalusel, aga eraldi muudetav */
+    menyy: "#20382f",
     kuldHele: "#dcc27a",
     luu: "#f4f1e8",
     ink: "#161613",
@@ -98,10 +100,11 @@ export const VARVI_RUHMAD = [
   {
     nimi: "Tume pühamu",
     selgitus:
-      "Lehe kõige isiklikumad kohad seisavad sügaval eukalüptirohelisel. Nendel pindadel vahetuvad ka tekstivärvid (vt „Kiri tumedal pinnal”).",
+      "Lehe kõige isiklikumad kohad seisavad sügaval eukalüptirohelisel. Nendel pindadel vahetuvad ka tekstivärvid (vt „Kiri tumedal pinnal”). Mobiilimenüül on oma värv — seda saab muuta jalusest sõltumatult.",
     varvid: [
       { votme: "mets", nimi: "Tume sektsioon", kus: "Liikumine avalehel, pöördumislugu, Stiiliteekond" },
-      { votme: "metsSyva", nimi: "Jalus ja mobiilimenüü", kus: "Lehe lõpp ja avatud menüü telefonis" },
+      { votme: "metsSyva", nimi: "Jalus ja teenuse päis", kus: "Lehe lõpp ja teenuse alamlehe päis" },
+      { votme: "menyy", nimi: "Mobiilimenüü", kus: "Avatud menüü telefonis — vaikimisi sama toon mis jalusel" },
     ],
   },
   {

@@ -11,7 +11,7 @@ import {
   Tekst,
 } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
-import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
+import { plokiStiil, tekstiKuju, tumePlokiStiil } from "@/sisu/tekstikujud";
 
 /*
   AVALEHT.
@@ -37,6 +37,8 @@ export default async function Avaleht() {
 
   /* Admin-lehelt antud üksikute tekstide kuju */
   const v = plokiStiil(sisu.tekstiKujud, "avaleht");
+  /* Liikumine seisab tumedal pinnal — seal käib värv läbi tumeda paranduse */
+  const vTume = tumePlokiStiil(sisu.tekstiKujud, "avaleht");
   const s = tekstiKuju(sisu.tekstiKujud, "avaleht");
   const vt = plokiStiil(sisu.tekstiKujud, "teenused");
   const st = tekstiKuju(sisu.tekstiKujud, "teenused");
@@ -176,12 +178,12 @@ export default async function Avaleht() {
       <Sektsioon taust="mets" taustaVoti="avaleht.liikumine">
         <Ilmub className="text-center">
           <div aria-hidden="true" className="pystjoon pystjoon-tume" />
-          <p className="silt silt-tume mt-7" style={v("liikumine.silt")}>
+          <p className="silt silt-tume mt-7" style={vTume("liikumine.silt")}>
             {s("liikumine.silt", liikumine.silt)}
           </p>
           <blockquote
             className="kuva mx-auto mt-6 max-w-3xl text-[clamp(2rem,4.2vw,3.3rem)] text-luu"
-            style={v("liikumine.pealkiri")}
+            style={vTume("liikumine.pealkiri")}
           >
             {s("liikumine.pealkiri", liikumine.pealkiri)}
           </blockquote>
@@ -201,7 +203,7 @@ export default async function Avaleht() {
               {/* Lähtekoht on loetav, mitte aimatav — suurem ja heledam kui tavaline silt */}
               <span
                 className="mikro whitespace-nowrap text-[clamp(0.8rem,3.2vw,1.25rem)] tracking-[0.12em] text-luu/90 sm:tracking-[0.16em]"
-                style={v(`liikumine.read.${jrk}.millest`)}
+                style={vTume(`liikumine.read.${jrk}.millest`)}
               >
                 {s(`liikumine.read.${jrk}.millest`, rida.millest)}
               </span>
@@ -213,7 +215,7 @@ export default async function Avaleht() {
               </span>
               <span
                 className="kuva whitespace-nowrap italic text-[clamp(1.7rem,7vw,3.2rem)] leading-[1.15] text-luu"
-                style={v(`liikumine.read.${jrk}.milleks`)}
+                style={vTume(`liikumine.read.${jrk}.milleks`)}
               >
                 {s(`liikumine.read.${jrk}.milleks`, rida.milleks)}
               </span>

@@ -10,7 +10,7 @@ import {
   Tekst,
 } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
-import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
+import { plokiStiil, tekstiKuju, tumePlokiStiil } from "@/sisu/tekstikujud";
 
 /* Metaandmed tulevad samast sisupuust, mis leht ise */
 export async function generateMetadata() {
@@ -45,6 +45,8 @@ export default async function Minust() {
   /* Admin-lehelt antud üksikute tekstide kuju */
   const v = plokiStiil(sisu.tekstiKujud, "minust");
   const s = tekstiKuju(sisu.tekstiKujud, "minust");
+  /* Pöördumislugu seisab tumedal pinnal — seal käib värv läbi tumeda paranduse */
+  const vTume = tumePlokiStiil(sisu.tekstiKujud, "minust");
 
   return (
     <>
@@ -163,12 +165,12 @@ export default async function Minust() {
       <Sektsioon taust="mets" taustaVoti="minust.poordumine">
         <Ilmub className="mx-auto max-w-3xl text-center">
           <div aria-hidden="true" className="pystjoon pystjoon-tume" />
-          <p className="silt silt-tume mt-7" style={v("pooordumine.silt")}>
+          <p className="silt silt-tume mt-7" style={vTume("pooordumine.silt")}>
             {s("pooordumine.silt", pooordumine.silt)}
           </p>
           <h2
             className="kuva mt-6 text-[clamp(2rem,4.2vw,3.2rem)] text-luu"
-            style={v("pooordumine.pealkiri")}
+            style={vTume("pooordumine.pealkiri")}
           >
             {s("pooordumine.pealkiri", pooordumine.pealkiri)}
           </h2>
@@ -178,9 +180,9 @@ export default async function Minust() {
           {pooordumine.loigud.map((loik, jrk) => (
             <p
               key={loik}
-              style={v(`pooordumine.loigud.${jrk}`)}
-              /* whitespace-pre-line: Marta reavahetused pildilt jäävad alles */
-              className={`whitespace-pre-line ${
+              style={vTume(`pooordumine.loigud.${jrk}`)}
+              /* Marta reavahetused jäävad alles — vt globals.css `white-space` */
+              className={`${
                 jrk === 0
                   ? "text-xl leading-[1.75] text-luu sm:text-[1.4rem]"
                   : "text-lg leading-[1.85] text-luu/95 sm:text-xl"
@@ -200,7 +202,7 @@ export default async function Minust() {
             <div aria-hidden="true" className="pystjoon pystjoon-tume" />
             <blockquote
               className="kuva mt-8 text-[clamp(1.35rem,2.7vw,1.9rem)] leading-[1.45] text-kuld-hele"
-              style={v("pooordumine.tsitaat")}
+              style={vTume("pooordumine.tsitaat")}
             >
               {s("pooordumine.tsitaat", pooordumine.tsitaat)}
             </blockquote>
@@ -326,8 +328,8 @@ export default async function Minust() {
                 <p
                   key={loik}
                   style={v(`terviklikkus.loigud.${jrk}`)}
-                  /* whitespace-pre-line: Marta reavahetused pildilt jäävad alles */
-                  className="max-w-[52ch] whitespace-pre-line text-xl leading-[1.75] text-ink/85"
+                  /* Marta reavahetused jäävad alles — vt globals.css `white-space` */
+                  className="max-w-[52ch] text-xl leading-[1.75] text-ink/85"
                 >
                   {s(`terviklikkus.loigud.${jrk}`, loik)}
                 </p>

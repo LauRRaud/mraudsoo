@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Ilmub from "@/components/Ilmub";
 import { Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu, laeSisuSync } from "@/sisu/lae";
-import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
+import { plokiStiil, tekstiKuju, tumePlokiStiil } from "@/sisu/tekstikujud";
 
 /* Teenuse otsimine slugi järgi — massiiv võib admini kaudu olla asendatud */
 function leiaTeenus(teenused, slug) {
@@ -107,7 +107,12 @@ export default async function TeenuseLeht({ params }) {
     Nii ei saa üksiku teenuse vana värvi- või fondiseade päist teistsuguseks
     muuta: taust, tüpograafia ja mõõdustik tulevad alati samast kolmest väljast.
   */
-  const vp = plokiStiil(sisu.tekstiKujud, "teenusedLeht");
+  /*
+    Päis seisab siin tumedal pinnal, koondlehel heledal. Kuju on sama, seega
+    värv käib läbi tumeda paranduse — Marta valitud tume kuld kaoks muidu
+    sügavrohelisele ära (2,6:1). Vt tumedaPinnaVarv().
+  */
+  const vp = tumePlokiStiil(sisu.tekstiKujud, "teenusedLeht");
   const sp = tekstiKuju(sisu.tekstiKujud, "teenusedLeht");
   const vj = plokiStiil(
     sisu.tekstiKujud,
@@ -162,25 +167,31 @@ export default async function TeenuseLeht({ params }) {
 
   return (
     <>
-      {/* Sama hele lehepäis nagu „Teenused” koondlehel. */}
-      <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="teenused.hero">
+      {/*
+        Teenuse päis seisab jaluse sügavrohelisel (metsSyva) — iga alamleht
+        algab ja lõpeb sama tumeda akordiga. Koondlehe „Teenused” päis jääb
+        heledaks, seepärast on siin ka OMA taustapildivõti (teenuseLeht.hero):
+        ühine võti tähendaks sama pilti heledal ja tumedal pinnal.
+      */}
+      <Sektsioon taust="metsSyva" polsterdus="ohuke" taustaVoti="teenuseLeht.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          <p className="sisene silt" style={vp("hero.silt")}>
+          <p className="sisene silt silt-tume" style={vp("hero.silt")}>
             {sp("hero.silt", teenus.alapealkiri)}
           </p>
           <h1
-            className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
+            className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-luu"
             style={{ "--viive": "90ms", ...vp("hero.pealkiri") }}
           >
             {sp("hero.pealkiri", teenus.nimi)}
           </h1>
           <div
-            className="sisene joon mb-9 mt-9 max-w-28"
+            className="sisene joon-tume mb-9 mt-9 max-w-28"
             style={{ "--viive": "200ms" }}
           />
           <div className="sisene" style={{ "--viive": "300ms" }}>
             <Tekst
               suur
+              tume
               stiil={vp("hero.tekst")}
               kuju={sp.kuju("hero.tekst")}
             >

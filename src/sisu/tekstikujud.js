@@ -377,6 +377,62 @@ function jutumarkidega(tekst) {
 }
 
 /*
+  VÄRV TUMEDAL PINNAL.
+
+  Marta valib üksiku teksti värvi admin-lehel ja peaaegu iga valik on tume
+  kuld (#8a6f20) või tint — heledal pinnal on need õiged. Tumedal
+  sektsioonil annab tume kuld 2,6:1 ja rida kaob taustale ära.
+
+  Salvestatud väärtust EI tohi selle pärast muuta: sama kuju teenib korraga
+  heledat ja tumedat kohta (nt `teenusedLeht.hero.tekst` seisab koondlehel
+  heledal ja teenuse alamlehel tumedal). Parandus käib seepärast kuvamise
+  hetkel, mitte andmetes.
+
+  Reegel: tumedal pinnal jääb alles ainult värv, mis on ise piisavalt hele.
+  Liiga tume värv asendatakse sama tähendusega tumeda pinna värviga —
+  kuldne kuldsega, muu tekstivärviga. Nii jääb Marta mõte („see rida on
+  kuldne”) alles, aga rida jääb loetavaks.
+*/
+const TUMEDA_PINNA_LAVI = 0.4;
+
+/* Kui palju peab punane sinisest üle olema, et värv loeks kuldsena */
+const KULLASE_LAVI = 40;
+
+function kanalid(varv) {
+  const t = varv.replace("#", "");
+  const taielik =
+    t.length === 3
+      ? t
+          .split("")
+          .map((m) => m + m)
+          .join("")
+      : t;
+
+  return [0, 2, 4].map((i) => parseInt(taielik.slice(i, i + 2), 16));
+}
+
+/* WCAG suhteline heledus — sama valem mis admini kontrastihoiatuses */
+function suhtelineHeledus(varv) {
+  const [r, g, b] = kanalid(varv).map((k) => {
+    const v = k / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  });
+
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+export function tumedaPinnaVarv(varv) {
+  if (!VARVI_MUSTER.test(varv)) return varv;
+  if (suhtelineHeledus(varv) >= TUMEDA_PINNA_LAVI) return varv;
+
+  const [r, , b] = kanalid(varv);
+  /* Kuld on soe: punane kanal on sinisest tublisti üle. Tint ei ole. */
+  return r - b >= KULLASE_LAVI
+    ? "var(--color-kuld-hele)"
+    : "var(--color-luu)";
+}
+
+/*
   PLOKI STIIL — see, mis peab olema ploki enda küljes.
 
   Joondus ei toimi <span>-il, seepärast käib ta koos värviga elemendile:
@@ -390,6 +446,10 @@ function jutumarkidega(tekst) {
   `--oma-varv` ja element kirjutab klassi `text-[var(--oma-varv,…)]` — nii
   jääb `group-hover:` peale, sest klassi spetsiifilisus on kõrgem kui
   muutujaviitel.
+
+  VALIK `tume`: sektsioon seisab tumedal pinnal. Liiga tume valitud värv
+  vahetatakse tumeda pinna vastu välja — vt tumedaPinnaVarv(). Anna see
+  KÕIGIL tumeda sektsiooni väljakutsetel, muidu jääb üks rida loetamatuks.
 */
 export function plokiStiil(tekstiKujud, eesliide = "") {
   const kaart = tekstiKujud ?? {};
@@ -400,14 +460,26 @@ export function plokiStiil(tekstiKujud, eesliide = "") {
 
     const tulemus = {};
     if (kuju.varv) {
-      if (valikud?.varvMuutujaks) tulemus["--oma-varv"] = kuju.varv;
-      else tulemus.color = kuju.varv;
+      const varv = valikud?.tume ? tumedaPinnaVarv(kuju.varv) : kuju.varv;
+      if (valikud?.varvMuutujaks) tulemus["--oma-varv"] = varv;
+      else tulemus.color = varv;
     }
     if (kuju.joondus === "kesk") tulemus.textAlign = "center";
     if (kuju.joondus === "parem") tulemus.textAlign = "right";
 
     return Object.keys(tulemus).length > 0 ? tulemus : undefined;
   };
+}
+
+/*
+  Sama mis plokiStiil(), aga tumeda sektsiooni jaoks: iga värv käib läbi
+  tumedaPinnaVarv(). Eraldi funktsioon, mitte `{ tume: true }` igal real —
+  üks unustatud rida tähendaks üht loetamatut lõiku, ja tumedas sektsioonis
+  on neid ridu kümneid.
+*/
+export function tumePlokiStiil(tekstiKujud, eesliide = "") {
+  const stiil = plokiStiil(tekstiKujud, eesliide);
+  return (tee, valikud) => stiil(tee, { ...valikud, tume: true });
 }
 
 /*

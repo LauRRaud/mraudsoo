@@ -177,7 +177,7 @@ const VIITED = {
   },
   teenused: {
     tekst:
-      "Ava teenuse kaardil „Alamlehe tekstid”. Ploki „Mida see kogemus annab” suur pealkiri, eraldi read ja lõpulause on seal tõstetud kohe põhiväljade järele. Teenuse nimi, alapealkiri ja lühikirjeldus on kõigis kuvamiskohtades sama tekst.",
+      "Kaardi päises seisev nimi on ainult silt — muuta saab teda kaardi sees. Ava „Ava teenuse tekstid”: seal on teenuse nimi, alapealkiri ja lühikirjeldus (needsamad, mis seisavad avalehe ja teenuste lehe registris) ning nende järel ploki „Mida see kogemus annab” pealkiri, read ja lõpulause. Nimi, alapealkiri ja lühikirjeldus on kõigis kuvamiskohtades sama tekst — muuda siin, muutub kõikjal.",
   },
   teenuseLeht: {
     tekst:
@@ -902,9 +902,17 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
                 </div>
                 {suurPlokk(element) ? (
                   <details className="mt-3">
+                    {/*
+                      Silt peab ütlema KÕIK, mis kinnise nurga taga on. Vana
+                      „Alamlehe tekstid” lubas ainult alamlehte, aga sama nurga
+                      all on ka teenuse nimi, alapealkiri ja lühikirjeldus —
+                      needsamad, mis seisavad avalehe ja teenuste lehe
+                      registris. Marta luges sildi ära ja järeldas, et nime
+                      muuta ei saagi.
+                    */}
                     <summary className="mikro cursor-pointer text-[0.7rem] text-ink-faint transition-colors hover:text-rohe">
                       {voti === "teenused"
-                        ? `Alamlehe tekstid · sh „${element.nimekirjaPealkiri || "Mida see annab"}”`
+                        ? "Ava teenuse tekstid · nimi, alapealkiri, lühikirjeldus ja alamleht"
                         : "Tekstid"}
                     </summary>
                     <div className="mt-4 space-y-4">

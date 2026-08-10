@@ -49,6 +49,12 @@
   */
   --color-mets: #29483f;
   --color-mets-syva: #20382f;
+  /*
+    Mobiilimenüü seisis varem jaluse värvi peal. Nüüd on tal oma muutuja —
+    vaikimisi sama toon, aga admin-lehelt saab menüü eraldi värvida, ilma et
+    jalus ja teenuse päis kaasa muutuksid.
+  */
+  --color-menyy: #20382f;
   --color-kuld-hele: #dcc27a;
   --color-luu: #f4f1e8;
 
@@ -114,6 +120,24 @@
     line-height: 1.8;
     letter-spacing: 0.004em;
     -webkit-font-smoothing: antialiased;
+    /*
+      MARTA REAVAHETUSED JÄÄVAD ALLES.
+
+      Sisupuus tähendab \n reavahetust, mille Marta on ise admin-lehele
+      kirjutanud — nt tühja rida oma lause ja kirjakoha vahele. Vaikimisi
+      `normal` sööks need ära ja kaks lõiku loeksid ühe pika reana.
+
+      Reegel on siin, KOGU LEHE peal, mitte üksikutel klassidel: sisu tuleb
+      sisupuust kümnetes kohtades igal lehel ja klassipõhine loend jäi juba
+      korra poolikuks — pre-line oli ainult kahel lõigul lehel „Minust” ja
+      teenuste lehe tsitaadist kadus Marta tühi rida ära.
+
+      Lehefailide oma taandus siia ei jõua: JSX koondab reavahetuse tekstis
+      juba enne renderdust üheks tühikuks ja kustutab tühjad read. Ekraanile
+      pääseb ainult see \n, mis on päriselt sisupuu sõnes. Ka `pre-line` ise
+      koondab järjestikused tühikud kokku — alles jäävad ainult reavahetused.
+    */
+    white-space: pre-line;
   }
 
   /*
@@ -222,7 +246,8 @@
     nendeni see ei ulatu.
   */
   .bg-mets,
-  .bg-mets-syva {
+  .bg-mets-syva,
+  .bg-menyy {
     --kuva-lisa: 0.016em;
     letter-spacing: 0.014em;
   }

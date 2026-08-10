@@ -55,7 +55,7 @@ export const TAUSTA_SEKTSIOONID = [
     /* Üks kord kõigi teenuste kohta — teenuse alamleht on sama ehitus */
     leht: "Teenuse leht (kõik teenused korraga)",
     sektsioonid: [
-      { votme: "teenuseLeht.hero", nimi: "Päis — teenuse nimi" },
+      { votme: "teenuseLeht.hero", nimi: "Päis — teenuse nimi", tume: true },
       { votme: "teenuseLeht.sissejuhatus", nimi: "Sissejuhatus" },
       { votme: "teenuseLeht.plokid", nimi: "Teenuse plokid" },
       { votme: "teenuseLeht.tsitaat", nimi: "Teenuse tsitaat" },

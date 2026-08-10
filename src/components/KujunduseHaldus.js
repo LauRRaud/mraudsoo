@@ -58,7 +58,9 @@ const KONTROLLID = [
   { tekst: "inkSoft", taust: "sage", nimi: "Põhitekst rõhutatud paneelil" },
   { tekst: "luu", taust: "mets", nimi: "Tekst tumedal sektsioonil" },
   { tekst: "kuldHele", taust: "mets", nimi: "Kuld tumedal sektsioonil" },
-  { tekst: "luu", taust: "metsSyva", nimi: "Tekst jaluses" },
+  { tekst: "luu", taust: "metsSyva", nimi: "Tekst jaluses ja teenuse päises" },
+  { tekst: "kuldHele", taust: "metsSyva", nimi: "Kuld teenuse päises" },
+  { tekst: "luu", taust: "menyy", nimi: "Tekst mobiilimenüüs" },
 ];
 
 export default function KujunduseHaldus({
