@@ -74,7 +74,7 @@ export default async function Avaleht({ params }) {
               {s("hero.silt", hero.silt)}
             </p>
             <h1
-              className="sisene kuva mt-6 text-[clamp(3rem,8vw,6rem)] leading-[0.98] text-ink"
+              className="sisene kuva mt-6 text-[clamp(2.85rem,7.6vw,5.7rem)] leading-[0.98] text-ink"
               style={{ "--viive": "90ms", ...v("hero.pealkiri") }}
             >
               {s("hero.pealkiri", hero.pealkiri)}
@@ -451,7 +451,7 @@ export default async function Avaleht({ params }) {
             {s("kutse.silt", kutse.silt)}
           </p>
           <blockquote
-            className="kuva mx-auto mt-7 max-w-2xl text-[clamp(1.9rem,4vw,3.1rem)] leading-[1.22] text-ink"
+            className="kuva mx-auto mt-7 max-w-2xl text-[clamp(1.8rem,3.7vw,2.9rem)] leading-[1.22] text-ink"
             style={v("kutse.pealkiri")}
           >
             {s("kutse.pealkiri", kutse.pealkiri)}
