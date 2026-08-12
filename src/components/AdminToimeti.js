@@ -409,6 +409,35 @@ const NUPP_VAIKE =
 const NUPP_TEKST =
   "mikro text-[0.65rem] text-ink-faint underline underline-offset-4 transition-colors hover:text-rohe";
 
+const MUSTANDI_VERSIOON = 1;
+
+function mustandiVoti(keel) {
+  return `marta-admin-mustand:${keel}`;
+}
+
+function loeMustand(keel) {
+  try {
+    const toores = window.sessionStorage.getItem(mustandiVoti(keel));
+    if (!toores) return null;
+
+    const mustand = JSON.parse(toores);
+    if (
+      mustand?.versioon !== MUSTANDI_VERSIOON ||
+      typeof mustand?.tunnus !== "string" ||
+      typeof mustand?.sisu !== "object" ||
+      mustand.sisu === null ||
+      Array.isArray(mustand.sisu)
+    ) {
+      window.sessionStorage.removeItem(mustandiVoti(keel));
+      return null;
+    }
+
+    return mustand;
+  } catch {
+    return null;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Ühe teksti kuju                                                     */
 /* ------------------------------------------------------------------ */
@@ -525,75 +554,103 @@ function Kujupaneel({ tee, nimi, kompaktne = false }) {
         )}
       </div>
 
-      {/*
-        Suurus on KORDAJA, mitte pikslid: tekstid saavad suuruse
-        responsiivsest clamp()-ist ja kordaja korrutab seda, seega
-        mobiilivaade jääb terveks.
+      <fieldset className="space-y-3 border border-sage bg-bone p-3">
+        <legend className="px-1 mikro text-[0.68rem] text-rohe">
+          Teksti suurus eri ekraanidel
+        </legend>
+        <p className="max-w-[60ch] text-[0.8rem] leading-relaxed text-ink-soft">
+          Arvuti ja telefoni väärtused ei võitle omavahel. Telefonis saad
+          kasutada kas arvuti suurust või oma, eraldi suurust.
+        </p>
 
-        KAKS LIUGURIT. clamp() kahandab teksti ekraani laiuse järgi ühe reegli
-        järgi, aga sama kordaja ei sobi mõlemale otsale: arvutis paras rõhutus
-        on telefonis liiga suur. Teine liugur kehtib alla 640 px ekraanil.
-        Puudumisel kehtib telefonis sama, mis arvutis — nii käituvad vanad
-        tekstid täpselt nagu enne.
-      */}
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="mikro w-20 text-[0.65rem] text-ink-faint">Arvutis</span>
-        <input
-          type="range"
-          min={SUURUSE_MIN}
-          max={SUURUSE_MAX}
-          step={0.05}
-          value={kuju.suurus ?? 1}
-          onChange={(sundmus) =>
-            muudaKuju(tee, { ...kuju, suurus: Number(sundmus.target.value) })
-          }
-          aria-label="Teksti suurus arvutis"
-          className="h-8 w-40 cursor-pointer accent-rohe"
-        />
-        <span className="text-[0.8rem] text-ink-faint">
-          {Math.round((kuju.suurus ?? 1) * 100)} %
-        </span>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="mikro w-20 text-[0.65rem] text-ink-faint">
-          Telefonis
-        </span>
-        <input
-          type="range"
-          min={SUURUSE_MIN}
-          max={SUURUSE_MAX}
-          step={0.05}
-          /* Seadmata liugur seisab arvuti väärtusel — lohistamine algab sealt */
-          value={kuju.suurusMobiil ?? kuju.suurus ?? 1}
-          onChange={(sundmus) =>
-            muudaKuju(tee, {
-              ...kuju,
-              suurusMobiil: Number(sundmus.target.value),
-            })
-          }
-          aria-label="Teksti suurus telefonis"
-          className="h-8 w-40 cursor-pointer accent-rohe"
-        />
-        {kuju.suurusMobiil === undefined ? (
-          <span className="text-[0.8rem] text-ink-faint">sama mis arvutis</span>
-        ) : (
-          <>
-            <span className="text-[0.8rem] text-ink-faint">
-              {Math.round(kuju.suurusMobiil * 100)} %
+        <div className="border-l-2 border-rohe bg-linen px-3 py-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+            <span className="mikro text-[0.65rem] text-ink-faint">
+              ARVUTIS · alates 640 px
             </span>
-            <button
-              type="button"
-              onClick={() =>
-                muudaKuju(tee, { ...kuju, suurusMobiil: undefined })
+            <output className="text-[0.85rem] text-rohe">
+              {Math.round((kuju.suurus ?? 1) * 100)} %
+            </output>
+          </div>
+          <input
+            type="range"
+            min={SUURUSE_MIN}
+            max={SUURUSE_MAX}
+            step={0.05}
+            value={kuju.suurus ?? 1}
+            onChange={(sundmus) =>
+              muudaKuju(tee, { ...kuju, suurus: Number(sundmus.target.value) })
+            }
+            aria-label="Teksti suurus arvutis"
+            className="mt-2 h-8 w-full cursor-pointer accent-rohe"
+          />
+        </div>
+
+        <div
+          className={`border-l-2 px-3 py-2.5 ${
+            kuju.suurusMobiil === undefined
+              ? "border-sage bg-linen"
+              : "border-gold-deep bg-bone"
+          }`}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <span className="mikro text-[0.65rem] text-ink-faint">
+              TELEFONIS · kuni 639 px
+            </span>
+            {kuju.suurusMobiil === undefined ? (
+              <button
+                type="button"
+                onClick={() =>
+                  muudaKuju(tee, {
+                    ...kuju,
+                    suurusMobiil: Math.min(kuju.suurus ?? 1, 1),
+                  })
+                }
+                className={NUPP_TEKST}
+              >
+                Määra telefonile oma suurus
+              </button>
+            ) : (
+              <div className="flex items-center gap-3">
+                <output className="text-[0.85rem] text-gold-deep">
+                  {Math.round(kuju.suurusMobiil * 100)} %
+                </output>
+                <button
+                  type="button"
+                  onClick={() =>
+                    muudaKuju(tee, { ...kuju, suurusMobiil: undefined })
+                  }
+                  className={NUPP_TEKST}
+                >
+                  Kasuta arvuti suurust
+                </button>
+              </div>
+            )}
+          </div>
+
+          {kuju.suurusMobiil === undefined ? (
+            <p className="mt-2 text-[0.8rem] text-ink-faint">
+              Praegu {Math.round((kuju.suurus ?? 1) * 100)} % — sama mis arvutis.
+            </p>
+          ) : (
+            <input
+              type="range"
+              min={SUURUSE_MIN}
+              max={SUURUSE_MAX}
+              step={0.05}
+              value={kuju.suurusMobiil}
+              onChange={(sundmus) =>
+                muudaKuju(tee, {
+                  ...kuju,
+                  suurusMobiil: Number(sundmus.target.value),
+                })
               }
-              className={NUPP_TEKST}
-            >
-              sama mis arvutis
-            </button>
-          </>
-        )}
-      </div>
+              aria-label="Teksti suurus telefonis"
+              className="mt-2 h-8 w-full cursor-pointer accent-gold-deep"
+            />
+          )}
+        </div>
+      </fieldset>
 
       {/* Joondus */}
       <div className="flex flex-wrap items-center gap-2">
@@ -1143,6 +1200,8 @@ export default function AdminToimeti({
   const [konflikt, setKonflikt] = useState(false);
   /* Millal see keel viimati faili kirjutati — päises, et seis oleks näha */
   const [salvestatud, setSalvestatud] = useState(algsaeg);
+  const [mustand, setMustand] = useState(null);
+  const mustandLoetud = useRef(false);
 
   const sektsioon =
     SEKTSIOONID.find((kirje) => kirje.id === valitud) ?? SEKTSIOONID[0];
@@ -1161,10 +1220,73 @@ export default function AdminToimeti({
     return () => window.removeEventListener("beforeunload", hoiata);
   }, [muudetud]);
 
+  /*
+    Mustand on viimane kaitsevõrk enne serverit: kui Marta läheb kogemata
+    admini teisele lehele või brauser taastab vahekaardi, saab ta oma sama
+    brauseri salvestamata teksti tagasi võtta. Server ei näe seda kunagi ning
+    ta ei kirjuta kellegi teise muudatusi üle.
+  */
+  useEffect(() => {
+    const taimer = window.setTimeout(() => {
+      mustandLoetud.current = true;
+      setMustand(loeMustand(keel));
+    }, 0);
+
+    return () => window.clearTimeout(taimer);
+  }, [keel]);
+
+  useEffect(() => {
+    try {
+      if (!mustandLoetud.current) return;
+      if (!muudetud) {
+        /* Nähtav taastamisvalik ei ole veel otsus mustandit kustutada. */
+        if (mustand) return;
+        window.sessionStorage.removeItem(mustandiVoti(keel));
+        return;
+      }
+
+      window.sessionStorage.setItem(
+        mustandiVoti(keel),
+        JSON.stringify({
+          versioon: MUSTANDI_VERSIOON,
+          tunnus,
+          sisu,
+          aeg: new Date().toISOString(),
+        }),
+      );
+    } catch {
+      /* Mustand on lisakaitse; brauseri keelatud salvestus ei tohi toimetit rikkuda. */
+    }
+  }, [keel, muudetud, sisu, tunnus, mustand]);
+
   function muuda(tee, uusVaartus) {
     setSisu((eelmine) => asendaTeel(eelmine, tee, uusVaartus));
     setMuudetud(true);
     setTeade(null);
+  }
+
+  function loobuMustandist() {
+    try {
+      window.sessionStorage.removeItem(mustandiVoti(keel));
+    } catch {
+      /* Eemaldamine on parim pingutus, nagu mustandi kirjutaminegi. */
+    }
+    setMustand(null);
+  }
+
+  function taastaMustand() {
+    if (!mustand) return;
+
+    setSisu(mustand.sisu);
+    setMuudetud(true);
+    setTeade({
+      liik: "ok",
+      tekst:
+        mustand.tunnus === algtunnus
+          ? "Salvestamata mustand taastati."
+          : "Mustand taastati. Serveris on vahepeal muudatusi — enne salvestamist kontrolli tekst üle.",
+    });
+    setMustand(null);
   }
 
   /*
@@ -1303,8 +1425,9 @@ export default function AdminToimeti({
                 onClick={(sundmus) => {
                   if (aktiivne || !muudetud) return;
                   const kinnitus = window.confirm(
-                    "Sul on salvestamata muudatusi. Keelt vahetades lähevad " +
-                      "need kaotsi. Kas jätkata?",
+                    "Sul on salvestamata muudatusi. Hoian need selles brauseris " +
+                      "mustandina alles, kuid enne salvestamist pead need teises " +
+                      "keeles uuesti üle vaatama. Kas jätkata?",
                   );
                   if (!kinnitus) sundmus.preventDefault();
                 }}
@@ -1325,6 +1448,40 @@ export default function AdminToimeti({
           pool.
         </p>
       </div>
+
+      {mustand && (
+        <div
+          role="status"
+          className="mb-8 border-l-2 border-rohe bg-linen px-5 py-4"
+        >
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="kuva text-xl text-ink">Salvestamata mustand on alles</p>
+              <p className="mt-2 max-w-[70ch] text-[0.9rem] leading-relaxed text-ink-soft">
+                See on selle brauseri eelmise adminivaate tekst. {mustand.tunnus === algtunnus
+                  ? "Serveri seis ei ole muutunud; taastamine on ohutu."
+                  : "Serveri seis on vahepeal muutunud; pärast taastamist vaata tekst enne salvestamist üle."}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={loobuMustandist}
+                className={NUPP_AARIS}
+              >
+                Ära taasta
+              </button>
+              <button
+                type="button"
+                onClick={taastaMustand}
+                className={NUPP_ROHE}
+              >
+                Taasta mustand
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/*
         KONFLIKT. Näeme seda siis, kui fail on vahepeal mujal muutunud (teine

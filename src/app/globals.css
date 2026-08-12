@@ -431,7 +431,16 @@
       lüliti, mitte pealkiri. Kordaja, mitte kindel piksliarv: nii liigub ta
       kaasa, kui Marta admin-lehelt sildisuurust muudab.
     */
-    font-size: calc(var(--silt-suurus) * 0.75);
+    /*
+      Avaja peab olema salmisildist tagasihoidlikum, kuid mitte sama peene
+      kuvakirjaga. Eriti kuldsel toonil kadus Cormoranti õhuke joon ekraanil
+      ära. Tekstifondi 600 kaal on selge nii telefonis kui laual.
+    */
+    font-family: var(--font-sans);
+    font-size: calc(var(--mikro-suurus) * 0.95);
+    font-weight: 600;
+    letter-spacing: calc(var(--mikro-vahe) * 0.9);
+    color: var(--color-ink-soft);
     /*
       Polsterdus teeb sildist sõrmele mõõdu. Ümbrise ülemine vahe on sama
       võrra väiksem (mt-7), nii et silmale jääb salmi ja avaja vahe endiseks.

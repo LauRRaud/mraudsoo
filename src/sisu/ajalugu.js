@@ -28,15 +28,21 @@ const LOGI_TEE = path.join(ANDMEKAUST, "logi.jsonl");
 /* Mitu koopiat ühe faili kohta alles hoiame */
 const KOOPIAID_ALLES = 20;
 
-/* Lubatud varukoopia nimi: <alus>-<20260812-181530>.json */
-const KOOPIA_MUSTER = /^([a-z0-9.]+)-(\d{8}-\d{6})\.json$/i;
+/*
+  Lubatud varukoopia nimi: <alus>-<20260812-181530-123>.json.
+  Millisekund on oluline: ühe sekundi sees võib tulla mitu salvestust ning
+  kumbki eelmine seis peab jääma omaette taastatavaks koopiaks. Vana,
+  sekunditäpsusega nimi jääb samuti loetavaks.
+*/
+const KOOPIA_MUSTER = /^([a-z0-9.]+)-(\d{8}-\d{6}(?:-\d{3})?)\.json$/i;
 
-/* 20260812-181530 — sorditav ja inimesele loetav */
+/* 20260812-181530-123 — sorditav, inimesele loetav ja sama sekundi sees ainulaadne */
 function ajatempel(hetk = new Date()) {
   const p = (arv, laius = 2) => String(arv).padStart(laius, "0");
   return (
     `${hetk.getFullYear()}${p(hetk.getMonth() + 1)}${p(hetk.getDate())}` +
-    `-${p(hetk.getHours())}${p(hetk.getMinutes())}${p(hetk.getSeconds())}`
+    `-${p(hetk.getHours())}${p(hetk.getMinutes())}${p(hetk.getSeconds())}` +
+    `-${p(hetk.getMilliseconds(), 3)}`
   );
 }
 
