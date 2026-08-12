@@ -432,15 +432,14 @@
       kaasa, kui Marta admin-lehelt sildisuurust muudab.
     */
     /*
-      Avaja peab olema salmisildist tagasihoidlikum, kuid mitte sama peene
-      kuvakirjaga. Eriti kuldsel toonil kadus Cormoranti õhuke joon ekraanil
-      ära. Tekstifondi 600 kaal on selge nii telefonis kui laual.
+      Salmi avaja jääb kuldseks serif-sildiks, mitte mustaks nupuks. Kergelt
+      tumedam kuld ja 500 kaal hoiavad selle peenena, kuid loetavana.
     */
-    font-family: var(--font-sans);
-    font-size: calc(var(--mikro-suurus) * 0.95);
-    font-weight: 600;
-    letter-spacing: calc(var(--mikro-vahe) * 0.9);
-    color: var(--color-ink-soft);
+    font-family: var(--font-display);
+    font-size: calc(var(--silt-suurus) * 0.82);
+    font-weight: 500;
+    letter-spacing: calc(var(--silt-vahe) * 0.72);
+    color: color-mix(in srgb, var(--color-gold-deep) 88%, var(--color-ink) 12%);
     /*
       Polsterdus teeb sildist sõrmele mõõdu. Ümbrise ülemine vahe on sama
       võrra väiksem (mt-7), nii et silmale jääb salmi ja avaja vahe endiseks.
