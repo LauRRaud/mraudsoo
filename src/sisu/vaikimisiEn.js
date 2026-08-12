@@ -69,10 +69,11 @@ export const vaikimisiSisuEn = {
       parandab, võtku allikaks see, mis lehel PÄRISELT seisab (data/sisu.et
       .json → avaleht.kutsumus), mitte src/sisu/vaikimisi.js.
 
-      Loendis ei ole „•” märke, kuigi eesti pool need praegu käsitsi sisse
-      kirjutatuna kannab: kujundus on litaania ilma täppideta (vt avalehe
-      kommentaar) ja täpid on Marta enda hilisem lisandus. Kui ta neid ka
-      inglise pool tahab, on nende koht admin-leht, mitte see fail.
+      TÄPID „•” ON TEKSTI SEES, mitte CSS-ist. Kujundus renderdab need read
+      täppideta litaaniana; eesti pool kannab täppe käsitsi sisse kirjutatuna
+      ja nii peab ka inglise pool, muidu seisavad kaks keelt kõrvuti eri
+      kujul. Kui täpid kunagi kujundusse kolivad, tuleb nad SIIT ära võtta —
+      muidu tekib kaks täppi rea ees.
     */
     kutsumus: {
       silt: "Calling",
@@ -84,12 +85,12 @@ export const vaikimisiSisuEn = {
       valjendusSissejuhatus:
         "My work brings together presence, listening and practical ordering. It may take the form of:",
       valjendus: [
-        "deep listening and reflection, to find clarity within yourself, in your choices and in your next steps",
-        "making sense of life stages, values and direction",
-        "noticing the identity, worth and gifts given by God",
-        "making more conscious choices in life and in style",
-        "putting life / home / wardrobe in order",
-        "purposeful choices and shopping that support a person's needs, values and whole life.",
+        "• deep listening and reflection, to find clarity within yourself, in your choices and in your next steps",
+        "• making sense of life stages, values and direction",
+        "• noticing the identity, worth and gifts given by God",
+        "• making more conscious choices in life and in style",
+        "• putting life / home / wardrobe in order",
+        "• purposeful choices and shopping that support a person's needs, values and whole life.",
       ],
     },
 
@@ -115,19 +116,24 @@ export const vaikimisiSisuEn = {
       silt: "Essence",
       pealkiri: "Your unique essence",
       alapealkiri: "Who GOD has created you to be …",
+      /* Üks lõik kahe reavahega sees, nagu eesti pool — mitte kolm lõiku */
       loigud: [
-        "Your essence … is not simply style. It is not only clothes, colours or forms. It is your presence. Your genuine way of being. Your inner beauty. Your unrepeatable expression. Your uniqueness, created in the image of God.",
-        "But beyond this I believe … that every person carries something singular within. Something that God has placed in them alone. Every person's life has meaning, direction and calling — and in their being there is something that cannot be replaced by anyone else.",
-        "And clothing can be one way in which this becomes visible. Not in order to prove your worth, nor to be someone else. Nor to fit the measure of the world. But to come more into harmony with who you truly are.",
+        "Your essence is more than style. It is your genuine presence, your inner beauty, the gifts you have received from God and your unrepeatable way of expressing yourself.\n\nYour story, your being and your gifts are not accidental — they are part of God's good plan. Clothing too can make this visible: not in order to prove your worth, but to express more truly who God has created you to be.",
       ],
       tsitaat:
         "“God does not create people by chance. Within every person there is worth, distinctness and beauty that can be learned to notice and to honour.”",
     },
 
-    /* John 10:10 (WEB) */
+    /*
+      John 10:10 (WEB). VÄLJAD ON RISTI, nagu eesti pool: salm seisab `viide`
+      all ja viide `tekst` all. Marta on need admin-lehel meelega vahetanud,
+      sest kujundus annab `viide` väljale kuldse suurtähekirja ja `tekst`
+      väljale kuvakirja — tema tahab salmi kuldselt, viidet kuvakirjas.
+      Kui siin väljad „õigesti” seista, näeks inglise leht teistmoodi välja.
+    */
     kirjakoht: {
-      viide: "John 10:10",
-      tekst: "“I came that they may have life, and may have it abundantly.”",
+      viide: "“I came that they may have life, and may have it abundantly.”",
+      tekst: "John 10:10",
       selgitus: "",
     },
 
@@ -139,43 +145,39 @@ export const vaikimisiSisuEn = {
 
     minustPlokk: {
       tsitaat:
-        "“Everything good in me is a gift from God. My wish is not to lead people to myself, but to help them grow in their relationship with God.”",
-      loigud: [
-        "I offer people a space where it is possible to pause, to be heard and to notice again what matters in life.",
-      ],
+        "“Everything good in me is a gift from God. My wish is to help a person grow in their relationship with God and to see themselves through His eyes — as valuable, loved and unique.”",
+      /* Tühi, nagu eesti pool: tsitaat seisab siin üksi ja lõiku ei ole */
+      loigud: [],
       linkTekst: "Read about me",
     },
 
+    /* Silt ja pealkiri on risti, nagu eesti pool: tsitaat on kuldne silt */
     kutse: {
-      silt: "The next step belongs to you",
-      pealkiri: "“And perhaps it is time to see yourself as God has created you.”",
+      silt: "“And perhaps it is time to see yourself as God has created you.”",
+      pealkiri: "Your next step  …",
       nuppEsmane: "Book a time",
       nuppTeine: "See the prices",
     },
   },
 
   minust: {
+    /* Silt on tühi ja pealkiri jätkub tekstis — kolmpunktid on Marta oma */
     hero: {
-      silt: "About me",
-      pealkiri: "I offer a space where it is possible to pause",
-      tekst:
-        "I offer people a space where it is possible to pause, to be heard and to notice again what matters in life.",
+      silt: "",
+      pealkiri: "A space to pause ...",
+      tekst: "... to notice again what matters in life.",
     },
 
     lugu: {
       silt: "My story",
-      pealkiri: "My story",
+      pealkiri:
+        "For as long as I can remember, there has been a longing in me ...",
       loigud: [
-        "For as long as I can remember, I have longed to meet my own uniqueness. Not simply through my style, my appearance or my roles, but that true self — the person GOD has created me to be.",
-        "Without knowing it, I have felt a call and a pull to understand: what is that unrepeatable “me” whom God has created?",
-        "I remember myself when I was young … watching people.",
-        "Not simply their clothes or their appearance, but something more. I have always been drawn to why a person dresses the way they dress …",
-        "… and why they have chosen just that work, that way of being, that expression. Why some people seem to hide themselves. Why some are present the moment they enter. Why with some people you sense that their outward picture and their inner being are not in harmony with one another.",
-        "I often felt as though I saw or sensed something in a person that I could not explain. At times it even seemed strange.",
-        "But today I understand that it was not by chance.",
-        "It was a call. It was an inner direction. It was a gift that needed to take root and ripen in me. I believe that God has placed gifts within us.",
-        "Sometimes we feel them long before we can give them a name. Sometimes they need time, experience and growth before we dare truly to listen to them.",
-        "Today I understand that in my heart there has always been a longing to help a person meet themselves — not the version they have tried to become, but the person God has created them to be.",
+        "... to understand life and the human being more deeply - who God has created us to be, and what shapes the way we live our lives?",
+        "Already as a young person, my own experiences made me ask why we are born into just these circumstances, into just these situations, and what a person finally builds their life upon?",
+        "Perhaps that is why I have always looked at a person as a whole - their choices, relationships, home, work, way of living and self-expression.",
+        "Today I understand that part of my calling was already in that: to help a person notice what shapes their life, what needs ordering, and how to grow ever more into harmony with who God has created them to be.",
+        "I believe that the gifts God gives need time to ripen in us into conscious service.",
       ],
     },
 
@@ -194,91 +196,91 @@ export const vaikimisiSisuEn = {
 
     pooordumine: {
       silt: "The heart longs for the truth",
-      pealkiri: "Today I see more clearly than ever before …",
+      /* Pealkirja ei ole — lugu algab kohe esimesest lõigust, nagu eesti pool */
+      pealkiri: "",
       loigud: [
-        "Within a person there are two realities at once.",
-        "The longing to live rightly, the wish to be honest, the need for peace and simplicity - the heart recognises what is right …",
-        "But at the same time… our human side is tired, is afraid, holds on to habits, goes back into old patterns and so a contradiction arises you know what is right… but you do not live it.",
-        "Your heart knows the truth but God's power helps you to live it",
-        "Today I want to ask … what are we actually building our life upon?",
-        "… if life is built on dependencies, then we have built on sand. And when it all sways and falls apart - the person falls too.",
-        "If work = security\nmoney = worth\nrole = identity",
-        "This is not a true foundation …",
-        "… But I lived that way for years. The focus was paying the bills, surviving, staying inside the system. And although outwardly it seemed as if everything were “in order”… inside I was broken.",
-        "Today I can honestly confess - I served the system, not God. And when there is no relationship with God, we always begin to serve something else … until we have met the truth.",
-        "Obedience to God's word … creates a stable foundation (a rock) that holds against the hardships of life, while disregarding his words leads to spiritual ruin and collapse.",
-        "For me the change began then…",
-        "… when I truly began to let go of what was false. It was not easy, it was painful, uncertain and it broke my old foundations. But at the same time something new began to be born …",
-        "And when I gave my life …",
-        "… my work, my calling, my future. Into God's hands - then things have begun to change …",
-        "… My heart, my mind, my relationship with life.",
-        "Baptism was the turning point for me.",
-        "We lose nothing, on the contrary - we meet the truth, the way and the life.",
-        "For God's way tears down what is not the truth and builds what remains.",
+        "Today I see more clearly than before how often we live in inner contradiction. The heart recognises what is right, but fear, tiredness, habits and old patterns hold us back.",
+        "We may know the truth, but we need God's power to live in it.",
+        "— I have had to ask myself as well: what am I really building my life upon?",
+        "For years my security was work, money, roles and staying inside the system. Outwardly everything may have seemed in order, but inwardly my life was not built on the right foundation.",
+        "The change began when I truly gave my life, my work, my calling and my future into God's hands. Baptism became for me a sign of leaving the old life behind and of new life in Christ.",
+        "— In Christ we do not lose who God has created us to be. He cleanses, renews and builds our life upon the truth.",
+        " “It is no longer I who live, but Christ lives in me.”\nGalatians 2:20",
       ],
       tsitaat:
-        "“It is no longer simply work but a CALLING, it is no longer striving, but SERVING OUT OF LOVE, it is no longer fear that leads but PEACE.”",
+        "— No longer simply work, but a CALLING. Not striving, but SERVING OUT OF LOVE.\nNot fear, but PEACE.",
       kirjakohad: [
         {
           viide: "Mark 14:38",
           tekst:
             "“Watch and pray, that you may not enter into temptation. The spirit indeed is willing, but the flesh is weak.”",
           selgitus:
-            "This verse underlines the need to be spiritually awake and prayerful in order not to fall into temptation, acknowledging the conflict between a person's will and their physical weakness. It is Jesus' warning to the disciples, noting that although the inner desire (the spirit) is to follow God, human nature (the flesh) is weak and needs strength through the support of prayer.",
+            "This verse underlines the need to be spiritually awake and prayerful in order to avoid temptation, acknowledging the conflict between a person's willpower and their physical weakness. It is Jesus' warning to the disciples, noting that although the inner desire (the spirit) is to follow God, human nature (the flesh) is weak and needs strength through the support of prayer.",
         },
         {
           viide: "Romans 7:19",
           tekst:
             "“For the good which I desire, I don't do; but the evil which I don't desire, that I practice.”",
           selgitus:
-            "A person is not created to live from their own strength alone … we need God.",
+            "We are not created to carry life by our own strength alone. We may know what is right and still experience how limited our own will and strength are. We need God — His grace, His truth and His leading.",
         },
         {
+          /* Lühendatud samast kohast kui eesti pool — ainult kaljule ehitaja */
           viide: "Matthew 7:24-27",
           tekst:
-            "“Everyone therefore who hears these words of mine and does them… is like a wise man who built his house on a rock… And everyone who hears these words of mine and doesn't do them… is like a foolish man who built his house on the sand.”",
-          selgitus: "",
+            "“Everyone therefore who hears these words of mine and does them will be likened to a wise man who built his house on a rock ...”",
+          selgitus:
+            "The question is not only what we know, but what we build our life upon. A strong foundation is born when our life begins to rest on God's word.",
         },
         {
           viide: "Matthew 6:24",
           tekst:
             "“No one can serve two masters, for either he will hate the one and love the other, or else he will be devoted to one and despise the other. You can't serve both God and Mammon.”",
           selgitus:
-            "God does not call us to live in exhaustion. He calls us to live in the Truth.",
+            "Our heart needs clarity about whom we belong to and what guides our choices. God does not call us to live in endless striving, trying to serve different expectations and values at once. He calls us to live in His truth.",
         },
         {
           viide: "Matthew 16:24",
           tekst:
-            "“If anyone desires to come after me, let him deny himself… and follow me.”",
+            "“If anyone desires to come after me, let him deny himself and follow me.”",
           selgitus:
-            "It is no longer my way, but His way. When I let go of my own way, a way opens that I would never have seen myself. I no longer live only by my own wishes, plans and understanding… but trust God's leading in my life.",
+            " — In following Christ we learn to let go of the need to steer and control everything ourselves, to entrust our life into God's hands and to grow ever more into the life to which He calls us.",
+        },
+        {
+          /* Kuues kirje ei ole salm, vaid Marta oma lause — viide on tühi */
+          viide: "",
+          tekst:
+            "It is no longer only my way, my plan and my will — but His way, His truth and His leading. (John 14:6)",
+          selgitus: "",
         },
       ],
     },
 
     annid: {
       silt: "Gifts",
-      pealkiri: "Gifts I have recognised on my journey",
+      pealkiri: "... that I have recognised on my journey",
       sissejuhatus:
-        "1 Corinthians 12 teaches that the Holy Spirit gives his gifts for the common good. On my own journey I have noticed most of all that God uses through me above all:",
+        "1 Corinthians 12 teaches that the Holy Spirit gives his gifts for the common good. On my journey I have noticed most of all that God uses through me above all:",
       loend: [
         {
-          nimi: "the sharing of wisdom",
+          nimi: "A word of wisdom",
           kirjeldus:
-            "to help see situations more widely and understand the next steps",
+            "To see situations more widely and to help bring clarity where a person may not yet see the whole picture.",
         },
         {
-          nimi: "discernment",
-          kirjeldus: "to notice what needs attention or ordering",
-        },
-        {
-          nimi: "the encouragement of faith",
-          kirjeldus: "to call to mind hope and trust in God",
-        },
-        {
-          nimi: "listening and presence",
+          nimi: "A word of knowledge",
           kirjeldus:
-            "to create a safe space where a person may be honest and experience clarity",
+            "To notice and to put into words what God draws attention to.",
+        },
+        {
+          nimi: "Faith",
+          kirjeldus:
+            "To call to mind trust in God even where the solution or the next step is not yet in sight, and to encourage hope in God.",
+        },
+        {
+          nimi: "Listening and presence",
+          kirjeldus:
+            "Making room for God — where a person can be honest in God's presence and experience peace and clarity.",
         },
       ],
     },
@@ -290,12 +292,12 @@ export const vaikimisiSisuEn = {
 
     terviklikkus: {
       silt: "Wholeness",
-      pealkiri: "God cares about the whole person",
-      /* Sõna-sõnalt pildilt: koma, punkti ega mõttekriipsu seal ei ole */
+      pealkiri: "God cares about the whole person.",
       loigud: [
-        "In this journey there begins to come into order - the spiritual emotional, physical world\nNot separately but together.",
-        "That is why in my work the inner and the outer meet — listening and practical steps, presence and coming into order.",
-        "When clarity is born in the heart, it can begin to be reflected in everyday life too: in choices, in the wardrobe, at home, in self-expression and in relationships.",
+        "Wholeness begins with what we build our life upon. On this journey we look at the spiritual, emotional and physical life not separately but as one whole — what carries us, what needs ordering and what needs a new direction.",
+        "That is why in my work the inner and the outer world meet: listening and practical steps, presence and coming into order.",
+        "When clarity is born in the heart and life is built on a firmer foundation, it begins to be reflected in everyday life too — in our choices, relationships, home, wardrobe and self-expression.",
+        "— Inner change becomes visible in the way we live.",
       ],
     },
 
@@ -311,11 +313,15 @@ export const vaikimisiSisuEn = {
       silt: "Services",
       pealkiri: "Different expressions of one calling",
       tekst:
-        "My services are not separate worlds. Sacred Space is not one service and style clarity, wardrobe ordering, conscious shopping and photography others. They are all different expressions of one and the same calling.",
+        "My services are not separate worlds. Sacred Space is not one service.\n\n— Style clarity, home and wardrobe ordering, conscious shopping and photography are all different expressions of one and the same calling.",
     },
     loeLahemalt: "Read more",
+    /*
+      Efeslastele 2:10 (WEB). Viide seisab pika tühikureana tsitaadi all,
+      täpselt nagu eesti pool — see on Marta oma taane, mitte kujundus.
+    */
     tsitaat:
-      "“My way is not only my own — it is service through presence, listening and deep empathy.”",
+      '"For we are his workmanship, created in Christ Jesus for good works, which God prepared before that we would walk in them."\n\n                                                                  Ephesians 2:10',
     tsitaadiSilt: "Presence",
     lopp: {
       pealkiri: "Not sure where to begin?",
@@ -338,34 +344,33 @@ export const vaikimisiSisuEn = {
       nimi: "Sacred Space",
       alapealkiri: "Sacred Presence in Christ",
       luhike:
-        "A safe space for listening, reflection, prayer and finding clarity.",
+        "A safe space to slow down, listen, reflect and pray — to find clarity, peace and direction in God's presence.",
       sissejuhatus:
-        "I offer people a space where it is possible to pause, to be heard and to notice again what matters in life.",
+        "I believe that God touches and leads people through different encounters, experiences and seasons of life. It has become important in my heart to be alongside a person in a way that helps them slow down, listen and notice again what truly matters.",
       loigud: [
-        "I believe that God uses different people in different ways. In my heart it has become important to create an environment where these may be born:",
-        "All of this happens in faith, in prayer and with the wish to give all glory to God.",
+        "All of this happens in faith and prayer, and all glory belongs to God, from whom true change comes.",
       ],
       plokid: [
         {
           pealkiri: "Psalm 62:1",
           loigud: [
-            "“My soul rests in God alone. My salvation is from him.”",
-            "Silence = the place where the soul finds peace, truth and clarity …",
+            "“In God alone my soul finds rest; from him comes my salvation.”",
+            "Silence is not an end in itself, but a place where the soul can be still before God. When the outer and inner noise subsides, we can experience His presence more clearly, listen for His guidance and receive the peace, truth and clarity that come from Him.",
+            "— In silence we meet God.",
           ],
         },
         {
           pealkiri: "Luke 21:34",
           loigud: [
             "“So be careful, or your hearts will be loaded down…”",
-            "When the heart is full… there is no longer room to hear.",
-            "We listen, but do not manage to understand. We experience, but do not manage to integrate. We are present, but never truly arrive.",
+            "We listen, yet do not understand.\nWe experience, yet cannot make what we have experienced whole within ourselves.\nWe are present, yet never truly arrive before ourselves or before God.",
           ],
         },
         {
-          pealkiri: "God calls us back into simplicity",
+          pealkiri: "— Back into God's presence",
           loigud: [
-            "And perhaps that is precisely why… God calls us back into simplicity but deep … into silence, into peace, into attunement.",
-            "Silence does not create identity, it reveals the truth …",
+            "And perhaps this is precisely why God calls us back into simplicity — into deeper silence, peace and His presence. To a place where the noise subsides, the heart turns to God and His voice again has room in our lives.",
+            "Silence reveals the truth …",
           ],
         },
         {
@@ -384,49 +389,45 @@ export const vaikimisiSisuEn = {
         {
           pealkiri: "Luke 10:41–42",
           loigud: [
-            "In the story of Martha and Mary, Jesus gently admonishes Martha: “You are anxious and troubled about many things, but one thing is needed. Mary has chosen the good part, which will not be taken away from her.”",
-            "What we need is not more doing - more noise, but presence.",
+            "In the story of Martha and Mary, Jesus gently says to Martha:\n\n“You are worried and troubled about many things, but one thing is needed. Mary has chosen the good part, which will not be taken away from her.”",
+            "We do not always need more doing, more striving or more noise. Sometimes we need to pause and be present before we act.",
           ],
         },
         {
-          pealkiri: "Biblical stillness",
+          pealkiri: "Biblical stillness …",
           loigud: [
-            "Biblical stillness is an inner silence in which a person stops struggling and begins to listen to God.",
+            "… is an inner silence in which a person stops striving and begins to listen to God.",
+            "In silence we turn more consciously to God and learn to rest in His presence.",
           ],
         },
         {
-          pealkiri: "Attuned presence",
+          pealkiri: "Where we are truly heading",
           loigud: [
-            "I would call it attuned presence … It is the place where the noise dies down, the pace slows and the heart is given room again.",
-            "It is precisely in silence that a person comes back into connection with God.",
-            "Attuned presence is an inner peace in the midst of life, where you no longer have to control, prove or hurry.",
-            "In attuned presence the TRUTH is quietly revealed, our true identity …",
+            "And perhaps this is the deeper direction of our journey — not toward ever more doing, experiencing or knowing, but back into God's presence.",
+            "In silence a new identity is not created. When the noise subsides and we remain in God's presence, the truth about our life, worth and calling begins to appear more clearly.\n\nIn this way, step by step, we move closer to God and grow ever more into the person He has created us to be.",
           ],
         },
         {
-          pealkiri: "Where we are actually going",
+          pealkiri: "I help you slow down",
           loigud: [
-            "And perhaps this is where we are actually going… not towards more doing, not more experiencing, not more knowing - but back …",
-            "… back into who we are in God. For in silence nothing is lost. In silence the truth begins to appear. And step by step… we move closer to who we have been all along.",
-          ],
-        },
-        {
-          pealkiri: "I help you to slow down",
-          loigud: [
-            "I help you to slow down, to put your spiritual, emotional and physical world in order …",
-            "… and to meet the truth - from that place right choices are born.",
+            "I help you slow down and bring order to your spiritual, emotional and practical life.",
+            "When the noise subsides, the truth becomes visible. From this clarity, choices are born that are in harmony with who God has created you to be.",
           ],
         },
       ],
-      nimekirjaPealkiri: "In this space there may be born",
+      nimekirjaPealkiri: "What this space makes possible …",
       nimekiri: [
-        "listening",
-        "clarity",
-        "coming into order",
-        "encouragement",
-        "discerning the next steps",
+        "Clarity",
+        "Inner peace",
+        "A sense of order",
+        "Encouragement",
+        "Sometimes a single honest meeting is enough for something to begin to move into place.",
       ],
       toon: "sygav",
+      tsitaat: {
+        tekst: "",
+        selgitus: "",
+      },
     },
     {
       slug: "uks-uhele-teekond",
@@ -435,44 +436,47 @@ export const vaikimisiSisuEn = {
       luhike:
         "A month-long journey in which the spiritual, emotional and physical world begin to come into order together.",
       sissejuhatus:
-        "Sometimes we do not need more knowledge… but a space where everything can quietly become clear.",
+        "Sometimes we do not need more knowledge but a space where everything can quietly become clear.",
       loigud: [
         "We meet once a week over the course of one month. On a fixed day. In a fixed rhythm. Not in order to “do more”… but to begin truly to see.",
-        "We look at your life as it really is. What supports you… and what does not. Where your energy moves… and where it quietly disappears.",
-        "We do not hurry change. But neither do we avoid the truth.",
+        "We look honestly at your life: what supports you and what does not, including how you use your time — where your energy goes and where it quietly disappears.",
+        "— We do not hurry change. But neither do we avoid the truth.",
+        "I believe that our bodies and surroundings deserve attention. The Bible reminds us that our body is a temple of the Holy Spirit. That is why a whole life also includes rest, recovery, caring for our body and noticing our boundaries.",
+        "— Home can be a quiet environment where we can breathe, rest, recover and simply be.",
       ],
       plokid: [
         {
           pealkiri: "Physical ordering",
           loigud: [
-            "Physical ordering is part of this journey. Your space. Your wardrobe. Your everyday surroundings - because what is visible reflects what is happening within you …",
+            "Physical ordering is also part of this journey — your space, wardrobe and everyday surroundings.\n\nWhat surrounds us affects our peace, attention and daily rhythm. Sometimes outer disorder can reflect inner overwhelm, and sometimes simplifying what is outside helps create more room for inner clarity.",
           ],
         },
         {
           pealkiri: "Relationships and activities",
           loigud: [
-            "We also touch relationships. And activities. We learn to notice where you give your energy and whether it carries you.",
+            "We also look at your relationships, responsibilities and everyday activities. We learn to notice where your time and energy go — what carries you, what drains you and what God has truly called you to in this season of life.",
           ],
         },
         {
           pealkiri: "And little by little",
           loigud: [
-            "And little by little… clarity and transparency begin to arise. Not through striving - but through the ordering of the spiritual, emotional and physical world.",
+            "… more clarity, simplicity and openness begin to emerge.\n\nNot through greater effort, but through bringing the spiritual, emotional and physical world into order.",
+          ],
+        },
+        {
+          pealkiri: "— This journey …",
+          loigud: [
+            "… is a return to God and an encounter with the person God has created you to be.",
           ],
         },
       ],
       tsitaat: {
-        tekst: "“This is not simply change. It is a coming back to yourself.”",
+        tekst: "— This is not simply change. It is a coming back to yourself.",
         selgitus:
-          "If you feel that you are ready for this… then this journey is for you",
+          "If you feel that you are ready for this - then this journey is for you",
       },
       nimekirjaPealkiri: "Together we look at what needs ordering in your life",
-      nimekiri: [
-        "phone/computer ordering",
-        "social media ordering",
-        "ordering of physical space",
-        "organising, systematising - home, wardrobe",
-      ],
+      nimekiri: [],
       toon: "sygav",
     },
     {
@@ -590,9 +594,8 @@ export const vaikimisiSisuEn = {
       slug: "fotograafia",
       nimi: "Photography",
       alapealkiri: "Black and white",
-      luhike:
-        "Natural and genuine moments that capture a person as they are.",
-      sissejuhatus: "Portraits that do not try to make anyone into someone else.",
+      luhike: "Natural and genuine moments …",
+      sissejuhatus: "Portrait",
       loigud: [
         "Black and white leaves what matters: the light, the presence and the person themselves.",
       ],
@@ -600,6 +603,10 @@ export const vaikimisiSisuEn = {
       nimekirjaPealkiri: "What this gives",
       nimekiri: [],
       toon: "sygav",
+      tsitaat: {
+        tekst: "",
+        selgitus: "",
+      },
     },
   ],
 
@@ -698,9 +705,9 @@ export const vaikimisiSisuEn = {
   blogiLeht: {
     hero: {
       silt: "Blog",
-      pealkiri: "Thoughts from the way",
-      tekst:
-        "Thoughts on presence, clarity and on how inner and outer ordering go hand in hand.",
+      pealkiri: "Thoughts ...",
+      /* Tühi, nagu eesti pool — pealkiri seisab üksi */
+      tekst: "",
     },
     tyhiPealkiri: "The first posts are on their way here.",
     tyhiTekst:
@@ -725,9 +732,11 @@ export const vaikimisiSisuEn = {
       "I answer myself and as quickly as I can. If you have a question and are not sure whether it even fits — ask anyway.",
     /* Psalm 46:10 (WEB) */
     kirjakoht: {
-      viide: "Psalm 46:10",
-      tekst: "“Be still, and know that I am God.”",
-      selgitus: "This is an invitation to pause and to attune …",
+      viide: "Matthew 11:28",
+      tekst:
+        "“Come to me, all you who labor and are heavily burdened, and I will give you rest.”",
+      selgitus:
+        "This is an invitation to come just as you are — to pause and to breathe in God's presence.",
     },
   },
 
