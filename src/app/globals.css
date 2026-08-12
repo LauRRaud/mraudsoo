@@ -433,11 +433,11 @@
     */
     /*
       Salmi avaja jääb kuldseks serif-sildiks, mitte mustaks nupuks. Kergelt
-      tumedam kuld ja 500 kaal hoiavad selle peenena, kuid loetavana.
+      tumedam kuld ja 600 kaal hoiavad selle selgena, kuid endiselt õhulisena.
     */
     font-family: var(--font-display);
     font-size: calc(var(--silt-suurus) * 0.82);
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: calc(var(--silt-vahe) * 0.72);
     color: color-mix(in srgb, var(--color-gold-deep) 88%, var(--color-ink) 12%);
     /*
