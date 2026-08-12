@@ -199,7 +199,7 @@ export default async function Avaleht({ params }) {
             {s("liikumine.silt", liikumine.silt)}
           </p>
           <blockquote
-            className="kuva mx-auto mt-6 max-w-3xl text-[clamp(2rem,4.2vw,3.3rem)] text-luu"
+            className="kuva mx-auto mt-6 max-w-3xl text-[clamp(1.85rem,3.7vw,3rem)] text-luu"
             style={vTume("liikumine.pealkiri")}
           >
             {s("liikumine.pealkiri", liikumine.pealkiri)}
