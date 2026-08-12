@@ -3,13 +3,8 @@
 import { useState, useTransition } from "react";
 import Kalender, { vormindaKuupaev } from "@/components/Kalender";
 import { Nupp } from "@/components/ui";
-import { saadaBroneering } from "@/app/broneerimine/tegevused";
-
-const KELLAAJAD = [
-  { vaartus: "Hommik", vihje: "9–12" },
-  { vaartus: "Pärastlõuna", vihje: "12–17" },
-  { vaartus: "Õhtu", vihje: "17–20" },
-];
+import { saadaBroneering } from "@/app/[keel]/broneerimine/tegevused";
+import { liides } from "@/sisu/liides";
 
 /*
   Vorm koostab e-kirja ja avab selle kasutaja e-posti programmis.
@@ -20,15 +15,28 @@ const KELLAAJAD = [
   tuleb välja vahetada ainult funktsioon saada().
 
   Sisu (e-post, teenuste nimekiri, teekonna nimi) tuleb propsidena serverilt —
-  see on kliendikomponent ja ei tohi sisulaadijat ise importida.
+  see on kliendikomponent ja ei tohi sisulaadijat ise importida. Vormi enda
+  sildid tulevad liidese sõnastikust (src/sisu/liides.js): need ei ole Marta
+  sisu ja neid ei kujundata admin-lehel.
+
+  Keel läheb ka serveritegevusele kaasa, et veateade tuleks samas keeles,
+  mida külastaja loeb.
 */
 export default function BroneeriVorm({
+  keel = "et",
   email,
   teenused = [],
   teekonnaNimi,
   suletudPaevad = [],
   suletudNadalapaevad = [],
 }) {
+  const sonad = liides(keel);
+  const kellaajaValikud = [
+    { vaartus: sonad.hommik, vihje: "9–12" },
+    { vaartus: sonad.parastlouna, vihje: "12–17" },
+    { vaartus: sonad.ohtu, vihje: "17–20" },
+  ];
+
   const [kuupaevad, setKuupaevad] = useState([]);
   const [kellaajad, setKellaajad] = useState([]);
 
@@ -55,8 +63,9 @@ export default function BroneeriVorm({
       sonum: vorm.get("sonum"),
       /* Peidetud peibutusväli — inimene jätab tühjaks, bot täidab */
       veebileht: vorm.get("veebileht"),
-      kuupaevad: kuupaevad.map((k) => vormindaKuupaev(k)),
+      kuupaevad: kuupaevad.map((k) => vormindaKuupaev(k, keel)),
       kellaajad,
+      keel,
     };
 
     alustaSaatmist(async () => {
@@ -74,7 +83,7 @@ export default function BroneeriVorm({
       } catch {
         setSeis({
           ok: false,
-          viga: `Saatmine ebaõnnestus. Palun kirjuta otse aadressile ${email}.`,
+          viga: sonad.saatmineEbaonnestus(email),
         });
       }
     });
@@ -87,16 +96,13 @@ export default function BroneeriVorm({
 
   return (
     <form onSubmit={saada} className="space-y-14">
-      <p className="text-lg leading-relaxed text-ink-soft">
-        Täida ainult nimi, e-post ja sõnum — ülejäänu on abiks, aga pole
-        vajalik.
-      </p>
+      <p className="text-lg leading-relaxed text-ink-soft">{sonad.vormiJuhis}</p>
 
       {/* Kontaktandmed */}
       <div className="grid gap-10 sm:grid-cols-2">
         <div>
           <label htmlFor="nimi" className={siltStiil}>
-            Nimi
+            {sonad.nimi}
           </label>
           <input
             id="nimi"
@@ -105,13 +111,13 @@ export default function BroneeriVorm({
             required
             autoComplete="name"
             className={`${valjaStiil} mt-3`}
-            placeholder="Sinu nimi"
+            placeholder={sonad.nimeVihje}
           />
         </div>
 
         <div>
           <label htmlFor="epost" className={siltStiil}>
-            E-post
+            {sonad.epost}
           </label>
           <input
             id="epost"
@@ -120,13 +126,13 @@ export default function BroneeriVorm({
             required
             autoComplete="email"
             className={`${valjaStiil} mt-3`}
-            placeholder="sinu@epost.ee"
+            placeholder={sonad.epostiVihje}
           />
         </div>
 
         <div>
           <label htmlFor="telefon" className={siltStiil}>
-            Telefon
+            {sonad.telefon}
           </label>
           <input
             id="telefon"
@@ -134,13 +140,13 @@ export default function BroneeriVorm({
             type="tel"
             autoComplete="tel"
             className={`${valjaStiil} mt-3`}
-            placeholder="Kui eelistad, et helistan"
+            placeholder={sonad.telefoniVihje}
           />
         </div>
 
         <div>
           <label htmlFor="teenus" className={siltStiil}>
-            Teenus
+            {sonad.teenus}
           </label>
           <select
             id="teenus"
@@ -148,14 +154,16 @@ export default function BroneeriVorm({
             defaultValue=""
             className={`${valjaStiil} mt-3 cursor-pointer`}
           >
-            <option value="">Ei tea veel / räägime</option>
+            <option value="">{sonad.teenustEiTeaVeel}</option>
             {teenused.map((t) => (
               <option key={t.slug} value={t.nimi}>
                 {t.nimi}
               </option>
             ))}
             {teekonnaNimi ? (
-              <option value={teekonnaNimi}>{teekonnaNimi} (kolm sammu)</option>
+              <option value={teekonnaNimi}>
+                {teekonnaNimi} ({sonad.kolmSammu})
+              </option>
             ) : null}
           </select>
         </div>
@@ -163,15 +171,15 @@ export default function BroneeriVorm({
 
       {/* Kalender */}
       <fieldset>
-        <legend className={siltStiil}>Millal sulle sobiks?</legend>
+        <legend className={siltStiil}>{sonad.millalSobiks}</legend>
         {/* Selgitus jääb lühikeseks: kuidas valida. Ülejäänu lepitakse kirjas kokku. */}
         <p className="mt-3 max-w-[52ch] text-lg leading-relaxed text-ink-soft">
-          Kui sul on mõni päev juba mõttes, vali kuni kolm. Kui ei ole, jäta
-          vahele — lepime aja kokku kirja teel.
+          {sonad.kalendriJuhis}
         </p>
 
         <div className="mt-8 max-w-md border border-gold/25 bg-bone p-5 sm:p-7">
           <Kalender
+            keel={keel}
             valitud={kuupaevad}
             onMuuda={setKuupaevad}
             suletudPaevad={suletudPaevad}
@@ -182,13 +190,13 @@ export default function BroneeriVorm({
 
       {/* Kellaaeg */}
       <fieldset>
-        <legend className={siltStiil}>Mis kellaaeg sulle sobib?</legend>
+        <legend className={siltStiil}>{sonad.misKellaaeg}</legend>
         <p className="mt-3 max-w-[52ch] text-lg leading-relaxed text-ink-soft">
-          Võid valida mitu või jätta valimata.
+          {sonad.kellaajaJuhis}
         </p>
         {/* Valikunupud on nupud, seega rohelised — kuld jääb joonteks ja siltideks */}
         <div className="mt-6 flex flex-wrap gap-3">
-          {KELLAAJAD.map((aeg) => {
+          {kellaajaValikud.map((aeg) => {
             const onValitud = kellaajad.includes(aeg.vaartus);
             return (
               <button
@@ -217,7 +225,7 @@ export default function BroneeriVorm({
       {/* Sõnum */}
       <div>
         <label htmlFor="sonum" className={siltStiil}>
-          Mis sind praegu kõige rohkem puudutab?
+          {sonad.misPuudutab}
         </label>
         <textarea
           id="sonum"
@@ -225,7 +233,7 @@ export default function BroneeriVorm({
           rows={5}
           required
           className={`${valjaStiil} mt-3 resize-y`}
-          placeholder="Kirjuta julgelt oma sõnadega."
+          placeholder={sonad.sonumiVihje}
         />
       </div>
 
@@ -234,13 +242,13 @@ export default function BroneeriVorm({
         automaatne täitja täidab ära ja reedab end sellega.
       */}
       <div aria-hidden="true" className="absolute left-[-9999px]">
-        <label htmlFor="veebileht">Jäta see väli tühjaks</label>
+        <label htmlFor="veebileht">{sonad.peibutuseSilt}</label>
         <input id="veebileht" name="veebileht" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
       <div className="flex flex-wrap items-center gap-6">
         <Nupp type="submit" disabled={saadab} nool={!saadab}>
-          {saadab ? "Saadan …" : "Saada soov"}
+          {saadab ? sonad.saadab : sonad.saada}
         </Nupp>
       </div>
 
@@ -250,8 +258,7 @@ export default function BroneeriVorm({
           role="status"
           className="border-l-2 border-rohe bg-linen px-6 py-5 text-lg leading-relaxed text-ink"
         >
-          Aitäh — sinu soov on Martani jõudnud. Ta vastab ise ja võimalikult
-          kiiresti.
+          {sonad.aitah}
         </p>
       )}
       {seis && !seis.ok && (

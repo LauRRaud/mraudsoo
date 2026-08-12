@@ -1,20 +1,32 @@
 import Ilmub from "@/components/Ilmub";
 import { KATTE_VARV, Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
+import { keeleAlternatiivid, keeleks, tee } from "@/sisu/keeled";
 import { plokiStiil, tekstiKuju, tumePlokiStiil } from "@/sisu/tekstikujud";
 
-/* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
-export async function generateMetadata() {
-  const sisu = await laeSisu();
+/*
+  Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte
+  staatiline metadata. Pealkirjal on varuväärtus — silt võib olla tühjaks
+  jäetud.
+*/
+export async function generateMetadata({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  const { hero } = sisu.hinnakiriLeht;
 
   return {
-    title: sisu.hinnakiriLeht.hero.silt,
-    description: sisu.hinnakiriLeht.hero.tekst,
+    title: hero.silt || hero.pealkiri,
+    description: hero.tekst,
+    alternates: keeleAlternatiivid(kood, "/hinnakiri"),
   };
 }
 
-export default async function Hinnakiri() {
-  const sisu = await laeSisu();
+export default async function Hinnakiri({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  const t = (rada) => tee(kood, rada);
   const { hinnakiriLeht, hinnakiri, teekond } = sisu;
 
   /* Admin-lehelt antud üksikute tekstide kuju */
@@ -35,7 +47,7 @@ export default async function Hinnakiri() {
     <>
       <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="hinnakiri.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          <p className="sisene silt" style={v("hero.silt")}>
+          <p className="sisene silt silt-suur" style={v("hero.silt")}>
             {s("hero.silt", hinnakiriLeht.hero.silt)}
           </p>
           <h1
@@ -211,7 +223,7 @@ export default async function Hinnakiri() {
           </Tekst>
         </Ilmub>
         <Ilmub viive={180} className="mt-11">
-          <Nupp href="/broneerimine" nool>
+          <Nupp href={t("/broneerimine")} nool>
             {hinnakiriLeht.lopp.nuppTekst}
           </Nupp>
         </Ilmub>

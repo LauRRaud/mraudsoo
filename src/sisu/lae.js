@@ -1,29 +1,59 @@
 /*
   SISU LAADIJA.
 
-  Vaikimisi sisu (src/sisu/vaikimisi.js) määrab puu kuju. Admin-lehelt
-  salvestatud muudatused elavad failis data/sisu.json ja liidetakse vaikimisi
-  sisu peale. Kui faili pole, see on vigane VÕI kui selle kuju ei vasta
-  vaikimisi puule, jääb leht vaikimisi sisu peale püsti — viga ei visata.
+  Vaikimisi sisu (src/sisu/vaikimisi.js eesti, src/sisu/vaikimisiEn.js inglise)
+  määrab puu kuju. Admin-lehelt salvestatud muudatused elavad failis
+  data/sisu.<keel>.json ja liidetakse vaikimisi sisu peale. Kui faili pole, see
+  on vigane VÕI kui selle kuju ei vasta vaikimisi puule, jääb leht vaikimisi
+  sisu peale püsti — viga ei visata.
 
   Sama puhastus käib nii lugemisel kui kirjutamisel: puhasta() elab siin ja
   src/app/admin/tegevused.js impordib selle. Nii ei saa ka käsitsi serveris
-  redigeeritud data/sisu.json lehte maha võtta.
+  redigeeritud fail lehte maha võtta.
+
+  KAKS ASJA, MIS SIIN ERINEVAD ÜHEST KEELEST:
+
+  1. VANA FAIL. Enne kakskeelsust oli üksainus data/sisu.json ja serveris on
+     temas Marta muudatused. Kui data/sisu.et.json veel ei ole, loeb vaikekeel
+     vana faili — muidu kaoks tema sisu vaikselt ära. Esimene salvestus
+     kirjutab data/sisu.et.json-i ja vana fail jääb alles varukoopiaks.
+
+  2. TEKSTIKUJUD ON KEELTE PEALE ÜHISED ja elavad omaette failis
+     data/tekstikujud.json. Marta kujundab teksti korra ja mõlemad keeled
+     näevad ühtemoodi välja. Keelefaili sisse neid EI kirjutata; lugemisel
+     kirjutatakse ühine kaart alati puu peale.
 */
 
 import { connection } from "next/server";
 import { readFileSync } from "node:fs";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { vaikimisiSisu } from "./vaikimisi.js";
+import { vaikimisiSisu as vaikimisiEt } from "./vaikimisi.js";
+import { vaikimisiSisuEn as vaikimisiEn } from "./vaikimisiEn.js";
+import { VAIKEKEEL, keeleks } from "./keeled.js";
 import { TEKSTIKUJUDE_VOTI, puhastaTekstiKujud } from "./tekstikujud.js";
+import { ANDMEKAUST, tunnus } from "./lukk.js";
+import { varunda } from "./ajalugu.js";
 
-export { vaikimisiSisu };
+const PUUD = { et: vaikimisiEt, en: vaikimisiEn };
 
-/* data/sisu.json asub projekti juurkaustas, mitte src-i sees */
-const kaust = path.join(process.cwd(), "data");
-const failiTee = path.join(kaust, "sisu.json");
-const ajutineTee = `${failiTee}.tmp`;
+/* Vaikimisi puu keele järgi. Tundmatu keel annab vaikekeele. */
+export function vaikimisiSisu(keel) {
+  return PUUD[keeleks(keel)];
+}
+
+/* data-kaust asub projekti juurkaustas, mitte src-i sees */
+const kaust = ANDMEKAUST;
+
+function sisuTee(keel) {
+  return path.join(kaust, `sisu.${keeleks(keel)}.json`);
+}
+
+/* Enne kakskeelsust: üksainus fail, milles on Marta senised muudatused */
+const VANA_SISU_TEE = path.join(kaust, "sisu.json");
+
+/* Keelte peale ühine tekstikujude kaart */
+const KUJUDE_TEE = path.join(kaust, "tekstikujud.json");
 
 /* Prototüübi reostuse vastu: neid võtmeid me kunagi läbi ei lase */
 const KEELATUD_VOTMED = new Set(["__proto__", "constructor", "prototype"]);
@@ -224,19 +254,83 @@ function parsi(sisu) {
   }
 }
 
+/* Puuduv või vigane fail annab null, mitte viga */
+async function loeJson(tee) {
+  try {
+    return parsi(await readFile(tee, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function loeJsonSync(tee) {
+  try {
+    return parsi(readFileSync(tee, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+/*
+  Ühe keele salvestatud sisu. Vaikekeel loeb vajadusel VANA ühe faili — vt
+  faili päise punkt 1. Inglise pool varuteed ei vaja: teda ei ole kunagi
+  olnud, ja vana faili lugemine annaks talle eestikeelse sisu.
+*/
+async function loeSalvestatud(keel) {
+  const oma = await loeJson(sisuTee(keel));
+  if (oma) return oma;
+  return keeleks(keel) === VAIKEKEEL ? await loeJson(VANA_SISU_TEE) : null;
+}
+
+function loeSalvestatudSync(keel) {
+  const oma = loeJsonSync(sisuTee(keel));
+  if (oma) return oma;
+  return keeleks(keel) === VAIKEKEEL ? loeJsonSync(VANA_SISU_TEE) : null;
+}
+
+/*
+  Keelte peale ühine tekstikujude kaart. Enne lahutamist elasid kujud sisupuu
+  sees — kui ühist faili veel ei ole, loeme nad vanast kohast, et Marta senine
+  kujundus ei kaoks.
+*/
+async function loeKujud() {
+  const yhine = await loeJson(KUJUDE_TEE);
+  if (yhine) return yhine;
+
+  const vana =
+    (await loeJson(sisuTee(VAIKEKEEL))) ?? (await loeJson(VANA_SISU_TEE));
+  return vana?.[TEKSTIKUJUDE_VOTI] ?? null;
+}
+
+function loeKujudSync() {
+  const yhine = loeJsonSync(KUJUDE_TEE);
+  if (yhine) return yhine;
+
+  const vana = loeJsonSync(sisuTee(VAIKEKEEL)) ?? loeJsonSync(VANA_SISU_TEE);
+  return vana?.[TEKSTIKUJUDE_VOTI] ?? null;
+}
+
 /*
   Salvestatud sisu liidetakse vaikimisi puu peale ja valideeritakse.
   Kui puhastus mingil põhjusel ebaõnnestub (liiga sügav pesastus, lubamatu
   võti), tagastame terve vaikimisi puu — leht jääb püsti.
-*/
-function liidaJaPuhasta(salvestatud) {
-  if (!onObjekt(salvestatud)) return vaikimisiSisu;
 
-  try {
-    return puhasta(vaikimisiSisu, salvestatud);
-  } catch {
-    return vaikimisiSisu;
+  Tekstikujud tulevad ÜHISEST failist ja kirjutatakse alati puu peale, mis
+  keelefailist ka ei tuleks.
+*/
+function liidaJaPuhasta(salvestatud, keel, kujud) {
+  const vaikimisi = vaikimisiSisu(keel);
+
+  let sisu = vaikimisi;
+  if (onObjekt(salvestatud)) {
+    try {
+      sisu = puhasta(vaikimisi, salvestatud);
+    } catch {
+      sisu = vaikimisi;
+    }
   }
+
+  return { ...sisu, [TEKSTIKUJUDE_VOTI]: puhastaTekstiKujud(kujud ?? {}) };
 }
 
 /*
@@ -245,42 +339,84 @@ function liidaJaPuhasta(salvestatud) {
   ehitusaegsesse eelrenderdusse. Kasuta seda lehekomponentides ja
   generateMetadata's.
 */
-export async function laeSisu() {
+export async function laeSisu(keel) {
   await connection();
 
-  let salvestatud = null;
-  try {
-    salvestatud = parsi(await readFile(failiTee, "utf8"));
-  } catch {
-    salvestatud = null;
-  }
+  const kood = keeleks(keel);
+  const [salvestatud, kujud] = await Promise.all([
+    loeSalvestatud(kood),
+    loeKujud(),
+  ]);
 
-  return liidaJaPuhasta(salvestatud);
+  return liidaJaPuhasta(salvestatud, kood, kujud);
 }
 
 /*
   Sünkroonne variant ILMA connection()-ita.
   Kasuta AINULT generateStaticParams's, kus päringukonteksti veel ei ole.
 */
-export function laeSisuSync() {
-  let salvestatud = null;
-  try {
-    salvestatud = parsi(readFileSync(failiTee, "utf8"));
-  } catch {
-    salvestatud = null;
-  }
+export function laeSisuSync(keel) {
+  const kood = keeleks(keel);
+  return liidaJaPuhasta(loeSalvestatudSync(kood), kood, loeKujudSync());
+}
 
-  return liidaJaPuhasta(salvestatud);
+/* Aatomiline kirjutus: esmalt .tmp, siis rename — poolikut faili ei jää */
+async function kirjuta(tee, sisu) {
+  const ajutine = `${tee}.tmp`;
+  await writeFile(ajutine, `${JSON.stringify(sisu, null, 2)}\n`, "utf8");
+  await rename(ajutine, tee);
 }
 
 /*
-  Kirjutab kogu sisupuu faili data/sisu.json.
-  Aatomiliselt: esmalt .tmp fail, siis rename — nii ei jää poolikut faili,
-  kui kirjutamine katkeb.
+  LUKU FAILID.
+
+  Sisu salvestus puudutab KAHTE faili: keelefaili ja ühist tekstikujude faili.
+  Vaikekeele juures loeme luku alla ka vana ühe faili — kuni ta serveris veel
+  on, on ta osa sellest, mida laadimine tegelikult luges.
+
+  Järjekord peab jääma samaks, muidu ei klapi tunnused iseendaga.
 */
-export async function salvestaSisu(uusSisu) {
+export function sisuFailid(keel) {
+  const kood = keeleks(keel);
+  return kood === VAIKEKEEL
+    ? [sisuTee(kood), VANA_SISU_TEE, KUJUDE_TEE]
+    : [sisuTee(kood), KUJUDE_TEE];
+}
+
+/* Tunnus, mille admin laadimisel kaasa saab ja salvestusel tagasi saadab */
+export function sisuTunnus(keel) {
+  return tunnus(sisuFailid(keel));
+}
+
+/*
+  Ainult ühe keele tekstid. Varukoopia tehakse ENNE ülekirjutamist, seega
+  koopiasse jääb eelmine seis.
+*/
+export async function salvestaTekstid(keel, tekstid) {
+  const tee = sisuTee(keel);
   await mkdir(kaust, { recursive: true });
-  await writeFile(ajutineTee, `${JSON.stringify(uusSisu, null, 2)}\n`, "utf8");
-  await rename(ajutineTee, failiTee);
+  await varunda(tee);
+  await kirjuta(tee, tekstid);
+}
+
+/* Ainult keelte peale ühine tekstikujude kaart */
+export async function salvestaKujud(kujud) {
+  await mkdir(kaust, { recursive: true });
+  await varunda(KUJUDE_TEE);
+  await kirjuta(KUJUDE_TEE, puhastaTekstiKujud(kujud));
+}
+
+/*
+  Kirjutab ühe keele sisupuu faili data/sisu.<keel>.json.
+
+  Tekstikujud lahutatakse välja ja lähevad ühisesse faili — vt faili päise
+  punkt 2. Keelefaili nad ei jõua, muidu tekiks kaks lahkuminevat kaarti.
+*/
+export async function salvestaSisu(keel, uusSisu) {
+  const { [TEKSTIKUJUDE_VOTI]: kujud, ...tekstid } = uusSisu;
+
+  await salvestaTekstid(keel, tekstid);
+  await salvestaKujud(kujud);
+
   return uusSisu;
 }

@@ -10,15 +10,26 @@ import {
   Tekst,
 } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
+import { keeleAlternatiivid, keeleks, tee } from "@/sisu/keeled";
 import { plokiStiil, tekstiKuju, tumePlokiStiil } from "@/sisu/tekstikujud";
 
-/* Metaandmed tulevad samast sisupuust, mis leht ise */
-export async function generateMetadata() {
-  const sisu = await laeSisu();
+/*
+  Metaandmed tulevad samast sisupuust, mis leht ise.
+
+  Pealkirjal on VARUVÄÄRTUS: Marta on „Minust” sildi admin-lehel tühjaks
+  jätnud ja siis jäi brauseri tiitel tühjaks. Silt on kujunduselement, mille
+  võib ära võtta — pealkiri on lehel alati.
+*/
+export async function generateMetadata({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  const { hero } = sisu.minust;
 
   return {
-    title: sisu.minust.hero.silt,
-    description: sisu.minust.hero.tekst,
+    title: hero.silt || hero.pealkiri,
+    description: hero.tekst,
+    alternates: keeleAlternatiivid(kood, "/minust"),
   };
 }
 
@@ -29,11 +40,15 @@ export async function generateMetadata() {
   (lehe kõige isiklikum osa metsarohelisel) → salmid loo juurde → annid →
   foto ja tsitaat → terviklikkus → lõpetus.
 */
-export default async function Minust() {
-  const sisu = await laeSisu();
+export default async function Minust({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  const t = (rada) => tee(kood, rada);
   const {
     hero,
     lugu,
+    tolgendus,
     kirjakoht,
     pooordumine,
     annid,
@@ -62,7 +77,7 @@ export default async function Minust() {
       >
         <div className="mx-auto grid max-w-[1400px] items-start gap-14 px-6 pb-16 pt-10 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
           <div className="lg:pt-14">
-            <p className="sisene silt" style={v("hero.silt")}>
+            <p className="sisene silt silt-suur" style={v("hero.silt")}>
               {s("hero.silt", hero.silt)}
             </p>
             <h1
@@ -82,7 +97,7 @@ export default async function Minust() {
             </div>
             <div className="sisene" style={{ "--viive": "400ms" }}>
               {/* Sõnastus on loo sektsiooni enda silt (lugu.silt) */}
-              <NooleLink href="#lugu" className="mt-10">
+              <NooleLink href="#lugu" className="mt-6">
                 {lugu.silt}
               </NooleLink>
             </div>
@@ -146,6 +161,14 @@ export default async function Minust() {
             viide={kirjakoht.viide}
             tekst={kirjakoht.tekst}
             selgitus={kirjakoht.selgitus}
+            /*
+              Tõlgendus avaneb klõpsust (vt Salm). Sildid tulevad sisupuust,
+              aga ILMA tekstikujuta: nad on avaja, mitte Marta tekst, ja
+              KUJUNDATAVAD registris neid ei ole.
+            */
+            selgitusPeidus
+            avaSilt={tolgendus.ava}
+            peidaSilt={tolgendus.peida}
             viiteStiil={v("kirjakoht.viide")}
             stiil={v("kirjakoht.tekst")}
             selgituseStiil={v("kirjakoht.selgitus")}
@@ -222,6 +245,9 @@ export default async function Minust() {
                 viide={koht.viide}
                 tekst={koht.tekst}
                 selgitus={koht.selgitus}
+                selgitusPeidus
+                avaSilt={tolgendus.ava}
+                peidaSilt={tolgendus.peida}
                 viiteStiil={v(`pooordumine.kirjakohad.${jrk}.viide`)}
                 stiil={v(`pooordumine.kirjakohad.${jrk}.tekst`)}
                 selgituseStiil={v(`pooordumine.kirjakohad.${jrk}.selgitus`)}
@@ -366,7 +392,7 @@ export default async function Minust() {
           </blockquote>
         </Ilmub>
         <Ilmub viive={180} className="mt-12">
-          <Nupp href="/broneerimine" nool>
+          <Nupp href={t("/broneerimine")} nool>
             {lopp.nuppTekst}
           </Nupp>
         </Ilmub>

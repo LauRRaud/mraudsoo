@@ -11,19 +11,36 @@ import {
   Tekst,
 } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
+import { keeleAlternatiivid, keeleks, tee } from "@/sisu/keeled";
 import { plokiStiil, tekstiKuju, tumePlokiStiil } from "@/sisu/tekstikujud";
 
 /*
   AVALEHT.
 
-  Kogu tekst tuleb sisupuust (src/sisu/vaikimisi.js + data/sisu.json).
+  Kogu tekst tuleb sisupuust (src/sisu/vaikimisi.js või vaikimisiEn.js +
+  data/sisu.<keel>.json).
   Taustade kaar: bone → linen → METS (tume) → bone → sage → linen → bone →
   sage, nii et kaks kõrvutist sektsiooni ei ole kunagi sama pinnaga ja lehe
   keskel seisab üks sügav tume hetk (liikumine). Heledaid pindu on kolm —
   vt src/kujundus/vaikimisi.js.
 */
-export default async function Avaleht() {
-  const sisu = await laeSisu();
+
+/*
+  Pealkirja siin ei ole — avaleht kannab juurpaigutuse oma. Küll on vaja
+  hreflang-paari: ilma selleta ei tea otsingumootor, et / ja /en on sama leht
+  kahes keeles.
+*/
+export async function generateMetadata({ params }) {
+  const { keel } = await params;
+  return { alternates: keeleAlternatiivid(keeleks(keel), "/") };
+}
+
+export default async function Avaleht({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  /* Sisemine aadress õiges keeles: /broneerimine või /en/broneerimine */
+  const t = (rada) => tee(kood, rada);
   const {
     hero,
     kutsumus,
@@ -53,7 +70,7 @@ export default async function Avaleht() {
       >
         <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 pb-16 pt-10 sm:pt-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
           <div>
-            <p className="sisene silt" style={v("hero.silt")}>
+            <p className="sisene silt silt-suur" style={v("hero.silt")}>
               {s("hero.silt", hero.silt)}
             </p>
             <h1
@@ -84,10 +101,10 @@ export default async function Avaleht() {
               className="sisene mt-10 flex flex-wrap gap-4"
               style={{ "--viive": "460ms" }}
             >
-              <Nupp href="/broneerimine" nool>
+              <Nupp href={t("/broneerimine")} nool>
                 {hero.nuppEsmane}
               </Nupp>
-              <Nupp href="/teenused" variant="aaris">
+              <Nupp href={t("/teenused")} variant="aaris">
                 {hero.nuppTeine}
               </Nupp>
             </div>
@@ -318,7 +335,7 @@ export default async function Avaleht() {
           >
             {teenusedPlokk.pealkiri}
           </Pealkiri>
-          <NooleLink href="/teenused">{teenusedPlokk.linkTekst}</NooleLink>
+          <NooleLink href={t("/teenused")}>{teenusedPlokk.linkTekst}</NooleLink>
         </Ilmub>
 
         {/*
@@ -333,7 +350,10 @@ export default async function Avaleht() {
         >
           {sisu.teenused.map((teenus, jrk) => (
             <li key={teenus.slug}>
-              <Link href={`/teenused/${teenus.slug}`} className="group block">
+              <Link
+                href={t(`/teenused/${teenus.slug}`)}
+                className="group block"
+              >
                 {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
                 <h3
                   className="kuva text-[clamp(1.9rem,6vw,2.15rem)] text-[var(--oma-varv,var(--color-ink))] transition-colors duration-300 group-hover:text-gold-deep"
@@ -407,7 +427,9 @@ export default async function Avaleht() {
               ))}
             </Ilmub>
             <Ilmub viive={200}>
-              <NooleLink href="/minust" className="mt-10">
+              {/* mt-6, mitte mt-10: link kuulub ülemise teksti juurde ja
+                  40 px jättis ta omaette hõljuma */}
+              <NooleLink href={t("/minust")} className="mt-6">
                 {minustPlokk.linkTekst}
               </NooleLink>
             </Ilmub>
@@ -439,7 +461,7 @@ export default async function Avaleht() {
           <Nupp href="/broneerimine" nool>
             {kutse.nuppEsmane}
           </Nupp>
-          <Nupp href="/hinnakiri" variant="aaris">
+          <Nupp href={t("/hinnakiri")} variant="aaris">
             {kutse.nuppTeine}
           </Nupp>
         </Ilmub>

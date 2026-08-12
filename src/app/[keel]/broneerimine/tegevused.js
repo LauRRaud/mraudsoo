@@ -13,6 +13,8 @@
 
 import { lisaBroneering, saadaTeavitus } from "@/broneering/salvesta";
 import { laeSisu } from "@/sisu/lae";
+import { VAIKEKEEL, keeleks } from "@/sisu/keeled";
+import { liides } from "@/sisu/liides";
 
 /* Kuni 5 saatmist 10 minuti jooksul (protsessi kohta) */
 const PIIR = 5;
@@ -41,7 +43,15 @@ function onEpost(vaartus) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(vaartus);
 }
 
+/*
+  Keel tuleb kaasa vormist, et veateade oleks samas keeles, mida külastaja
+  loeb. Tundmatu väärtus annab vaikekeele — see on AVALIK otspunkt ja siia
+  võib tulla mida iganes.
+*/
 export async function saadaBroneering(andmed) {
+  const keel = keeleks(andmed?.keel);
+  const sonad = liides(keel);
+
   const peibutus = tekst(andmed?.veebileht, 100);
   if (peibutus) {
     /* Bot täitis peidetud välja. Vaikselt „õnnestus", et ta ei õpiks. */
@@ -49,25 +59,24 @@ export async function saadaBroneering(andmed) {
   }
 
   if (!piirajaLubab()) {
-    return {
-      ok: false,
-      viga: "Liiga palju saatmisi järjest. Proovi mõne minuti pärast uuesti.",
-    };
+    return { ok: false, viga: sonad.liigaPaljuSaatmisi };
   }
 
   const nimi = tekst(andmed?.nimi, 120);
   const epost = tekst(andmed?.epost, 200);
   const sonum = tekst(andmed?.sonum, 5000);
 
-  if (!nimi) return { ok: false, viga: "Palun sisesta oma nimi." };
-  if (!onEpost(epost)) return { ok: false, viga: "Palun kontrolli e-posti aadressi." };
-  if (!sonum) return { ok: false, viga: "Palun kirjuta paar sõna endast." };
+  if (!nimi) return { ok: false, viga: sonad.sisestaNimi };
+  if (!onEpost(epost)) return { ok: false, viga: sonad.kontrolliEposti };
+  if (!sonum) return { ok: false, viga: sonad.kirjutaPaarSona };
 
   const kirje = {
     /* Ajatempel annab nii id kui järjestuse */
     id: `${Date.now()}-${saatmised.length}`,
     saabus: new Date().toISOString(),
     loetud: false,
+    /* Mis keeles külastaja kirjutas — Marta näeb seda admin-lehel */
+    keel,
     nimi,
     epost,
     telefon: tekst(andmed?.telefon, 60),
@@ -83,16 +92,16 @@ export async function saadaBroneering(andmed) {
   try {
     await lisaBroneering(kirje);
   } catch {
-    return {
-      ok: false,
-      viga: "Salvestamine ebaõnnestus. Palun kirjuta otse e-posti teel.",
-    };
+    return { ok: false, viga: sonad.salvestamineEbaonnestus };
   }
 
   /* 2. Proovime saata. Ebaõnnestumine ei tohi külastajale viga näidata —
-        soov on juba salvestatud ja Marta näeb seda admin-lehel. */
+        soov on juba salvestatud ja Marta näeb seda admin-lehel.
+
+        E-posti aadress on mõlemas keeles sama, seepärast piisab vaikekeelest —
+        Marta postkast ei sõltu sellest, mis keeles külastaja kirjutas. */
   try {
-    const { kontakt } = await laeSisu();
+    const { kontakt } = await laeSisu(VAIKEKEEL);
     await saadaTeavitus(kirje, kontakt?.email);
   } catch {
     /* Vaikime tahtlikult: vt kommentaar ülal */

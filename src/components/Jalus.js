@@ -1,18 +1,22 @@
 import Link from "next/link";
+import { tee as keeleTee } from "@/sisu/keeled";
+import { liides } from "@/sisu/liides";
 
 /*
   Jalus on serverikomponent, aga ei loe sisu ise — kõik tuleb propsidena
-  juurpaigutusest (src/app/layout.js), et allikas oleks üks.
+  juurpaigutusest (src/app/[keel]/layout.js), et allikas oleks üks.
 
   Jalus on lehe kõige tumedam pind (metsSyva) — iga leht lõpeb sama
   vaikse, sügava akordiga.
 */
 export default function Jalus({
+  keel = "et",
   navi = [],
   kontakt = {},
   saidiNimi = "Marta Raudsoo",
   tutvustus = "",
 }) {
+  const sonad = liides(keel);
   /* Täisheledad lingid — jalus peab olema loetav, mitte vaid aimatav */
   const link =
     "text-lg text-luu transition-colors duration-300 hover:text-kuld-hele";
@@ -39,11 +43,14 @@ export default function Jalus({
           </div>
 
           {/* Menüü ei vaja silti — lingid kõnelevad ise */}
-          <nav aria-label="Jaluse menüü" className="md:pt-3">
+          <nav aria-label={sonad.jaluseMenyy} className="md:pt-3">
             <ul className="space-y-4">
               {navi.map((punkt) => (
                 <li key={punkt.tee}>
-                  <Link href={punkt.tee} className={`alajoon ${link}`}>
+                  <Link
+                    href={keeleTee(keel, punkt.tee)}
+                    className={`alajoon ${link}`}
+                  >
                     {punkt.nimi}
                   </Link>
                 </li>
@@ -52,7 +59,7 @@ export default function Jalus({
           </nav>
 
           <div className="md:pt-3">
-            <p className="silt silt-tume">Kontakt</p>
+            <p className="silt silt-tume">{sonad.kontakt}</p>
             <ul className="mt-6 space-y-4">
               {kontakt.email && (
                 <li>

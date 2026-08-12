@@ -2,21 +2,32 @@ import { KATTE_VARV, Salm, Sektsioon, Tekst } from "@/components/ui";
 import BroneeriVorm from "@/components/BroneeriVorm";
 import Ilmub from "@/components/Ilmub";
 import { laeSisu } from "@/sisu/lae";
+import { keeleAlternatiivid, keeleks } from "@/sisu/keeled";
 import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 import { laeKalender } from "@/broneering/kalender";
 
-/* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
-export async function generateMetadata() {
-  const sisu = await laeSisu();
+/*
+  Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte
+  staatiline metadata. Pealkirjal on varuväärtus — silt võib olla tühjaks
+  jäetud.
+*/
+export async function generateMetadata({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  const { hero } = sisu.broneerimine;
 
   return {
-    title: sisu.broneerimine.hero.silt,
-    description: sisu.broneerimine.hero.tekst,
+    title: hero.silt || hero.pealkiri,
+    description: hero.tekst,
+    alternates: keeleAlternatiivid(kood, "/broneerimine"),
   };
 }
 
-export default async function Broneerimine() {
-  const sisu = await laeSisu();
+export default async function Broneerimine({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
   const kalender = await laeKalender();
   const { broneerimine, kontakt, teenused, teekond } = sisu;
 
@@ -28,7 +39,7 @@ export default async function Broneerimine() {
     <>
       <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="broneerimine.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          <p className="sisene silt" style={v("hero.silt")}>
+          <p className="sisene silt silt-suur" style={v("hero.silt")}>
             {s("hero.silt", broneerimine.hero.silt)}
           </p>
           <h1
@@ -61,6 +72,7 @@ export default async function Broneerimine() {
             </p>
             <div className="mt-10">
               <BroneeriVorm
+                keel={kood}
                 email={kontakt.email}
                 teenused={teenused}
                 teekonnaNimi={teekond.nimi}

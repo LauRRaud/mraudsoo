@@ -39,7 +39,7 @@ function teeVoti(aasta, kuu, paev) {
   nädalapäevi. Salvestamine on selgesõnaline nupp, mitte automaatne — nii ei
   teki tunnet, et kogemata klõps läks kohe elama.
 */
-export default function KalendriHaldus({ algseis }) {
+export default function KalendriHaldus({ algseis, algtunnus }) {
   const tana = useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -54,6 +54,8 @@ export default function KalendriHaldus({ algseis }) {
   const [kuu, setKuu] = useState(tana.getMonth());
   const [salvestab, alustaSalvestamist] = useTransition();
   const [teade, setTeade] = useState(null);
+  /* Faili tunnus lehe avamise hetkest — vt src/sisu/lukk.js */
+  const [tunnus, setTunnus] = useState(algtunnus);
 
   /* Muudatused, mida ei ole veel salvestatud */
   const muutunud =
@@ -88,10 +90,20 @@ export default function KalendriHaldus({ algseis }) {
 
   function salvesta() {
     alustaSalvestamist(async () => {
-      const vastus = await salvestaKalendriTegevus({
-        suletudPaevad: paevad,
-        suletudNadalapaevad: nadalapaevad,
-      });
+      const vastus = await salvestaKalendriTegevus(
+        {
+          suletudPaevad: paevad,
+          suletudNadalapaevad: nadalapaevad,
+        },
+        tunnus,
+      );
+
+      /*
+        Konflikti korral EI puutu me valikuid: Marta märgitud päevad jäävad
+        ekraanile alles ja ta saab need pärast uuesti laadimist uuesti teha.
+      */
+      if (vastus.ok && vastus.tunnus) setTunnus(vastus.tunnus);
+
       setTeade(
         vastus.ok
           ? { ok: true, tekst: "Salvestatud." }

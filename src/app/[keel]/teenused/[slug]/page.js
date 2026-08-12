@@ -3,6 +3,12 @@ import { notFound } from "next/navigation";
 import Ilmub from "@/components/Ilmub";
 import { Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu, laeSisuSync } from "@/sisu/lae";
+import {
+  KEELEKOODID,
+  keeleAlternatiivid,
+  keeleks,
+  tee,
+} from "@/sisu/keeled";
 import { plokiStiil, tekstiKuju, tumePlokiStiil } from "@/sisu/tekstikujud";
 
 /* Teenuse otsimine slugi järgi — massiiv võib admini kaudu olla asendatud */
@@ -51,17 +57,23 @@ function kirjakohaOsad(plokk) {
 /*
   Ehitusaegsed teed. Siin EI tohi kasutada laeSisu()-t: selle sees olev
   connection() ootab päringukonteksti, mida ehituse ajal veel ei ole.
+
+  Ülemine segment [keel] oma generateStaticParams'i ei anna, seega tuleb
+  siit tagastada MÕLEMA parameetri paarid. Slugid on keeltes samad, aga
+  loeme mõlemad puud üle: admin võib teenuse ühes keeles ümber nimetada.
 */
 export function generateStaticParams() {
-  const sisu = laeSisuSync();
-  const teenused = Array.isArray(sisu.teenused) ? sisu.teenused : [];
-
-  return teenused.map((teenus) => ({ slug: teenus.slug }));
+  return KEELEKOODID.flatMap((keel) => {
+    const sisu = laeSisuSync(keel);
+    const teenused = Array.isArray(sisu.teenused) ? sisu.teenused : [];
+    return teenused.map((teenus) => ({ keel, slug: teenus.slug }));
+  });
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
-  const sisu = await laeSisu();
+  const { keel, slug } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
   const teenused = Array.isArray(sisu.teenused) ? sisu.teenused : [];
   const teenus = leiaTeenus(teenused, slug);
 
@@ -70,12 +82,15 @@ export async function generateMetadata({ params }) {
   return {
     title: teenus.nimi,
     description: teenus.luhike,
+    alternates: keeleAlternatiivid(kood, `/teenused/${slug}`),
   };
 }
 
 export default async function TeenuseLeht({ params }) {
-  const { slug } = await params;
-  const sisu = await laeSisu();
+  const { keel, slug } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  const t = (rada) => tee(kood, rada);
   const teenused = Array.isArray(sisu.teenused) ? sisu.teenused : [];
   const teenus = leiaTeenus(teenused, slug);
 
@@ -175,7 +190,7 @@ export default async function TeenuseLeht({ params }) {
       */}
       <Sektsioon taust="metsSyva" polsterdus="ohuke" taustaVoti="teenuseLeht.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          <p className="sisene silt silt-tume" style={vp("hero.silt")}>
+          <p className="sisene silt silt-suur silt-tume" style={vp("hero.silt")}>
             {sp("hero.silt", teenus.alapealkiri)}
           </p>
           <h1
@@ -373,10 +388,10 @@ export default async function TeenuseLeht({ params }) {
               {kutseTekst}
             </Tekst>
             <div className="mt-10 flex flex-wrap gap-4">
-              <Nupp href="/broneerimine" nool>
+              <Nupp href={t("/broneerimine")} nool>
                 {nuppEsmane}
               </Nupp>
-              <Nupp href="/hinnakiri" variant="aaris">
+              <Nupp href={t("/hinnakiri")} variant="aaris">
                 {nuppTeine}
               </Nupp>
             </div>
@@ -389,7 +404,7 @@ export default async function TeenuseLeht({ params }) {
             >
               <p className="silt">{jargmineSilt}</p>
               <Link
-                href={`/teenused/${jargmine.slug}`}
+                href={t(`/teenused/${jargmine.slug}`)}
                 className="group mt-6 block"
               >
                 {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}

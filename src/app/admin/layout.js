@@ -1,13 +1,26 @@
 import Link from "next/link";
+import "../globals.css";
 import { kasSisseLoginud, onParoolSeatud } from "@/admin/turve";
 import { Sisselogimisvorm } from "@/components/AdminToimeti";
+import { koikFondiKlassid } from "@/kujundus/fondid";
+import { kujundusCss, laeKujundus } from "@/kujundus/lae";
 import { loguValjaTegevus } from "./tegevused";
 
 /*
-  ADMIN — PAIGUTUS JA KAITSE.
+  ADMIN — JUURPAIGUTUS JA KAITSE.
 
-  Serverikomponent: sessioon kontrollitakse ära enne, kui admin-sisu üldse
-  renderdatakse.
+  MIKS SEE ON JUURPAIGUTUS (<html> ja <body> siin):
+  avaliku lehe juurpaigutus elab src/app/[keel]/layout.js all, sest <html lang>
+  sõltub keelest. Kaks juurpaigutust tähendab, et admin peab oma <html>-i ise
+  tegema — kolmandat kohta, mis mõlemat kataks, ei ole. Admin on ainult eesti
+  keeles, seega lang="et" on siin kõva väärtus.
+
+  Mis sellega muutus: admini kohal ei ole enam avaliku lehe päist ega jalust.
+  Nende asemel on päises link „Vaata lehte”. Varem tulid nad juurpaigutusest
+  kaasa ja seisid admini oma riba kohal.
+
+  Ilmumisanimatsioonide skripti (html.js) siin EI OLE — admin ei kasuta
+  ühtki `.ilmub` elementi ja ilma klassita on kõik kohe nähtav.
 
   MIKS ME EI SUUNA redirect("/admin/login") PEALE:
   see paigutus katab kogu /admin/* haru, sealhulgas /admin/login. Kui me siit
@@ -32,19 +45,48 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
+const ADMINI_MENYY = [
+  { tee: "/admin", nimi: "Sisu" },
+  { tee: "/admin/broneeringud", nimi: "Broneeringud" },
+  { tee: "/admin/kalender", nimi: "Kalender" },
+  { tee: "/admin/kujundus", nimi: "Kujundus" },
+  { tee: "/admin/varukoopiad", nimi: "Varukoopiad" },
+];
+
+/*
+  Ümbris, mis annab <html>-i ja <body> — sama nii lukus kui avatud admini all.
+
+  Linen-pind on ümbrisel, mitte <body>-l: globals.css annab body'le bone-tausta
+  ja utiliidiklass sellest siin üle ei kirjuta. Sama kuju oli ka varem, kui
+  admin elas veel avaliku lehe juurpaigutuses.
+*/
+function AdminiRaam({ kujundus, children }) {
+  return (
+    <html lang="et" className={`${koikFondiKlassid} h-full antialiased`}>
+      <head>
+        <style>{kujundusCss(kujundus)}</style>
+      </head>
+      <body className="flex min-h-full flex-col">
+        <div className="flex-1 bg-linen">{children}</div>
+      </body>
+    </html>
+  );
+}
+
 export default async function AdminPaigutus({ children }) {
+  const kujundus = await laeKujundus();
   const sees = await kasSisseLoginud();
 
   if (!sees) {
     return (
-      <div className="bg-linen">
+      <AdminiRaam kujundus={kujundus}>
         <Sisselogimisvorm lukus={!onParoolSeatud()} />
-      </div>
+      </AdminiRaam>
     );
   }
 
   return (
-    <div className="bg-linen">
+    <AdminiRaam kujundus={kujundus}>
       <div className="mx-auto w-full max-w-[1360px] px-6 pt-10 lg:px-10">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-sage pb-4">
           <p className="nimi text-xl text-ink">Marta Raudsoo · sisuhaldus</p>
@@ -52,12 +94,7 @@ export default async function AdminPaigutus({ children }) {
           <div className="flex flex-wrap items-center gap-6">
             <nav aria-label="Sisuhalduse menüü">
               <ul className="flex flex-wrap items-center gap-5">
-                {[
-                  { tee: "/admin", nimi: "Sisu" },
-                  { tee: "/admin/broneeringud", nimi: "Broneeringud" },
-                  { tee: "/admin/kalender", nimi: "Kalender" },
-                  { tee: "/admin/kujundus", nimi: "Kujundus" },
-                ].map((punkt) => (
+                {ADMINI_MENYY.map((punkt) => (
                   <li key={punkt.tee}>
                     <Link
                       href={punkt.tee}
@@ -67,6 +104,18 @@ export default async function AdminPaigutus({ children }) {
                     </Link>
                   </li>
                 ))}
+                {/*
+                  Avalik leht on nüüd oma juurpaigutuses, seega tema päis siia
+                  ei ulatu — link asendab selle.
+                */}
+                <li>
+                  <Link
+                    href="/"
+                    className="mikro text-[0.7rem] text-ink-faint transition-colors hover:text-rohe"
+                  >
+                    Vaata lehte ↗
+                  </Link>
+                </li>
               </ul>
             </nav>
 
@@ -84,6 +133,6 @@ export default async function AdminPaigutus({ children }) {
       </div>
 
       {children}
-    </div>
+    </AdminiRaam>
   );
 }

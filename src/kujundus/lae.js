@@ -12,9 +12,20 @@ import { connection } from "next/server";
 import { vaikimisiKujundus } from "./vaikimisi";
 import { leiaKuvaFont, leiaTekstiFont } from "./fondid";
 import { ASETUSED, onTaustaVoti } from "./sektsioonid";
+import { ANDMEKAUST, tunnus } from "@/sisu/lukk";
+import { varunda } from "@/sisu/ajalugu";
 
-const kaust = path.join(process.cwd(), "data");
+const kaust = ANDMEKAUST;
 const failiTee = path.join(kaust, "kujundus.json");
+
+/* Luku failid ja tunnus — sama muster mis sisul, vt src/sisu/lukk.js */
+export function kujunduseFailid() {
+  return [failiTee];
+}
+
+export function kujunduseTunnus() {
+  return tunnus(kujunduseFailid());
+}
 
 /* #rgb või #rrggbb — muud ei lubata CSS-i sisse */
 function onVarv(vaartus) {
@@ -30,17 +41,27 @@ function onVarv(vaartus) {
 const PILDI_NIMI = /^[a-z0-9][a-z0-9-]{0,63}\.(jpg|png|webp)$/;
 
 /*
-  VANA VAIKEPALETI ÜHEKORDNE ÜLEMINEK.
+  VANA PALETI ÜHEKORDNE ÜLEMINEK.
 
-  Kujundusfailis on ka vaikimisi värvid päriselt väärtustena kirjas. Ilma
-  üleminekuta jääks vana süsteemi salvestanud leht igavesti vana paleti peale,
-  kuigi koodis on uus vaikepalett. Muudame ainult väärtuse, mis on täpselt vana
-  süsteemi vaikevärv; Marta enda erinev käsitsi valitud toon jääb puutumata.
+  Kujundusfailis on KÕIK värvid päriselt väärtustena kirjas — ka need, mida
+  keegi ei ole puutunud, sest puhastus kirjutab iga võtme välja. Seetõttu võidab
+  salvestatud fail koodi vaikeväärtuse ALATI ja koodipoolne paletivahetus jääb
+  lehel nähtamatuks, kuni keegi läheb admin-lehele „Lähtesta” vajutama. Just nii
+  jäi hall lehepõhi ekraanile ka siis, kui koodis oli ammu luuvalge.
+
+  Siin loetletud väärtus tähendab „see toon on maha kantud”: kui failis seisab
+  täpselt see, võtab leht uue vaikevärvi. Kõik muu jääb puutumata, seega Marta
+  enda valitud toon püsib.
+
+  HELEDATE PINDADE RIDA (august 2026): maha kantud on nii vanad vaikeväärtused
+  kui ka käsitsi valitud hall lehepõhi #f4f3f0. See hall tegi kaks viga korraga
+  — lehepõhi luges hallina ja rõhupaneel jäi seisma kahe ERINEVA tooni vahele,
+  sest linen jäi samal ajal soojaks. Bone ja linen peavad olema sama toon.
 */
 const EELMISED_VAIKEVARVID = {
-  bone: ["#fdfcf9"],
-  linen: ["#f7f5ef", "#f3eee3"],
-  sage: ["#e4e3d7", "#dce5dc"],
+  bone: ["#fdfcf9", "#fbf8f1", "#f4f3f0"],
+  linen: ["#f7f5ef", "#f3eee3", "#fbf8f1"],
+  sage: ["#e4e3d7", "#dce5dc", "#f0eadf"],
   rohe: ["#4a5a46"],
   roheHele: ["#5c6e57"],
   mets: ["#46543f"],
@@ -54,6 +75,35 @@ function puhastaVarv(votme, antud, vaikeVaartus) {
   if (eelmised.includes(antud.toLowerCase())) return vaikeVaartus;
 
   return antud;
+}
+
+/*
+  MAHA KANTUD VAIKESUURUSED — sama lugu, mis värvidega ülal.
+
+  Salvestatud fail sisaldab KÕIKI nelja suurust, ka neid, mida keegi ei ole
+  liigutanud. Seega koodipoolne vaikemõõdu muutmine ei jõua ekraanile kunagi:
+  fail seisab alati ees.
+
+  SILDID (august 2026): 16 px oli sektsioonisiltide algne mõõt. Suurtähtedes,
+  hõreda tähevahega ja kuldsena kadus silt selles mõõdus tühja sektsiooni
+  kohal lihtsalt ära — kõige selgemini üksik sõna („VÄÄRTUS”, „KONTAKT”,
+  „KUTSUMUS”). Uus mõõt on 24 px ja teine pool parandusest on kaal 600
+  (globals.css) — peenike kuldne silt vajab mõlemat.
+
+  AINULT LAUAARVUTI KOMPLEKT. Telefoni väärtus puudub vanas failis niikuinii
+  ja võtab varuväärtusena juba parandatud lauaarvuti mõõdu. Kui keegi seab
+  hiljem telefonile teadlikult 16 px, peab see püsima — seepärast siin
+  ülekirjutust ei ole.
+*/
+const EELMISED_VAIKESUURUSED = {
+  silt: [16],
+};
+
+function puhastaSuurus(votme, antud, vaikeVaartus) {
+  const mahaKantud = EELMISED_VAIKESUURUSED[votme] ?? [];
+  if (mahaKantud.includes(Number(antud))) return vaikeVaartus;
+
+  return arv(antud, 10, 48, vaikeVaartus);
 }
 
 export function onPildiNimi(vaartus) {
@@ -82,7 +132,20 @@ export function puhastaKujundus(salvestatud) {
 
   const suurused = {};
   for (const [votme, vaikeVaartus] of Object.entries(alus.suurused)) {
-    suurused[votme] = arv(s.suurused?.[votme], 10, 48, vaikeVaartus);
+    suurused[votme] = puhastaSuurus(votme, s.suurused?.[votme], vaikeVaartus);
+  }
+
+  /*
+    MOBIILISUURUSE VARUVÄÄRTUS ON PUHASTATUD LAUAARVUTI OMA, MITTE KOODI VAIKE.
+
+    Salvestatud kujundusfail on kirjutatud enne selle võtme sündi, seega
+    mobiiliväärtusi seal ei ole ühtegi. Koodi vaikega (18 px) langeks käsitsi
+    seatud 22 px põhitekst telefonis vaikselt 18 peale — muudatus, mida keegi
+    ei palunud. Lauaarvuti väärtusega ei muutu vana faili puhul mitte midagi.
+  */
+  const suurusedMobiil = {};
+  for (const votme of Object.keys(alus.suurusedMobiil)) {
+    suurusedMobiil[votme] = arv(s.suurusedMobiil?.[votme], 10, 48, suurused[votme]);
   }
 
   const tahevahed = {};
@@ -98,6 +161,7 @@ export function puhastaKujundus(salvestatud) {
     },
     varvid,
     suurused,
+    suurusedMobiil,
     tahevahed,
     taustad: puhastaTaustad(s.taustad),
   };
@@ -140,6 +204,16 @@ function sidekriipsuga(votme) {
   return votme.replace(/[A-Z]/g, (t) => `-${t.toLowerCase()}`);
 }
 
+/* px -> rem, et suurused austaksid brauseri kirjasuuruse seadet */
+function suuruseRead(suurused) {
+  return [
+    `--silt-suurus:${suurused.silt / 16}rem`,
+    `--mikro-suurus:${suurused.mikro / 16}rem`,
+    `--tekst-suurus:${suurused.tekst / 16}rem`,
+    `--tekst-suur-suurus:${suurused.tekstSuur / 16}rem`,
+  ];
+}
+
 /*
   Kujundusest CSS. Kirjutab :root muutujad üle — see läheb juurpaigutuses
   <style> silti. Väärtused on juba puhastatud, seega CSS-i sisse ei saa
@@ -152,11 +226,7 @@ export function kujundusCss(kujundus) {
     read.push(`--color-${sidekriipsuga(votme)}:${vaartus}`);
   }
 
-  /* px -> rem, et suurused austaksid brauseri kirjasuuruse seadet */
-  read.push(`--silt-suurus:${kujundus.suurused.silt / 16}rem`);
-  read.push(`--mikro-suurus:${kujundus.suurused.mikro / 16}rem`);
-  read.push(`--tekst-suurus:${kujundus.suurused.tekst / 16}rem`);
-  read.push(`--tekst-suur-suurus:${kujundus.suurused.tekstSuur / 16}rem`);
+  read.push(...suuruseRead(kujundus.suurused));
 
   read.push(`--silt-vahe:${kujundus.tahevahed.silt}em`);
   read.push(`--mikro-vahe:${kujundus.tahevahed.mikro}em`);
@@ -166,7 +236,21 @@ export function kujundusCss(kujundus) {
   read.push(`--kuva-font:var(${leiaKuvaFont(kujundus.fondid.kuva).muutuja})`);
   read.push(`--tekst-font:var(${leiaTekstiFont(kujundus.fondid.tekst).muutuja})`);
 
-  return `:root{${read.join(";")}}${taustadeCss(kujundus.taustad)}`;
+  /*
+    Telefoni suurused seisavad PÄRAST :root plokki: valija on täpselt sama,
+    seega spetsiifilisus ei otsusta midagi ja võidab hilisem reegel. Enne
+    kirjutatuna ei jõuaks nad kitsal ekraanil kunagi ekraanile.
+
+    Piir on 639 px — sama koht, kus üksiku teksti .kuju-mobiil ümber lülitub
+    (vt globals.css), et kaks kraadi vahetuksid ühel ja samal laiusel.
+  */
+  const mobiil = suuruseRead(kujundus.suurusedMobiil).join(";");
+
+  return (
+    `:root{${read.join(";")}}` +
+    `@media (max-width:639px){:root{${mobiil}}}` +
+    taustadeCss(kujundus.taustad)
+  );
 }
 
 /*
@@ -225,6 +309,9 @@ export function laeKujundusSync() {
 export async function salvestaKujundus(uus) {
   const puhas = puhastaKujundus(uus);
   await mkdir(kaust, { recursive: true });
+
+  /* Koopia eelmisest seisust enne ülekirjutamist */
+  await varunda(failiTee);
 
   const ajutine = `${failiTee}.tmp`;
   await writeFile(ajutine, `${JSON.stringify(puhas, null, 2)}\n`, "utf8");

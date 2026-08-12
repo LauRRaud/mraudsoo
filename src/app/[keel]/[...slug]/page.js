@@ -2,40 +2,56 @@ import { notFound } from "next/navigation";
 import Ilmub from "@/components/Ilmub";
 import { Pealkiri, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
+import { keeleAlternatiivid, keeleks } from "@/sisu/keeled";
 
 /*
-  OMALOODUD LEHED.
+  OMALOODUD LEHED — JA ÜHTLASI KOGU LEHE 404.
 
   See marsruut püüab kinni kõik aadressid, millele ei vasta ükski päris kaust
-  src/app all. Next.js eelistab alati staatilist segmenti dünaamilisele, seega
-  /minust, /teenused ja /admin jõuavad endiselt oma lehtedeni — siia satuvad
-  ainult tundmatud aadressid.
+  src/app/[keel] all. Next.js eelistab alati staatilist segmenti dünaamilisele,
+  seega /minust, /teenused ja /admin jõuavad endiselt oma lehtedeni — siia
+  satuvad ainult tundmatud aadressid.
 
-  Kui sellist lehte sisupuus ei ole, anname 404. Nii ei teki olukorda, kus
-  suvaline aadress vastab tühja lehega.
+  MIKS KÕIKEHÕLMAV [...slug], MITTE [slug]:
+  ühe segmendiga muster jättis pikemad tundmatud aadressid (/mingi/asi) hoopis
+  marsruudita ja siis vastas Next'i oma paljas 404-leht, ilma meie kujunduseta.
+  Kõikehõlmav muster võtab nad vastu ja annab notFound() kaudu meie enda
+  404-vaate (src/app/[keel]/not-found.js).
+
+  Omaloodud leht saab olla ainult ÜHE segmendi sügavusel (/minu-leht) — nii on
+  ka admin-lehel lubatud kuju.
 */
 
+/* Ainult üks segment loeb lehe aadressiks; sügavam tee on tundmatu aadress */
+function ainusSegment(slug) {
+  return Array.isArray(slug) && slug.length === 1 ? slug[0] : null;
+}
+
 function leiaLeht(lehed, slug) {
-  if (!Array.isArray(lehed)) return null;
+  if (!Array.isArray(lehed) || !slug) return null;
   return lehed.find((leht) => leht?.slug === slug) ?? null;
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
-  const { lehed } = await laeSisu();
-  const leht = leiaLeht(lehed, slug);
+  const { keel, slug } = await params;
+  const kood = keeleks(keel);
+  const tee = ainusSegment(slug);
+  const { lehed } = await laeSisu(kood);
+  const leht = leiaLeht(lehed, tee);
   if (!leht) return {};
 
   return {
     title: leht.pealkiri,
     description: leht.sissejuhatus || undefined,
+    alternates: keeleAlternatiivid(kood, `/${tee}`),
   };
 }
 
 export default async function OmaLeht({ params }) {
-  const { slug } = await params;
-  const { lehed } = await laeSisu();
-  const leht = leiaLeht(lehed, slug);
+  const { keel, slug } = await params;
+  const kood = keeleks(keel);
+  const { lehed } = await laeSisu(kood);
+  const leht = leiaLeht(lehed, ainusSegment(slug));
 
   if (!leht || !leht.pealkiri) notFound();
 
@@ -45,7 +61,7 @@ export default async function OmaLeht({ params }) {
     <>
       <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="vabaLeht.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          {leht.silt && <p className="sisene silt">{leht.silt}</p>}
+          {leht.silt && <p className="sisene silt silt-suur">{leht.silt}</p>}
           <h1
             className="sisene kuva mt-6 text-[clamp(2.5rem,5.5vw,4.25rem)] text-ink"
             style={{ "--viive": "90ms" }}

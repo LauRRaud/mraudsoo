@@ -3,32 +3,46 @@ import { notFound } from "next/navigation";
 import Ilmub from "@/components/Ilmub";
 import { Sektsioon } from "@/components/ui";
 import { laeSisu, laeSisuSync } from "@/sisu/lae";
+import {
+  KEELEKOODID,
+  keeleAlternatiivid,
+  keeleks,
+  leiaKeel,
+  tee,
+} from "@/sisu/keeled";
+import { liides } from "@/sisu/liides";
 
 /*
   generateStaticParams jookseb enne päringukonteksti, seepärast sünkroonne
-  laadija ilma connection()-ita.
+  laadija ilma connection()-ita. Ülemine segment [keel] omi parameetreid ei
+  anna, seega tulevad siit mõlema parameetri paarid.
 */
 export function generateStaticParams() {
-  const { postitused } = laeSisuSync();
-
-  return postitused.map((postitus) => ({ slug: postitus.slug }));
+  return KEELEKOODID.flatMap((keel) =>
+    laeSisuSync(keel).postitused.map((postitus) => ({
+      keel,
+      slug: postitus.slug,
+    })),
+  );
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
-  const { postitused } = await laeSisu();
+  const { keel, slug } = await params;
+  const kood = keeleks(keel);
+  const { postitused } = await laeSisu(kood);
   const postitus = postitused.find((p) => p.slug === slug);
   if (!postitus) return {};
 
   return {
     title: postitus.pealkiri,
     description: postitus.sissejuhatus,
+    alternates: keeleAlternatiivid(kood, `/blogi/${slug}`),
   };
 }
 
-/* Kuupäev eesti keeles: 3. august 2026 */
-function vormindaKuupaev(iso) {
-  return new Date(iso).toLocaleDateString("et-EE", {
+/* Kuupäev lehe keeles: 3. august 2026 / 3 August 2026 */
+function vormindaKuupaev(iso, keel) {
+  return new Date(iso).toLocaleDateString(leiaKeel(keel).lokaat, {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -36,8 +50,9 @@ function vormindaKuupaev(iso) {
 }
 
 export default async function Postitus({ params }) {
-  const { slug } = await params;
-  const { postitused } = await laeSisu();
+  const { keel, slug } = await params;
+  const kood = keeleks(keel);
+  const { postitused } = await laeSisu(kood);
   const postitus = postitused.find((p) => p.slug === slug);
 
   if (!postitus) notFound();
@@ -58,7 +73,7 @@ export default async function Postitus({ params }) {
             dateTime={postitus.kuupaev}
             className="sisene mikro block text-ink-faint"
           >
-            {vormindaKuupaev(postitus.kuupaev)}
+            {vormindaKuupaev(postitus.kuupaev, kood)}
           </time>
           <h1
             className="sisene kuva mt-6 text-[clamp(2.2rem,5.5vw,4rem)] text-ink"
@@ -88,9 +103,9 @@ export default async function Postitus({ params }) {
         </Ilmub>
 
         <div className="joon mt-16" />
-        {/* Sisupuus ei ole tagasilingi jaoks välja — jääb vaikimisi sõnastus */}
+        {/* Sisupuus ei ole tagasilingi jaoks välja — sõna tuleb liidesest */}
         <Link
-          href="/blogi"
+          href={tee(kood, "/blogi")}
           className="group mikro mt-8 inline-flex items-center gap-3 text-gold-deep transition-colors hover:text-ink"
         >
           <span
@@ -99,7 +114,7 @@ export default async function Postitus({ params }) {
           >
             ←
           </span>
-          Kõik postitused
+          {liides(kood).koikPostitused}
         </Link>
       </Sektsioon>
     </article>

@@ -65,6 +65,7 @@ const KONTROLLID = [
 
 export default function KujunduseHaldus({
   algseis,
+  algtunnus,
   kuvaFondid,
   tekstiFondid,
   algsedPildid,
@@ -72,6 +73,8 @@ export default function KujunduseHaldus({
   const [kujundus, setKujundus] = useState(algseis);
   const [salvestab, alustaSalvestamist] = useTransition();
   const [teade, setTeade] = useState(null);
+  /* Faili tunnus lehe avamise hetkest — vt src/sisu/lukk.js */
+  const [tunnus, setTunnus] = useState(algtunnus);
 
   /* Pildid elavad serveris, mitte kujunduses — üleslaadimine jõustub kohe */
   const [pildid, setPildid] = useState(algsedPildid);
@@ -91,6 +94,14 @@ export default function KujunduseHaldus({
     setKujundus((e) => ({
       ...e,
       suurused: { ...e.suurused, [votme]: Number(vaartus) },
+    }));
+  }
+
+  function muudaSuurusMobiil(votme, vaartus) {
+    setTeade(null);
+    setKujundus((e) => ({
+      ...e,
+      suurusedMobiil: { ...e.suurusedMobiil, [votme]: Number(vaartus) },
     }));
   }
 
@@ -172,7 +183,11 @@ export default function KujunduseHaldus({
 
   function salvesta() {
     alustaSalvestamist(async () => {
-      const vastus = await salvestaKujundusTegevus(kujundus);
+      const vastus = await salvestaKujundusTegevus(kujundus, tunnus);
+
+      /* Konflikti korral EI puutu me valikuid — vt src/sisu/lukk.js */
+      if (vastus.ok && vastus.tunnus) setTunnus(vastus.tunnus);
+
       setTeade(
         vastus.ok
           ? { ok: true, tekst: "Salvestatud. Värskenda lehte, et muudatust näha." }
@@ -573,28 +588,67 @@ export default function KujunduseHaldus({
         </div>
       </section>
 
-      {/* Suurused */}
+      {/*
+        Suurused. KAKS LIUGURIT IGA SUURUSE KOHTA. Need neli arvu on kindlad
+        pikslid, mitte clamp — üks väärtus kehtis korraga nii arvutis kui
+        telefonis ja üks ots jäi alati valeks. Teine liugur kehtib alla 640 px
+        ekraanil, sama piir mis üksiku teksti mobiilisuurusel.
+
+        Erinevalt üksikust tekstist ei ole siin „sama mis arvutis” valikut:
+        mobiiliväärtus on alati olemas (vt puhastaKujundus), seega on ausam
+        näidata mõlemat pikslit kui pakkuda tühjendamist, mida hoidla ei tunne.
+      */}
       <section className="mt-14">
         <h2 className="kuva text-2xl text-ink">Tekstisuurused</h2>
-        <div className="mt-6 space-y-6">
+        <p className="mt-2 max-w-2xl text-base leading-relaxed text-ink-soft">
+          Sama arv, mis on arvutis paras, jääb telefonis sageli liiga suureks.
+          Seepärast on iga suuruse jaoks kaks liugurit: alumine kehtib ainult
+          kitsal ekraanil.
+        </p>
+        <div className="mt-6 space-y-8">
           {Object.entries(SUURUSE_NIMED).map(([votme, nimi]) => (
-            <label key={votme} className="block">
-              <span className="flex items-baseline justify-between gap-4">
-                <span className="text-base text-ink">{nimi}</span>
-                <span className="text-base text-ink-faint">
+            <div key={votme}>
+              <p className="text-base text-ink">{nimi}</p>
+
+              <label className="mt-2 flex flex-wrap items-center gap-3">
+                <span className="mikro w-20 text-[0.65rem] text-ink-faint">
+                  Arvutis
+                </span>
+                <input
+                  type="range"
+                  min={10}
+                  max={40}
+                  step={1}
+                  value={kujundus.suurused[votme]}
+                  onChange={(e) => muudaSuurus(votme, e.target.value)}
+                  /* Silt „Arvutis” üksi ei ütle, MILLINE suurus see on */
+                  aria-label={`${nimi} arvutis`}
+                  className="h-8 flex-1 cursor-pointer accent-rohe"
+                />
+                <span className="w-14 text-right text-base text-ink-faint">
                   {kujundus.suurused[votme]} px
                 </span>
-              </span>
-              <input
-                type="range"
-                min={10}
-                max={40}
-                step={1}
-                value={kujundus.suurused[votme]}
-                onChange={(e) => muudaSuurus(votme, e.target.value)}
-                className="mt-2 w-full accent-rohe"
-              />
-            </label>
+              </label>
+
+              <label className="mt-1 flex flex-wrap items-center gap-3">
+                <span className="mikro w-20 text-[0.65rem] text-ink-faint">
+                  Telefonis
+                </span>
+                <input
+                  type="range"
+                  min={10}
+                  max={40}
+                  step={1}
+                  value={kujundus.suurusedMobiil[votme]}
+                  onChange={(e) => muudaSuurusMobiil(votme, e.target.value)}
+                  aria-label={`${nimi} telefonis`}
+                  className="h-8 flex-1 cursor-pointer accent-rohe"
+                />
+                <span className="w-14 text-right text-base text-ink-faint">
+                  {kujundus.suurusedMobiil[votme]} px
+                </span>
+              </label>
+            </div>
           ))}
         </div>
       </section>

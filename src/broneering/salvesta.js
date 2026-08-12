@@ -97,6 +97,11 @@ export async function saadaTeavitus(kirje, saaja) {
   });
 
   const read = [
+    /*
+      Keel ainult siis, kui see ei ole eesti oma: ingliskeelne soov vajab
+      ingliskeelset vastust ja see peab kirja avades kohe silma jääma.
+    */
+    kirje.keel && kirje.keel !== "et" ? `Keel: ${kirje.keel.toUpperCase()}` : null,
     `Nimi: ${kirje.nimi}`,
     `E-post: ${kirje.epost}`,
     kirje.telefon ? `Telefon: ${kirje.telefon}` : null,

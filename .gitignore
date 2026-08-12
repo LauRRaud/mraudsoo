@@ -23,6 +23,10 @@
 # admin-lehelt salvestatud sisu (data/sisu.json) — elab serveris, mitte gitis
 /data
 
+# brauseritööriistade jooksvad logid
+/.playwright-cli
+/output
+
 # misc
 .DS_Store
 *.pem

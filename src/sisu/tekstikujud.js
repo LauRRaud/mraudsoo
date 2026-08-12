@@ -8,6 +8,7 @@
         "avaleht.kutsumus.valjendusSissejuhatus": {
           varv: "#8a6f20",
           suurus: 1.15,        // kordaja, mitte pikslid
+          suurusMobiil: 0.9,   // sama kordaja telefonis (alla 640 px)
           joondus: "kesk",     // vasak | kesk | parem
           kaal: "rasvane",
           kalle: "kaldu",
@@ -35,6 +36,19 @@
   mobiilis ise. Kindel piksliväärtus lõhuks selle. Kordaja rakendub
   em-ühikuna teksti ümber pandud <span>-il ja korrutab ELEMENDI enda
   kujundatud suurust, seega responsiivsus jääb alles.
+
+  MIKS ERALDI MOBIILISUURUS:
+  clamp() kahandab teksti ekraani laiuse järgi ÜHE reegli järgi, aga sama
+  kordaja ei sobi mõlemale otsale — lauaarvutis paras rõhutus on telefonis
+  liiga suur ja vastupidi. `suurusMobiil` on sama kordaja alla 640 px laiuse
+  ekraani jaoks. Puudumisel kehtib telefonis sama kordaja mis mujal, seega
+  vanad kirjed käituvad täpselt nagu enne.
+
+  MIKS SEE EI SAA OLLA INLINE-STIIL:
+  inline-stiilis ei ole meediapäringut. Seepärast annab <span> suuruse
+  MUUTUJANA (--kuju-suurus / --kuju-suurus-mobiil) ja klass .kuju-mobiil
+  valib nende vahel — vt globals.css. Klassireegel, mitte inline font-size:
+  muidu võidaks inline-väärtus meediapäringu ära.
 */
 
 import { createElement } from "react";
@@ -264,6 +278,15 @@ export function teenuseKujuVariandid(tee) {
   välja; vaikimisi tähendusega väärtusi (suurus 1, joondus vasak, kaal
   tavaline) ei salvestata, et kaart ei täituks tühja müraga.
 */
+/* Suuruse kordaja piiridesse; kõlbmatu väärtus annab null. Kaks kohta
+   piisab, sest admini liuguri samm on 0,05. */
+function kordaja(vaartus) {
+  const arv = Number(vaartus);
+  if (!Number.isFinite(arv)) return null;
+  if (arv < SUURUSE_MIN || arv > SUURUSE_MAX) return null;
+  return Math.round(arv * 100) / 100;
+}
+
 function puhastaKuju(kuju) {
   if (typeof kuju !== "object" || kuju === null || Array.isArray(kuju)) {
     return null;
@@ -275,15 +298,19 @@ function puhastaKuju(kuju) {
     tulemus.varv = kuju.varv.toLowerCase();
   }
 
-  const suurus = Number(kuju.suurus);
-  if (
-    Number.isFinite(suurus) &&
-    suurus >= SUURUSE_MIN &&
-    suurus <= SUURUSE_MAX &&
-    suurus !== 1
-  ) {
-    /* Kaks kohta piisab: admini samm on 0,05 */
-    tulemus.suurus = Math.round(suurus * 100) / 100;
+  const suurus = kordaja(kuju.suurus);
+  if (suurus !== null && suurus !== 1) tulemus.suurus = suurus;
+
+  /*
+    MOBIILISUURUS SALVESTATAKSE KA SIIS, KUI TA ON TÄPSELT 1.
+
+    „Telefonis tavasuurus, mujal suurendatud” on päris valik ja kaob ära, kui
+    kohelda ühte samamoodi nagu lauaarvuti suuruse puhul. Välja kukub ainult
+    väärtus, mis on lauaarvuti omaga SAMA — siis ei ole tal midagi öelda.
+  */
+  const mobiil = kordaja(kuju.suurusMobiil);
+  if (mobiil !== null && mobiil !== (suurus ?? 1)) {
+    tulemus.suurusMobiil = mobiil;
   }
 
   /* „vasak” on vaikimisi — seda ei ole mõtet kaardile kirjutada */
@@ -520,7 +547,22 @@ export function rakendaKuju(sisu, kuju) {
   const tekst = kuju.jutumargid ? jutumarkidega(sisu) : sisu;
 
   const stiil = {};
-  if (kuju.suurus && kuju.suurus !== 1) stiil.fontSize = `${kuju.suurus}em`;
+  const suurus = kuju.suurus && kuju.suurus !== 1 ? kuju.suurus : null;
+
+  /*
+    Kaks kraadi tähendab klassi ja muutujaid, üks kraad paljast font-size'i.
+    Klass ainult siis, kui teda on päriselt vaja — nii jääb enamiku tekstide
+    märgend täpselt selliseks nagu enne.
+  */
+  const kahesKraadis = typeof kuju.suurusMobiil === "number";
+
+  if (kahesKraadis) {
+    stiil["--kuju-suurus"] = `${suurus ?? 1}em`;
+    stiil["--kuju-suurus-mobiil"] = `${kuju.suurusMobiil}em`;
+  } else if (suurus) {
+    stiil.fontSize = `${suurus}em`;
+  }
+
   if (kuju.kaal === "rasvane") stiil.fontWeight = 600;
   if (kuju.kalle === "kaldu") stiil.fontStyle = "italic";
 
@@ -529,5 +571,9 @@ export function rakendaKuju(sisu, kuju) {
 
   if (Object.keys(stiil).length === 0) return tekst;
 
-  return createElement("span", { style: stiil }, tekst);
+  return createElement(
+    "span",
+    { className: kahesKraadis ? "kuju-mobiil" : undefined, style: stiil },
+    tekst,
+  );
 }

@@ -15,9 +15,20 @@
 
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { ANDMEKAUST, tunnus } from "@/sisu/lukk";
+import { varunda } from "@/sisu/ajalugu";
 
-const kaust = path.join(process.cwd(), "data");
+const kaust = ANDMEKAUST;
 const failiTee = path.join(kaust, "kalender.json");
+
+/* Luku failid ja tunnus — sama muster mis sisul, vt src/sisu/lukk.js */
+export function kalendriFailid() {
+  return [failiTee];
+}
+
+export function kalendriTunnus() {
+  return tunnus(kalendriFailid());
+}
 
 const TYHI = { suletudPaevad: [], suletudNadalapaevad: [] };
 
@@ -62,6 +73,9 @@ export async function laeKalender() {
 export async function salvestaKalender(andmed) {
   const puhas = puhasta(andmed);
   await mkdir(kaust, { recursive: true });
+
+  /* Koopia eelmisest seisust enne ülekirjutamist */
+  await varunda(failiTee);
 
   /* Ajutine fail + nihutamine, et katkestus ei jätaks poolikut sisu */
   const ajutine = `${failiTee}.tmp`;

@@ -155,12 +155,19 @@ export function Nupp({
   );
 }
 
-/* Tekstilink noolega — kasutame loendite ja edasiviidete juures */
+/*
+  Tekstilink noolega — kasutame loendite ja edasiviidete juures.
+
+  SUURUS ON MIKROST SUUREM. Nupu- ja menüümõõt (16 px) on õige seal, kus
+  silte on rühmas mitu; üksik noolelink seisab aga pika tekstiploki all
+  omaette ja kadus seal ära. Kordaja, mitte kindel piksliarv — nii jääb
+  admin-lehe „Nupud ja menüü” liugur ka siia mõjuma.
+*/
 export function NooleLink({ href, children, tume = false, className = "" }) {
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center gap-3 mikro transition-colors duration-300 ${
+      className={`group inline-flex items-center gap-3 mikro text-[calc(var(--mikro-suurus)*1.15)] transition-colors duration-300 ${
         tume
           ? "text-kuld-hele hover:text-luu"
           : "text-gold-deep hover:text-ink"
@@ -204,6 +211,14 @@ export function Tekst({
   Salm — kirjakoht oma vaikse hetkena: püstjoon, viide sildina,
   salm kuvakirjas, Marta selgitus all. Kasutusel lehel „Minust” ja
   teenuselehtede plokkides.
+
+  `selgitusPeidus` paneb selgituse <details> sisse: salm jääb esimeseks ja
+  vaikseks, tõlgendus avaneb klõpsust. Marta soov — „mitte kohe avalik vaid
+  võimalus avada ja lugeda”. Päris <details>, mitte oma JS: töötab ka ilma
+  skriptita, käib klaviatuurilt ja brauseri lehesisene otsing avab ta ise.
+
+  Teenuselehtedel seda EI kasutata — seal ei ole „selgitus” tõlgendus, vaid
+  ploki enda tekst (vt teenused/[slug] kirjakohaOsad), mis peab jääma näha.
 */
 export function Salm({
   viide,
@@ -211,6 +226,9 @@ export function Salm({
   selgitus = [],
   tume = false,
   className = "",
+  selgitusPeidus = false,
+  avaSilt = "Loe tõlgendust",
+  peidaSilt = "Peida tõlgendus",
   /* Admin-lehelt antud tekstikujud (vt src/sisu/tekstikujud.js) */
   viiteStiil,
   stiil,
@@ -236,6 +254,19 @@ export function Salm({
   const selgituseKujul =
     typeof selgituseKuju === "function" ? selgituseKuju : () => selgituseKuju;
 
+  /* Read on samad mõlemal juhul — peitu läheb ümbris, mitte tekst ise */
+  const selgituseRead = selgitused.map((loik, jrk) => (
+    <p
+      key={loik}
+      style={selgituseStiilil(jrk)}
+      className={`text-lg leading-[1.8] ${
+        tume ? "text-luu/85" : "text-ink-soft"
+      }`}
+    >
+      {rakendaKuju(loik, selgituseKujul(jrk))}
+    </p>
+  ));
+
   return (
     <figure className={`text-center ${className}`}>
       <div aria-hidden="true" className={`pystjoon${tume ? " pystjoon-tume" : ""}`} />
@@ -260,21 +291,27 @@ export function Salm({
         {rakendaKuju(tekst, kuju)}
       </blockquote>
 
-      {selgitused.length > 0 && (
-        <div className="mx-auto mt-8 max-w-[54ch] space-y-4">
-          {selgitused.map((loik, jrk) => (
-            <p
-              key={loik}
-              style={selgituseStiilil(jrk)}
-              className={`text-lg leading-[1.8] ${
-                tume ? "text-luu/85" : "text-ink-soft"
-              }`}
-            >
-              {rakendaKuju(loik, selgituseKujul(jrk))}
-            </p>
-          ))}
-        </div>
-      )}
+      {selgitused.length > 0 &&
+        (selgitusPeidus ? (
+          <details className="tolgendus mt-7">
+            {/*
+              Ilma noole ja märgita: ↓ luges kerimisviitena. Avaja on tekst,
+              mille alla kasvab menüüst tuttav alajoon, ja sõna ise ütleb
+              seisundi („Loe tõlgendust” ↔ „Peida tõlgendus”).
+            */}
+            <summary className={`silt alajoon${tume ? " silt-tume" : ""}`}>
+              <span className="tolgendus-kinni">{avaSilt}</span>
+              <span className="tolgendus-lahti">{peidaSilt}</span>
+            </summary>
+            <div className="mx-auto mt-7 max-w-[54ch] space-y-4">
+              {selgituseRead}
+            </div>
+          </details>
+        ) : (
+          <div className="mx-auto mt-8 max-w-[54ch] space-y-4">
+            {selgituseRead}
+          </div>
+        ))}
     </figure>
   );
 }

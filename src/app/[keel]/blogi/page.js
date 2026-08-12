@@ -2,29 +2,41 @@ import Link from "next/link";
 import Ilmub from "@/components/Ilmub";
 import { Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
+import { keeleAlternatiivid, keeleks, leiaKeel, tee } from "@/sisu/keeled";
 import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
-/* Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte staatiline metadata */
-export async function generateMetadata() {
-  const sisu = await laeSisu();
+/*
+  Pealkiri ja kirjeldus tulevad sisupuust, seepärast generateMetadata, mitte
+  staatiline metadata. Pealkirjal on varuväärtus — silt võib olla tühjaks
+  jäetud.
+*/
+export async function generateMetadata({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  const { hero } = sisu.blogiLeht;
 
   return {
-    title: sisu.blogiLeht.hero.silt,
-    description: sisu.blogiLeht.hero.tekst,
+    title: hero.silt || hero.pealkiri,
+    description: hero.tekst,
+    alternates: keeleAlternatiivid(kood, "/blogi"),
   };
 }
 
-/* Kuupäev eesti keeles: 3. august 2026 */
-function vormindaKuupaev(iso) {
-  return new Date(iso).toLocaleDateString("et-EE", {
+/* Kuupäev lehe keeles: 3. august 2026 / 3 August 2026 */
+function vormindaKuupaev(iso, keel) {
+  return new Date(iso).toLocaleDateString(leiaKeel(keel).lokaat, {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 }
 
-export default async function Blogi() {
-  const sisu = await laeSisu();
+export default async function Blogi({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  const t = (rada) => tee(kood, rada);
   const { blogiLeht, kontakt, postitused } = sisu;
 
   const jarjestatud = [...postitused].sort(
@@ -39,7 +51,7 @@ export default async function Blogi() {
     <>
       <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="blogi.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          <p className="sisene silt" style={v("hero.silt")}>
+          <p className="sisene silt silt-suur" style={v("hero.silt")}>
             {s("hero.silt", blogiLeht.hero.silt)}
           </p>
           <h1
@@ -98,14 +110,14 @@ export default async function Blogi() {
             {jarjestatud.map((postitus) => (
               <li key={postitus.slug}>
                 <Link
-                  href={`/blogi/${postitus.slug}`}
+                  href={t(`/blogi/${postitus.slug}`)}
                   className="group -mx-6 grid grid-cols-1 gap-x-12 gap-y-3 border-t border-gold/25 px-6 py-10 transition-colors duration-300 hover:bg-bone sm:grid-cols-[11rem_1fr] sm:py-12 lg:-mx-12 lg:px-12"
                 >
                   <time
                     dateTime={postitus.kuupaev}
                     className="mikro text-ink-faint sm:pt-3"
                   >
-                    {vormindaKuupaev(postitus.kuupaev)}
+                    {vormindaKuupaev(postitus.kuupaev, kood)}
                   </time>
 
                   <div>

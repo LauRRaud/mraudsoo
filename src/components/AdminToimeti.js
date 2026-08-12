@@ -12,6 +12,7 @@
     AdminToimeti     — sisu muutmise vaade (vaikimisi eksport)
 */
 
+import Link from "next/link";
 import {
   createContext,
   useActionState,
@@ -25,6 +26,7 @@ import {
   loguSisseTegevus,
   salvestaTegevus,
 } from "@/app/admin/tegevused";
+import { KEELED, VAIKEKEEL, tee as keeleTee } from "@/sisu/keeled";
 import {
   SUURUSE_MAX,
   SUURUSE_MIN,
@@ -136,25 +138,57 @@ const SILDID = {
   Vasakpoolne navigatsioon. Iga kirje koondab ühe või mitu sisupuu ülemise
   taseme võtit — nii on menüü lühike, kuid kogu puu on kaetud.
 */
+/*
+  `leht` on avaliku lehe aadress ilma keeleprefiksita — sellest teeb
+  „Vaata lehel” lingi õiges keeles. Sektsioonidel, mis ei vasta ühele lehele
+  (jalus, kontakt, menüü), seda ei ole.
+*/
 const SEKTSIOONID = [
-  { id: "avaleht", nimi: "Avaleht", teed: ["avaleht"] },
-  { id: "minust", nimi: "Minust", teed: ["minust"] },
+  { id: "avaleht", nimi: "Avaleht", teed: ["avaleht"], leht: "/" },
+  { id: "minust", nimi: "Minust", teed: ["minust"], leht: "/minust" },
   {
     id: "teenused",
     nimi: "Teenused",
     teed: ["teenusedLeht", "teenuseLeht", "teenused"],
+    leht: "/teenused",
   },
   {
     id: "hinnakiri",
     nimi: "Hinnakiri",
     teed: ["hinnakiriLeht", "hinnakiri", "teekond"],
+    leht: "/hinnakiri",
   },
-  { id: "blogi", nimi: "Blogi", teed: ["blogiLeht", "postitused"] },
-  { id: "broneerimine", nimi: "Broneerimine", teed: ["broneerimine"] },
+  {
+    id: "blogi",
+    nimi: "Blogi",
+    teed: ["blogiLeht", "postitused"],
+    leht: "/blogi",
+  },
+  {
+    id: "broneerimine",
+    nimi: "Broneerimine",
+    teed: ["broneerimine"],
+    leht: "/broneerimine",
+  },
   { id: "jalus", nimi: "Jalus", teed: ["jalus", "eiLeitud"] },
   { id: "kontakt", nimi: "Kontakt", teed: ["kontakt", "meta"] },
   { id: "menyy", nimi: "Menüü", teed: ["navi"] },
 ];
+
+/* ISO-ajast „12.08.2026 18:15”. Vigane väärtus ei tohi lehte maha võtta. */
+function vormindaAeg(iso) {
+  try {
+    return new Date(iso).toLocaleString("et-EE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return "";
+  }
+}
 
 /*
   VIITED — kus üks või teine tekst päriselt elab.
@@ -495,9 +529,15 @@ function Kujupaneel({ tee, nimi, kompaktne = false }) {
         Suurus on KORDAJA, mitte pikslid: tekstid saavad suuruse
         responsiivsest clamp()-ist ja kordaja korrutab seda, seega
         mobiilivaade jääb terveks.
+
+        KAKS LIUGURIT. clamp() kahandab teksti ekraani laiuse järgi ühe reegli
+        järgi, aga sama kordaja ei sobi mõlemale otsale: arvutis paras rõhutus
+        on telefonis liiga suur. Teine liugur kehtib alla 640 px ekraanil.
+        Puudumisel kehtib telefonis sama, mis arvutis — nii käituvad vanad
+        tekstid täpselt nagu enne.
       */}
       <div className="flex flex-wrap items-center gap-3">
-        <span className="mikro w-20 text-[0.65rem] text-ink-faint">Suurus</span>
+        <span className="mikro w-20 text-[0.65rem] text-ink-faint">Arvutis</span>
         <input
           type="range"
           min={SUURUSE_MIN}
@@ -507,12 +547,52 @@ function Kujupaneel({ tee, nimi, kompaktne = false }) {
           onChange={(sundmus) =>
             muudaKuju(tee, { ...kuju, suurus: Number(sundmus.target.value) })
           }
-          aria-label="Teksti suurus"
+          aria-label="Teksti suurus arvutis"
           className="h-8 w-40 cursor-pointer accent-rohe"
         />
         <span className="text-[0.8rem] text-ink-faint">
           {Math.round((kuju.suurus ?? 1) * 100)} %
         </span>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="mikro w-20 text-[0.65rem] text-ink-faint">
+          Telefonis
+        </span>
+        <input
+          type="range"
+          min={SUURUSE_MIN}
+          max={SUURUSE_MAX}
+          step={0.05}
+          /* Seadmata liugur seisab arvuti väärtusel — lohistamine algab sealt */
+          value={kuju.suurusMobiil ?? kuju.suurus ?? 1}
+          onChange={(sundmus) =>
+            muudaKuju(tee, {
+              ...kuju,
+              suurusMobiil: Number(sundmus.target.value),
+            })
+          }
+          aria-label="Teksti suurus telefonis"
+          className="h-8 w-40 cursor-pointer accent-rohe"
+        />
+        {kuju.suurusMobiil === undefined ? (
+          <span className="text-[0.8rem] text-ink-faint">sama mis arvutis</span>
+        ) : (
+          <>
+            <span className="text-[0.8rem] text-ink-faint">
+              {Math.round(kuju.suurusMobiil * 100)} %
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                muudaKuju(tee, { ...kuju, suurusMobiil: undefined })
+              }
+              className={NUPP_TEKST}
+            >
+              sama mis arvutis
+            </button>
+          </>
+        )}
       </div>
 
       {/* Joondus */}
@@ -1043,12 +1123,26 @@ function Valjad({ vaartus, tee, muuda, sugavus = 0 }) {
 /* Toimeti                                                             */
 /* ------------------------------------------------------------------ */
 
-export default function AdminToimeti({ algsisu }) {
+export default function AdminToimeti({
+  keel = VAIKEKEEL,
+  algsisu,
+  algtunnus,
+  algsaeg = null,
+}) {
   const [sisu, setSisu] = useState(algsisu);
   const [muudetud, setMuudetud] = useState(false);
   const [valitud, setValitud] = useState(SEKTSIOONID[0].id);
   const [teade, setTeade] = useState(null);
   const [tootab, setTootab] = useState(false);
+  /*
+    Faili tunnus lehe avamise hetkest (vt src/sisu/lukk.js). Läheb iga
+    salvestusega kaasa; server keeldub, kui fail on vahepeal mujal muutunud.
+    Õnnestunud salvestus annab uue tunnuse tagasi.
+  */
+  const [tunnus, setTunnus] = useState(algtunnus);
+  const [konflikt, setKonflikt] = useState(false);
+  /* Millal see keel viimati faili kirjutati — päises, et seis oleks näha */
+  const [salvestatud, setSalvestatud] = useState(algsaeg);
 
   const sektsioon =
     SEKTSIOONID.find((kirje) => kirje.id === valitud) ?? SEKTSIOONID[0];
@@ -1091,6 +1185,18 @@ export default function AdminToimeti({ algsisu }) {
         puhas[votme] = vaartus;
       }
 
+      /*
+        Telefonisuurus, mis on arvuti omaga sama, ei ütle midagi — sama reegel
+        mis salvestuse puhastuses (src/sisu/tekstikujud.js). Ilma selleta jääks
+        liuguri kõrvale protsent ka siis, kui vahet päriselt ei ole.
+      */
+      if (
+        puhas.suurusMobiil !== undefined &&
+        Number(puhas.suurusMobiil) === Number(puhas.suurus ?? 1)
+      ) {
+        delete puhas.suurusMobiil;
+      }
+
       if (Object.keys(puhas).length === 0) {
         delete kaart[tee];
       } else {
@@ -1103,21 +1209,34 @@ export default function AdminToimeti({ algsisu }) {
     setTeade(null);
   }
 
+  /*
+    Ühine vastuse käsitlus salvestamisele ja lähtestamisele.
+
+    KONFLIKT: sisu EI asendata ega väljasid ei puudutata — Marta tekst jääb
+    ekraanile alles, et ta saaks selle enne uuesti laadimist kopeerida. See on
+    kogu luku mõte: vaikne ülekirjutus asendub nähtava keeldumisega.
+  */
+  function votaVastus(vastus, vaikeViga) {
+    if (vastus?.ok) {
+      if (vastus.sisu) setSisu(vastus.sisu);
+      if (vastus.tunnus) setTunnus(vastus.tunnus);
+      if (vastus.aeg) setSalvestatud(vastus.aeg);
+      setKonflikt(false);
+      setMuudetud(false);
+      setTeade({ liik: "ok", tekst: vastus.sonum ?? "Salvestatud." });
+      return;
+    }
+
+    if (vastus?.konflikt) setKonflikt(true);
+    setTeade({ liik: "viga", tekst: vastus?.viga ?? vaikeViga });
+  }
+
   async function salvesta() {
     setTootab(true);
     setTeade(null);
     try {
-      const vastus = await salvestaTegevus(sisu);
-      if (vastus?.ok) {
-        if (vastus.sisu) setSisu(vastus.sisu);
-        setMuudetud(false);
-        setTeade({ liik: "ok", tekst: vastus.sonum ?? "Salvestatud." });
-      } else {
-        setTeade({
-          liik: "viga",
-          tekst: vastus?.viga ?? "Salvestamine ebaõnnestus.",
-        });
-      }
+      const vastus = await salvestaTegevus(keel, sisu, tunnus);
+      votaVastus(vastus, "Salvestamine ebaõnnestus.");
     } catch {
       setTeade({
         liik: "viga",
@@ -1129,8 +1248,12 @@ export default function AdminToimeti({ algsisu }) {
   }
 
   async function lahtesta(tee) {
+    const keeleNimi = KEELED.find((k) => k.kood === keel)?.silt ?? keel;
     const kinnitus = window.confirm(
       `Kas lähtestada „${silt(tee)}” vaikimisi tekstidele?\n\n` +
+        `Tekstid lähtestatakse ainult keeles ${keeleNimi}.\n` +
+        "Selle sektsiooni tekstide KUJU (värv, suurus, font) on aga keelte " +
+        "peale ühine ja läheb maha mõlemas keeles.\n\n" +
         "Lähtestamine salvestab kohe. Kõik salvestamata muudatused lähevad kaotsi.",
     );
     if (!kinnitus) return;
@@ -1138,17 +1261,8 @@ export default function AdminToimeti({ algsisu }) {
     setTootab(true);
     setTeade(null);
     try {
-      const vastus = await lahtestaTegevus(tee);
-      if (vastus?.ok) {
-        if (vastus.sisu) setSisu(vastus.sisu);
-        setMuudetud(false);
-        setTeade({ liik: "ok", tekst: vastus.sonum ?? "Lähtestatud." });
-      } else {
-        setTeade({
-          liik: "viga",
-          tekst: vastus?.viga ?? "Lähtestamine ebaõnnestus.",
-        });
-      }
+      const vastus = await lahtestaTegevus(keel, tee, tunnus);
+      votaVastus(vastus, "Lähtestamine ebaõnnestus.");
     } catch {
       setTeade({
         liik: "viga",
@@ -1164,6 +1278,81 @@ export default function AdminToimeti({ algsisu }) {
       value={{ kujud: sisu[TEKSTIKUJUDE_VOTI] ?? {}, muudaKuju }}
     >
     <div className="mx-auto w-full max-w-[1360px] px-6 py-10 lg:px-10">
+      {/*
+        KEELEVALIK.
+
+        Keel elab aadressis (/admin?keel=en), mitte seisundis: nii saab lingi
+        järjehoidjasse panna ja lehe värskendamine ei viska teist keelt maha.
+        Salvestamata muudatuste korral küsime kinnitust — Link teeb
+        kliendipoolse navigeerimise ja brauseri oma „kas lahkuda” hoiatus
+        (beforeunload) siis ei käivitu.
+      */}
+      <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-3 border border-sage bg-bone px-4 py-3">
+        <span className="mikro text-[0.7rem] text-ink-faint">Keel</span>
+        <div className="flex flex-wrap items-center gap-2">
+          {KEELED.map((k) => {
+            const aktiivne = k.kood === keel;
+            const aadress =
+              k.kood === VAIKEKEEL ? "/admin" : `/admin?keel=${k.kood}`;
+
+            return (
+              <Link
+                key={k.kood}
+                href={aadress}
+                aria-current={aktiivne ? "true" : undefined}
+                onClick={(sundmus) => {
+                  if (aktiivne || !muudetud) return;
+                  const kinnitus = window.confirm(
+                    "Sul on salvestamata muudatusi. Keelt vahetades lähevad " +
+                      "need kaotsi. Kas jätkata?",
+                  );
+                  if (!kinnitus) sundmus.preventDefault();
+                }}
+                className={`mikro border px-4 py-2 text-[0.7rem] transition-colors ${
+                  aktiivne
+                    ? "border-rohe bg-rohe text-white"
+                    : "border-sage text-ink-faint hover:border-rohe hover:text-rohe"
+                }`}
+              >
+                {k.silt}
+              </Link>
+            );
+          })}
+        </div>
+        <p className="text-[0.85rem] leading-relaxed text-ink-soft">
+          Tekstid on kummalgi keelel omad. Tekstide KUJU — värv, suurus, font,
+          joondus — on mõlemal keelel ühine: kujunda korra, muutub mõlemal
+          pool.
+        </p>
+      </div>
+
+      {/*
+        KONFLIKT. Näeme seda siis, kui fail on vahepeal mujal muutunud (teine
+        vahekaart, teine seade). Väljasid me EI puutu: Marta tekst peab jääma
+        ekraanile, et ta saaks muudetud kohad kopeerida enne uuesti laadimist.
+      */}
+      {konflikt && (
+        <div
+          role="alert"
+          className="mb-8 border-l-2 border-gold-deep bg-bone px-6 py-5"
+        >
+          <p className="kuva text-xl text-ink">Salvestamine peatati</p>
+          <p className="mt-3 max-w-[70ch] text-base leading-relaxed text-ink-soft">
+            Sisu on vahepeal mujal muutunud — tõenäoliselt on admin lahti veel
+            ühes vahekaardis või teises seadmes. Ma ei kirjutanud seda üle.
+            Sinu tekst on siin lehel alles: kopeeri muudetud kohad kõrvale ja
+            laadi siis leht uuesti.
+          </p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className={`${NUPP_AARIS} mt-5`}
+          >
+            Laadi leht uuesti
+          </button>
+        </div>
+      )}
+
       <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-14">
         {/* Mobiilis vormi kohal, laual vasakul ja püsiv */}
         <nav
@@ -1194,6 +1383,24 @@ export default function AdminToimeti({ algsisu }) {
         </nav>
 
         <div className="min-w-0 flex-1 space-y-12">
+          {/*
+            Uues aknas, mitte samas: admini olek (avatud paneelid, salvestamata
+            tekst) peab alles jääma. Aadress käib läbi keeleTee(), nii et
+            inglise sisu vaadates avaneb inglise leht.
+          */}
+          {sektsioon.leht && (
+            <p className="-mb-6">
+              <a
+                href={keeleTee(keel, sektsioon.leht)}
+                target="_blank"
+                rel="noreferrer"
+                className="mikro text-[0.7rem] text-ink-faint transition-colors hover:text-rohe"
+              >
+                Vaata lehel ↗
+              </a>
+            </p>
+          )}
+
           {sektsioon.teed.map((tee) => {
             const viide = VIITED[tee];
             const sihtNimi = viide?.siht
@@ -1282,6 +1489,13 @@ export default function AdminToimeti({ algsisu }) {
             ) : (
               <span className="text-[0.8rem] text-ink-faint">
                 Kõik muudatused on salvestatud
+              </span>
+            )}
+            {/* Millal see keel viimati faili kirjutati — vastab küsimusele
+                „kas minu eelmine salvestus üldse jõudis kohale” */}
+            {salvestatud && (
+              <span className="text-[0.8rem] text-ink-faint">
+                Viimati salvestatud {vormindaAeg(salvestatud)}
               </span>
             )}
             <p

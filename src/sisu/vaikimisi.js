@@ -183,6 +183,16 @@ export const vaikimisiSisu = {
       ],
     },
 
+    /*
+      Salmide tõlgendused on peidus ja avanevad klõpsust — Marta soov:
+      „mitte kohe avalik vaid võimalus avada ja lugeda”. Need kaks sõna
+      seisavad avajal ja kehtivad kõigi selle lehe salmide kohta.
+    */
+    tolgendus: {
+      ava: "Loe tõlgendust",
+      peida: "Peida tõlgendus",
+    },
+
     kirjakoht: {
       viide: "1. Moosese 1:27",
       tekst: "„Ja Jumal lõi inimese oma näo järgi…”",
@@ -324,7 +334,7 @@ export const vaikimisiSisu = {
     loeLahemalt: "Loe lähemalt",
     /* Marta sõnad (IG 241) — kehtivad kõigi teenuste kohta, mitte ainult Püha Ruumi */
     tsitaat:
-      "âMinu tee ei ole ainult minu oma — see on teenimine läbi kohalolu, kuulamise ja sügava empaatia.â",
+      "„Minu tee ei ole ainult minu oma — see on teenimine läbi kohalolu, kuulamise ja sügava empaatia.”",
     tsitaadiSilt: "Kohalolu",
     lopp: {
       pealkiri: "Ei tea, kust alustada?",
@@ -465,7 +475,7 @@ export const vaikimisiSisu = {
         },
       ],
       tsitaat: {
-        tekst: "âSee ei ole lihtsalt muutus. See on tagasi tulemine iseenda juurde.â",
+        tekst: "„See ei ole lihtsalt muutus. See on tagasi tulemine iseenda juurde.”",
         selgitus:
           "Kui tunned, et oled selleks valmis… siis see teekond on sinu jaoks",
       },
@@ -516,7 +526,7 @@ export const vaikimisiSisu = {
       ],
       tsitaat: {
         tekst:
-          "âSee on personaalne peegeldus sellest, kuidas sinu olemus, stiil, keha ja kohalolu omavahel kohtuvad.â",
+          "„See on personaalne peegeldus sellest, kuidas sinu olemus, stiil, keha ja kohalolu omavahel kohtuvad.”",
         selgitus: "",
       },
       nimekirjaPealkiri: "Saad selgust …",

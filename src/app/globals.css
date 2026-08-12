@@ -25,13 +25,27 @@
 */
 @theme {
   /*
-    Pinnad — üks ühtne luuvalge lehepõhi ja üks soe liivakarva rõhupind.
+    Pinnad — peaaegu valge lehepõhi ja üks kraad soojem rõhupind.
+
     Bone ja linen on teadlikult sama värv: kõrvuti sektsioonide vahele ei teki
-    enam juhuslikku peaaegu-valget triipu.
+    enam juhuslikku peaaegu-valget triipu ja rõhupaneel seisab ühesuguse tooni
+    peal nii ülalt kui alt.
+
+    Toonid on tahtlikult vaevumärgatavad. Varasem palett kaldus liivakarva
+    poole ja luges ekraanil kollakana; hall lehepõhi tegi sama vea teises
+    otsas. Soojus on alles, aga ainult vihjena.
   */
-  --color-bone: #fbf8f1; /* lehe põhitaust */
-  --color-linen: #fbf8f1; /* sama lehepõhi, teine semantiline roll */
-  --color-sage: #f0eadf; /* soe liivakarva rõhupind */
+  --color-bone: #fdfcfa; /* lehe põhitaust */
+  --color-linen: #fdfcfa; /* sama lehepõhi, teine semantiline roll */
+  --color-sage: #f7f4ec; /* soe elevandiluu rõhupind */
+
+  /*
+    Menüü pind — päiseriba ja avatud mobiilimenüü paneel. Sama soe
+    elevandiluu, mis salmisektsioon: menüü ei ole enam lehe tume vaheruum ega
+    lehe põhitaust, vaid oma pind. Muutuja jääb sage'ist eraldi, et admin
+    saaks menüüd värvida ilma salmisektsiooni puutumata.
+  */
+  --color-menyy: #f7f4ec;
 
   /*
     Nupuvärv — sügav murtud roheline. Valge tekst annab 7.3:1.
@@ -49,12 +63,6 @@
   */
   --color-mets: #29483f;
   --color-mets-syva: #20382f;
-  /*
-    Mobiilimenüü seisis varem jaluse värvi peal. Nüüd on tal oma muutuja —
-    vaikimisi sama toon, aga admin-lehelt saab menüü eraldi värvida, ilma et
-    jalus ja teenuse päis kaasa muutuksid.
-  */
-  --color-menyy: #20382f;
   --color-kuld-hele: #dcc27a;
   --color-luu: #f4f1e8;
 
@@ -78,7 +86,13 @@
   vaikimisi väärtused — kui admin ei ole midagi salvestanud, kehtivad need.
 */
 :root {
-  --silt-suurus: 1rem;
+  /*
+    24 px. Tee siia oli 16 → 18 → 21 → 24: peenike kuldne suurtähtsilt vajab
+    suurte kuvakirjas pealkirjade kõrval päriselt seda kraadi, muidu loeb ta
+    märkusena. Teine pool parandusest on kaal 600 (vt .silt) — silt peab
+    jääma peen, mitte ainult suur.
+  */
+  --silt-suurus: 1.5rem;
   --mikro-suurus: 1rem;
   --tekst-suurus: 1.125rem;
   --tekst-suur-suurus: 1.3125rem;
@@ -221,13 +235,57 @@
   /*
     Hõredalt tähestatud silt sektsioonide kohal.
     Suurus hoitakse siin ühes kohas — kogu lehe sildid muutuvad korraga.
+
+    FONT ON KUVAFONT, mitte tekstifont. Varem ei olnud siin font-family't
+    üldse, seega silt päris body käest tekstifondi (Poppins) — aga avalehe
+    „Kohalolu Kristuses” oli Cormorantis, sest Marta oli sellele ÜHELE
+    väljale admin-lehelt fondi andnud. Nii jooksid lehe päised lahku: üks
+    seriifis, ülejäänud groteskis. Nüüd tuleb font ühest kohast ja järgib
+    admini „Pealkirjafondi” valikut.
   */
   .silt {
+    font-family: var(--font-display);
     font-size: var(--silt-suurus);
-    font-weight: 500;
+    /*
+      KAAL 600, MITTE 500.
+
+      Cormorant on seriifkiri ja tema peenikesed jooned kaovad väikeses
+      kraadis ära; kuldne toon heledal pinnal võtab neilt viimasegi jõu.
+      Sildid nagu „TERVIKLIKKUS” või „KONTAKT” luges ekraanilt vaevu.
+      600 on Cormorantil päris lõige (vt fondid.js), mitte brauseri
+      võltspaks — tähe joonis jääb terveks.
+    */
+    font-weight: 600;
     letter-spacing: var(--silt-vahe);
     text-transform: uppercase;
     color: var(--color-gold-deep);
+  }
+
+  /*
+    LEHE PÄISE SILT — suurem kui tavaline sektsioonisilt.
+
+    Ta seisab üksinda suure pealkirja kohal ja peab kandma kogu lehe
+    sissejuhatust; sektsioonisildi mõõdus kadus ta seal ära. Cormorant on
+    väikeses kraadis lisaks peenike, seega fondivahetus üksi teeks ta hoopis
+    tagasihoidlikumaks.
+
+    MIKS OMA clamp(), MITTE --silt-suurus: see muutuja tuleb admini
+    kujunduslehelt (data/kujundus.json) ja seal seatud väärtus võidaks koodi
+    oma alati. Päisesildi mõõt on kujunduse otsus, mitte seade — seepärast
+    jääb ta koodi ja liigub ekraani laiusega kaasa.
+  */
+  .silt-suur {
+    /* Algne mõõt × 1,25 — suurem kui enne, aga ei võistle pealkirjaga */
+    font-size: clamp(1.31rem, 2.63vw, 1.94rem);
+    /*
+      TÄHEVAHE KAHANEB KRAADI KASVADES.
+
+      Silt on suurtähtedes ja --silt-vahe (0,28em) on mõõdetud 16 px sildi
+      järgi. Kaks korda suuremas kirjas tähendab sama em-väärtus kaks korda
+      laiemat vahet: „KOHALOLU KRISTUSES” muutus telefonis kolmerealiseks.
+      Kordaja hoiab sildi ühel-kahel real ja järgib ikka admini valikut.
+    */
+    letter-spacing: calc(var(--silt-vahe) * 0.62);
   }
 
   /* Sama silt tumedal taustal — hele kuld (5.7:1 metsal) */
@@ -244,10 +302,13 @@
     tumedal pinnal pisut rohkem vahet — kuvakiri --kuva-lisa kaudu, tavatekst
     otse. Sildid ja nupud (.silt, .mikro, .nimi) määravad oma vahe ise, nii et
     nendeni see ei ulatu.
+
+    .bg-menyy ei ole siin: mobiilimenüü paneel kannab nüüd tumeda kirja heledal
+    pinnal, seega tal ei ole seda parandust vaja — lisavahe muudaks menüü kirja
+    lehe ülejäänud heledatest pindadest hõredamaks.
   */
   .bg-mets,
-  .bg-mets-syva,
-  .bg-menyy {
+  .bg-mets-syva {
     --kuva-lisa: 0.016em;
     letter-spacing: 0.014em;
   }
@@ -297,6 +358,29 @@
     font-size: var(--tekst-suur-suurus);
   }
 
+  /*
+    ÜKSIKU TEKSTI KAKS KRAADI — lauaarvuti ja telefon.
+
+    Admin saab ühele tekstile anda eraldi suuruse telefoni jaoks (vt
+    src/sisu/tekstikujud.js). Väärtus tuleb <span>-ilt muutujana, sest
+    inline-stiilis ei ole meediapäringut — valiku teeb see klass.
+
+    MÕLEMAD REEGLID ON KLASSI PEAL. Kui lauaarvuti suurus jääks inline
+    font-size'iks, võidaks ta meediapäringu ära (inline on klassist tugevam)
+    ja telefoni suurus ei jõuaks kunagi ekraanile.
+
+    Piir on 639 px — sama koht, kus mobiilinupud lehel ümber lülituvad.
+  */
+  .kuju-mobiil {
+    font-size: var(--kuju-suurus, 1em);
+  }
+
+  @media (max-width: 639px) {
+    .kuju-mobiil {
+      font-size: var(--kuju-suurus-mobiil, var(--kuju-suurus, 1em));
+    }
+  }
+
   /* Peen kuldjoon — asendab kaarte ja varje. Nõksa üle juuksekarva, et püsiks nähtav. */
   .joon {
     height: 1.5px;
@@ -327,6 +411,62 @@
   /* Kaar — foto ülaserv on poolkaar nagu kirikuaken */
   .kaar {
     border-radius: 999rem 999rem 0 0;
+  }
+
+  /*
+    TÕLGENDUS — salmi selgitus peidus, avaneb klõpsust.
+
+    Avaja kannab .silt klassi (sama kuldne suurtähtedes silt, mis mujal
+    lehel), lisaks nool, mis avades pöördub. Ühtki joont ega raami siin ei
+    ole — avaja on tekst, mitte nupp, ja jääb salmi rahusse.
+
+    Nool on ↓, mitte kolmnurk: sama märgipere, mis noolelinkide → juures.
+  */
+  .tolgendus > summary {
+    display: inline-block;
+    /*
+      AVAJA ON SILDIST VÄIKSEM. Ta kannab .silt klassi ja sai sellega kaasa
+      ka sektsioonisildi mõõdu (24 px) — salmi all seisis „LOE TÕLGENDUST”
+      seetõttu sama kaalukalt kui kirjakoha viide selle kohal, kuigi ta on
+      lüliti, mitte pealkiri. Kordaja, mitte kindel piksliarv: nii liigub ta
+      kaasa, kui Marta admin-lehelt sildisuurust muudab.
+    */
+    font-size: calc(var(--silt-suurus) * 0.75);
+    /*
+      Polsterdus teeb sildist sõrmele mõõdu. Ümbrise ülemine vahe on sama
+      võrra väiksem (mt-7), nii et silmale jääb salmi ja avaja vahe endiseks.
+    */
+    padding-block: 0.5rem;
+    cursor: pointer;
+    /* Brauseri oma kolmnurk maha — avaja on paljas tekst */
+    list-style: none;
+    transition: color 0.45s var(--sujuv);
+  }
+
+  .tolgendus > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .tolgendus > summary:hover {
+    color: var(--color-ink);
+  }
+
+  .tolgendus > summary.silt-tume:hover {
+    color: var(--color-luu);
+  }
+
+  /*
+    Alajoon istub tähtede all, mitte polsterduse serval — muidu ripuks ta
+    sõnadest 8 px allpool. `bottom` on siin polsterduse võrra kõrgemal.
+  */
+  .tolgendus > summary.alajoon::after {
+    bottom: 0.15rem;
+  }
+
+  /* Silt vahetub avamisel: kumbki sõna seisab omal ajal */
+  .tolgendus:not([open]) .tolgendus-lahti,
+  .tolgendus[open] .tolgendus-kinni {
+    display: none;
   }
 
   /*

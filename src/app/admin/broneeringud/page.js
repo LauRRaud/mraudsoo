@@ -30,12 +30,22 @@ function vormindaAeg(iso) {
   });
 }
 
-export default async function BroneeringudLeht() {
+/*
+  Mitu soovi korraga näidatakse. Fail hoiab kuni 500 kirjet ja kõigi korraga
+  renderdamine teeb lehe raskeks — vanemad on ühe klõpsu kaugusel.
+*/
+const KORRAGA = 50;
+
+export default async function BroneeringudLeht({ searchParams }) {
   if (!(await kasSisseLoginud())) redirect("/admin/login");
+
+  const { koik } = await searchParams;
+  const naitaKoiki = koik === "1";
 
   const soovid = await loeBroneeringud();
   const postToimib = onPostSeadistatud();
   const lugemata = soovid.filter((s) => !s.loetud).length;
+  const nahtaval = naitaKoiki ? soovid : soovid.slice(0, KORRAGA);
 
   return (
     <div className="mx-auto w-full max-w-[1360px] px-6 py-10 lg:px-10">
@@ -67,7 +77,7 @@ export default async function BroneeringudLeht() {
         <p className="mt-10 text-lg text-ink-soft">Soove ei ole veel tulnud.</p>
       ) : (
         <ul className="mt-10 space-y-5">
-          {soovid.map((soov) => (
+          {nahtaval.map((soov) => (
             <li
               key={soov.id}
               className={`border-l-2 bg-bone px-6 py-5 ${
@@ -80,6 +90,16 @@ export default async function BroneeringudLeht() {
                   {!soov.loetud && (
                     <span className="ml-3 align-middle mikro text-[0.65rem] text-rohe">
                       uus
+                    </span>
+                  )}
+                  {/*
+                    Keelemärk ainult siis, kui soov EI tulnud eesti lehelt:
+                    siis vajab ta ingliskeelset vastust. Vanadel soovidel
+                    (enne kakskeelsust) välja ei ole ja märki ei teki.
+                  */}
+                  {soov.keel && soov.keel !== "et" && (
+                    <span className="ml-3 align-middle mikro border border-gold-deep px-2 py-0.5 text-[0.6rem] text-gold-deep">
+                      {String(soov.keel).toUpperCase()}
                     </span>
                   )}
                 </p>
@@ -146,6 +166,17 @@ export default async function BroneeringudLeht() {
             </li>
           ))}
         </ul>
+      )}
+
+      {!naitaKoiki && soovid.length > KORRAGA && (
+        <p className="mt-8">
+          <Link
+            href="/admin/broneeringud?koik=1"
+            className="mikro text-[0.7rem] text-ink-faint transition-colors hover:text-rohe"
+          >
+            {`Näita kõiki ${soovid.length} soovi`}
+          </Link>
+        </p>
       )}
     </div>
   );

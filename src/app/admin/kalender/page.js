@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { kasSisseLoginud } from "@/admin/turve";
-import { laeKalender } from "@/broneering/kalender";
+import { kalendriTunnus, laeKalender } from "@/broneering/kalender";
 import KalendriHaldus from "@/components/KalendriHaldus";
 
 /*
@@ -18,6 +18,8 @@ export const metadata = {
 export default async function KalendriLeht() {
   if (!(await kasSisseLoginud())) redirect("/admin/login");
 
+  /* Tunnus enne seisu — vt selgitust src/app/admin/page.js */
+  const tunnus = await kalendriTunnus();
   const seis = await laeKalender();
 
   return (
@@ -38,7 +40,7 @@ export default async function KalendriLeht() {
       </p>
 
       <div className="mt-10">
-        <KalendriHaldus algseis={seis} />
+        <KalendriHaldus algseis={seis} algtunnus={tunnus} />
       </div>
     </div>
   );

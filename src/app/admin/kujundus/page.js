@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { kasSisseLoginud } from "@/admin/turve";
 import { KUVA_FONDID, TEKSTI_FONDID } from "@/kujundus/fondid";
-import { laeKujundus } from "@/kujundus/lae";
+import { kujunduseTunnus, laeKujundus } from "@/kujundus/lae";
 import { laeTaustaPildid } from "@/kujundus/taustaPildid";
 import KujunduseHaldus from "@/components/KujunduseHaldus";
 
@@ -14,6 +14,8 @@ export const metadata = {
 export default async function KujunduseLeht() {
   if (!(await kasSisseLoginud())) redirect("/admin/login");
 
+  /* Tunnus enne seisu — vt selgitust src/app/admin/page.js */
+  const tunnus = await kujunduseTunnus();
   const kujundus = await laeKujundus();
   const pildid = await laeTaustaPildid();
 
@@ -38,6 +40,7 @@ export default async function KujunduseLeht() {
         {/* Fondinimekirjad tulevad serverilt — komponent ei tohi next/font-i importida */}
         <KujunduseHaldus
           algseis={kujundus}
+          algtunnus={tunnus}
           algsedPildid={pildid}
           kuvaFondid={KUVA_FONDID.map(({ id, nimi, muutuja, kirjeldus }) => ({
             id,

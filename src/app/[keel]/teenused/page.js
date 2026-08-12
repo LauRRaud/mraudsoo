@@ -2,21 +2,29 @@ import Link from "next/link";
 import Ilmub from "@/components/Ilmub";
 import { KATTE_VARV, Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
+import { keeleAlternatiivid, keeleks, tee } from "@/sisu/keeled";
 import { plokiStiil, tekstiKuju } from "@/sisu/tekstikujud";
 
-export async function generateMetadata() {
-  const sisu = await laeSisu();
+/* Pealkirja varuväärtus: silt võib olla admin-lehel tühjaks jäetud */
+export async function generateMetadata({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
   const { hero } = sisu.teenusedLeht;
 
   return {
-    title: hero.silt,
+    title: hero.silt || hero.pealkiri,
     description: hero.tekst,
+    alternates: keeleAlternatiivid(kood, "/teenused"),
   };
 }
 
 /* TEENUSED — nummerdatud register, iga rida on uks omaette maailma. */
-export default async function Teenused() {
-  const sisu = await laeSisu();
+export default async function Teenused({ params }) {
+  const { keel } = await params;
+  const kood = keeleks(keel);
+  const sisu = await laeSisu(kood);
+  const t = (rada) => tee(kood, rada);
   const { hero, tsitaat, tsitaadiSilt, lopp } = sisu.teenusedLeht;
   /* Admin võib teenuste massiivi tervikuna asendada — kindlustame kuju */
   const teenused = Array.isArray(sisu.teenused) ? sisu.teenused : [];
@@ -31,7 +39,7 @@ export default async function Teenused() {
     <>
       <Sektsioon taust="bone" polsterdus="ohuke" taustaVoti="teenused.hero">
         <div className="max-w-3xl pt-6 sm:pt-10">
-          <p className="sisene silt" style={v("hero.silt")}>
+          <p className="sisene silt silt-suur" style={v("hero.silt")}>
             {s("hero.silt", hero.silt)}
           </p>
           <h1
@@ -70,7 +78,10 @@ export default async function Teenused() {
           >
             {teenused.map((teenus, jrk) => (
               <li key={teenus.slug}>
-                <Link href={`/teenused/${teenus.slug}`} className="group block">
+                <Link
+                  href={t(`/teenused/${teenus.slug}`)}
+                  className="group block"
+                >
                   {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
                   <h2
                     className="kuva text-[clamp(2.15rem,7vw,2.6rem)] text-[var(--oma-varv,var(--color-ink))] transition-colors duration-300 group-hover:text-gold-deep"
@@ -148,10 +159,10 @@ export default async function Teenused() {
           </Tekst>
         </Ilmub>
         <Ilmub viive={180} className="mt-11 flex flex-wrap justify-center gap-4">
-          <Nupp href="/broneerimine" nool>
+          <Nupp href={t("/broneerimine")} nool>
             {lopp.nuppEsmane}
           </Nupp>
-          <Nupp href="/hinnakiri" variant="aaris">
+          <Nupp href={t("/hinnakiri")} variant="aaris">
             {lopp.nuppTeine}
           </Nupp>
         </Ilmub>

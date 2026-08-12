@@ -1,25 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { leiaKeel } from "@/sisu/keeled";
+import { liides } from "@/sisu/liides";
 
-const KUUD = [
-  "jaanuar",
-  "veebruar",
-  "märts",
-  "aprill",
-  "mai",
-  "juuni",
-  "juuli",
-  "august",
-  "september",
-  "oktoober",
-  "november",
-  "detsember",
-];
+/*
+  Kuunimed ja nädalapäevade tähed tulevad liidese sõnastikust
+  (src/sisu/liides.js) — need ei ole Marta sisu, vaid masina hääl.
 
-/* Eesti nädal algab esmaspäevast */
-const NADALAPAEVAD = ["E", "T", "K", "N", "R", "L", "P"];
-
+  Nädal algab MÕLEMAS keeles esmaspäevast: kalender on Eestis kasutatav
+  tööriist ja veergude nihutamine keele järgi ainult segaks.
+*/
 export const MAX_KUUPAEVI = 3;
 
 /* Mitmes veerus on kuu 1. kuupäev, kui nädal algab esmaspäevast */
@@ -40,9 +31,9 @@ export function teeVoti(aasta, kuu, paev) {
   )}`;
 }
 
-export function vormindaKuupaev(voti) {
+export function vormindaKuupaev(voti, keel = "et") {
   const [a, k, p] = voti.split("-").map(Number);
-  return new Date(a, k - 1, p).toLocaleDateString("et-EE", {
+  return new Date(a, k - 1, p).toLocaleDateString(leiaKeel(keel).lokaat, {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -56,11 +47,13 @@ export function vormindaKuupaev(voti) {
   Nädalapäev on 1 = esmaspäev ... 7 = pühapäev.
 */
 export default function Kalender({
+  keel = "et",
   valitud,
   onMuuda,
   suletudPaevad = [],
   suletudNadalapaevad = [],
 }) {
+  const sonad = liides(keel);
   const tana = useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -104,12 +97,12 @@ export default function Kalender({
           disabled={!saabTagasi}
           className="flex h-10 w-10 items-center justify-center text-lg text-ink-soft transition-colors hover:text-gold-deep disabled:cursor-not-allowed disabled:text-ink-faint/40"
         >
-          <span className="sr-only">Eelmine kuu</span>
+          <span className="sr-only">{sonad.eelmineKuu}</span>
           <span aria-hidden="true">←</span>
         </button>
 
         <p aria-live="polite" className="kuva text-xl text-ink sm:text-2xl">
-          {KUUD[kuu]} {aasta}
+          {sonad.kuud[kuu]} {aasta}
         </p>
 
         <button
@@ -117,7 +110,7 @@ export default function Kalender({
           onClick={() => liigu(1)}
           className="flex h-10 w-10 items-center justify-center text-lg text-ink-soft transition-colors hover:text-gold-deep"
         >
-          <span className="sr-only">Järgmine kuu</span>
+          <span className="sr-only">{sonad.jargmineKuu}</span>
           <span aria-hidden="true">→</span>
         </button>
       </div>
@@ -126,13 +119,14 @@ export default function Kalender({
 
       {/* Nädalapäevad */}
       <div className="mt-5 grid grid-cols-7 gap-1">
-        {NADALAPAEVAD.map((p) => (
+        {/* Võti on järjekord, mitte täht: inglise M T W T F S S kordub */}
+        {sonad.nadalapaevad.map((taht, jrk) => (
           <div
-            key={p}
+            key={jrk}
             aria-hidden="true"
             className="py-2 text-center mikro text-ink-faint"
           >
-            {p}
+            {taht}
           </div>
         ))}
       </div>
@@ -165,7 +159,9 @@ export default function Kalender({
               onClick={() => lyliti(voti, keelatud)}
               disabled={keelatud}
               aria-pressed={onValitud}
-              aria-label={`${vormindaKuupaev(voti)}${suletud ? " — ei ole kohtumisteks avatud" : ""}`}
+              aria-label={`${vormindaKuupaev(voti, keel)}${
+                suletud ? ` — ${sonad.eiOleAvatud}` : ""
+              }`}
               className={`relative flex aspect-square items-center justify-center text-lg transition-colors ${
                 onValitud
                   ? "bg-rohe text-white"
@@ -200,7 +196,7 @@ export default function Kalender({
       {/* Valitud kuupäevad */}
       <div className="mt-6 flex flex-wrap items-baseline justify-between gap-3">
         <p className="text-sm text-ink-faint">
-          Valitud {valitud.length}/{MAX_KUUPAEVI}
+          {sonad.valitud} {valitud.length}/{MAX_KUUPAEVI}
         </p>
         {valitud.length > 0 && (
           <button
@@ -208,7 +204,7 @@ export default function Kalender({
             onClick={() => onMuuda([])}
             className="text-sm text-ink-soft underline underline-offset-4 transition-colors hover:text-gold-deep"
           >
-            Tühjenda
+            {sonad.tyhjenda}
           </button>
         )}
       </div>
@@ -220,14 +216,14 @@ export default function Kalender({
               key={voti}
               className="flex items-center justify-between gap-4 border-t border-gold/25 pt-3 text-lg text-ink-soft"
             >
-              <span>{vormindaKuupaev(voti)}</span>
+              <span>{vormindaKuupaev(voti, keel)}</span>
               <button
                 type="button"
                 onClick={() => onMuuda(valitud.filter((v) => v !== voti))}
                 className="text-ink-faint transition-colors hover:text-gold-deep"
               >
                 <span className="sr-only">
-                  Eemalda {vormindaKuupaev(voti)}
+                  {sonad.eemalda} {vormindaKuupaev(voti, keel)}
                 </span>
                 <span aria-hidden="true">×</span>
               </button>
