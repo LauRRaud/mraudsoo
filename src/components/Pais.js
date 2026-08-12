@@ -153,10 +153,6 @@ export default function Pais({
     };
   }, [avatud]);
 
-  /* Broneerimine on esile tõstetud — menüüs seisab see nupuna */
-  const tavalised = navi.filter((punkt) => punkt.tee !== "/broneerimine");
-  const esile = navi.find((punkt) => punkt.tee === "/broneerimine");
-
   /* Adminis „Saidi nimi” alla valitud kuju rakendub päise logotekstile. */
   const saidiNimePlokiStiil = plokiStiil(tekstiKujud, "meta")(
     "saidiNimi",
@@ -268,7 +264,7 @@ export default function Pais({
         */}
         <nav className="hidden xl:block" aria-label={sonad.peamenyy}>
           <ul className="flex items-center gap-7 2xl:gap-9">
-            {tavalised.map((punkt) => (
+            {navi.map((punkt) => (
               <li key={punkt.tee}>
                 <Link
                   href={keeleTee(keel, punkt.tee)}
@@ -291,16 +287,6 @@ export default function Pais({
                 </Link>
               </li>
             ))}
-            {esile && (
-              <li>
-                <Link
-                  href={keeleTee(keel, esile.tee)}
-                  className="nupp nupp-aaris nupp-vaike mikro font-normal"
-                >
-                  <span>{esile.nimi}</span>
-                </Link>
-              </li>
-            )}
           </ul>
         </nav>
 
