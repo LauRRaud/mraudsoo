@@ -74,7 +74,7 @@ export default async function Avaleht({ params }) {
               {s("hero.silt", hero.silt)}
             </p>
             <h1
-              className="sisene kuva mt-6 text-[clamp(3.25rem,9vw,6.5rem)] leading-[0.98] text-ink"
+              className="sisene kuva mt-6 text-[clamp(3rem,8vw,6rem)] leading-[0.98] text-ink"
               style={{ "--viive": "90ms", ...v("hero.pealkiri") }}
             >
               {s("hero.pealkiri", hero.pealkiri)}
