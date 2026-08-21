@@ -68,19 +68,22 @@ export default async function Teenused({ params }) {
         <div className="mx-auto max-w-[1400px] px-6 pb-16 sm:pb-20 lg:px-12 lg:pb-24">
           {/*
             Register, mitte tabel: iga teenus on omaette plokk kahes veerus,
-            jooni ei ole — plokke lahutab õhk. Sama vorm mis avalehel, ainult
-            suurema kirjaga, sest siin on teenused lehe peasisu.
+            plokke lahutavad peened kuldjooned. Sama vorm mis avalehel, ainult
+            suurema õhuga, sest siin on teenused lehe peasisu.
           */}
           <Ilmub
             ruhm
             as="ul"
-            className="grid gap-x-16 gap-y-10 pt-12 sm:grid-cols-2 sm:gap-y-12 sm:pt-14 lg:gap-x-24 lg:gap-y-14 lg:pt-16"
+            className="mt-12 grid gap-x-16 border-t border-gold/35 sm:mt-14 sm:grid-cols-2 lg:mt-16 lg:gap-x-24"
           >
             {teenused.map((teenus, jrk) => (
-              <li key={teenus.slug}>
+              <li
+                key={teenus.slug}
+                className="border-b border-gold/25 py-7 sm:py-8 lg:py-9"
+              >
                 <Link
                   href={t(`/teenused/${teenus.slug}`)}
-                  className="group block"
+                  className="group block h-full"
                 >
                   {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
                   <h2

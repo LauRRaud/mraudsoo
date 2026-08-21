@@ -243,9 +243,10 @@ export default async function TeenuseLeht({ params }) {
     (bone) — seega piisab tsitaadi vaatamisest.
   */
   const nimekirjaTaust = tsitaat ? "linen" : "sage";
+  const kuvabNimekirja = nimekiri.length > 0 && !onFotograafia;
 
   const eelnevTaust =
-    nimekiri.length > 0
+    kuvabNimekirja
       ? nimekirjaTaust
       : tsitaat
         ? "sage"
@@ -479,7 +480,7 @@ export default async function TeenuseLeht({ params }) {
         </Sektsioon>
       )}
 
-      {nimekiri.length > 0 && (
+      {kuvabNimekirja && (
         <Sektsioon taust={nimekirjaTaust} taustaVoti="teenuseLeht.nimekiri">
           {onTeadlikOstlemine ? (
             <div className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24">
@@ -551,11 +552,9 @@ export default async function TeenuseLeht({ params }) {
                     >
                       <p
                         className={`kuva text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink ${
-                          onFotograafia
-                            ? "text-left"
-                            : onJoontegaNimekiri
-                              ? "max-w-[40ch] text-left"
-                              : `text-center ${onPuhaRuum ? "" : "sm:text-left"}`
+                          onJoontegaNimekiri
+                            ? "max-w-[40ch] text-left"
+                            : `text-center ${onPuhaRuum ? "" : "sm:text-left"}`
                         }`}
                         style={v(`nimekiri.${punktJrk}`)}
                       >

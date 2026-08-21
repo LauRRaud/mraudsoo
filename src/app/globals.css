@@ -427,13 +427,6 @@
     overscroll-behavior-inline: contain;
     touch-action: pan-x;
     cursor: grab;
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 4%,
-      black 96%,
-      transparent
-    );
   }
 
   .fotogalerii:active {
@@ -452,14 +445,20 @@
   .fotogalerii-ruhm {
     display: flex;
     flex-shrink: 0;
+    align-items: center;
     gap: clamp(1rem, 2vw, 2rem);
     padding-right: clamp(1rem, 2vw, 2rem);
   }
 
   .fotogalerii-kaader {
     width: clamp(16rem, 30vw, 30rem);
+    height: clamp(20rem, 37.5vw, 37.5rem);
     flex: none;
     filter: grayscale(1) contrast(1.04);
+  }
+
+  .fotogalerii-kaader-lai {
+    width: clamp(24rem, 45vw, 56.25rem);
   }
 
   .fotogalerii-nool {
@@ -467,25 +466,29 @@
     z-index: 2;
     top: calc(50% - 2rem);
     display: grid;
-    width: 3.25rem;
-    height: 3.25rem;
+    width: 4rem;
+    height: 4rem;
     place-items: center;
-    border: 1px solid rgb(251 248 241 / 45%);
+    border: 0;
     border-radius: 999px;
-    background: rgb(20 55 45 / 82%);
-    color: var(--luu);
-    font-size: 1.5rem;
-    line-height: 1;
-    backdrop-filter: blur(8px);
+    background: rgb(20 55 45 / 92%);
     transition:
       background-color 180ms ease,
-      border-color 180ms ease,
       transform 180ms ease;
+  }
+
+  .fotogalerii-kolmnurk {
+    width: 2rem;
+    height: 2rem;
+    fill: none;
+    stroke: var(--color-luu);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .fotogalerii-nool:hover,
   .fotogalerii-nool:focus-visible {
-    border-color: var(--kuld-hele);
     background: rgb(20 55 45 / 96%);
     transform: scale(1.06);
   }
@@ -504,10 +507,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .fotogalerii {
-      mask-image: none;
-    }
-
     .fotogalerii-nool {
       transition: none;
     }
@@ -519,10 +518,14 @@
 
   @media (max-width: 640px) {
     .fotogalerii-nool {
-      top: calc(50% - 1.5rem);
-      width: 2.75rem;
-      height: 2.75rem;
-      font-size: 1.25rem;
+      top: calc(50% - 1.625rem);
+      width: 3.25rem;
+      height: 3.25rem;
+    }
+
+    .fotogalerii-kolmnurk {
+      width: 1.75rem;
+      height: 1.75rem;
     }
   }
 

@@ -341,19 +341,22 @@ export default async function Avaleht({ params }) {
 
         {/*
           Register, mitte tabel: iga teenus on omaette plokk kahes veerus.
-          Jooni ei ole — plokke lahutab õhk. Hover puudutab ainult nime,
-          mitte tervet rida (reataust luges nagu tabel).
+          Peened kuldjooned annavad nii mobiilis kui arvutis igale teenusele
+          selge rütmi. Hover puudutab ainult nime, mitte tervet rida.
         */}
         <Ilmub
           ruhm
           as="ul"
-          className="mt-10 grid gap-x-16 gap-y-10 sm:grid-cols-2 sm:gap-y-12 lg:gap-x-24 lg:gap-y-14"
+          className="mt-10 grid gap-x-16 border-t border-gold/35 sm:grid-cols-2 lg:gap-x-24"
         >
           {sisu.teenused.map((teenus, jrk) => (
-            <li key={teenus.slug}>
+            <li
+              key={teenus.slug}
+              className="border-b border-gold/25 py-7 sm:py-8 lg:py-9"
+            >
               <Link
                 href={t(`/teenused/${teenus.slug}`)}
-                className="group block"
+                className="group block h-full"
               >
                 {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
                 <h3

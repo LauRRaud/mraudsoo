@@ -9,7 +9,12 @@ const PILDID = [
   { nimi: "marta-portree", altEt: "Portree loomulikus valguses", altEn: "Portrait in natural light" },
   { nimi: "marta-seistes", altEt: "Seisev portree stuudios", altEn: "Standing studio portrait" },
   { nimi: "marta-diivanil", altEt: "Rahulik portree diivanil", altEn: "Quiet portrait on a sofa" },
-  { nimi: "marta-lamades", altEt: "Ajatu portree heledas stuudios", altEn: "Timeless portrait in a light studio" },
+  {
+    nimi: "marta-lamades",
+    altEt: "Ajatu portree heledas stuudios",
+    altEn: "Timeless portrait in a light studio",
+    lai: true,
+  },
   { nimi: "marta-tutrega", altEt: "Kahe inimese portree stuudios", altEn: "Portrait of two people in a studio" },
 ];
 
@@ -35,12 +40,19 @@ function Pildirida({ keel, peidetud = false }) {
       aria-hidden={peidetud ? "true" : undefined}
     >
       {PILDID.map((pilt) => (
-        <div className="fotogalerii-kaader" key={`${pilt.nimi}-${peidetud}`}>
+        <div
+          className={`fotogalerii-kaader${pilt.lai ? " fotogalerii-kaader-lai" : ""}`}
+          key={`${pilt.nimi}-${peidetud}`}
+        >
           <Foto
             nimi={pilt.nimi}
             alt={peidetud ? "" : keel === "en" ? pilt.altEn : pilt.altEt}
-            kuvasuhe="4 / 5"
-            sizes="(max-width: 640px) 72vw, 30vw"
+            kuvasuhe={pilt.lai ? "3 / 2" : "4 / 5"}
+            sizes={
+              pilt.lai
+                ? "(max-width: 640px) 100vw, 48vw"
+                : "(max-width: 640px) 72vw, 30vw"
+            }
             className="h-full w-full"
           />
         </div>
@@ -65,13 +77,27 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
   const keriFoto = useCallback(
     (suund) => {
       const galerii = galeriiRef.current;
-      const kaader = radaRef.current?.querySelector(".fotogalerii-kaader");
-      if (!galerii || !kaader) return;
+      const kaadrid = Array.from(
+        radaRef.current?.querySelectorAll(".fotogalerii-kaader") ?? [],
+      );
+      if (!galerii || kaadrid.length === 0) return;
 
-      const ruhm = radaRef.current?.firstElementChild;
-      const vahe = ruhm ? Number.parseFloat(getComputedStyle(ruhm).gap) || 0 : 0;
-      const ruhmaLaius = ruhm?.getBoundingClientRect().width ?? 0;
-      const liikumine = kaader.getBoundingClientRect().width + vahe;
+      const galeriiMoot = galerii.getBoundingClientRect();
+      const galeriiKesk = galeriiMoot.left + galeriiMoot.width / 2;
+      const lahinIndeks = kaadrid.reduce(
+        (parim, kaader, indeks) => {
+          const moot = kaader.getBoundingClientRect();
+          const kaugus = Math.abs(moot.left + moot.width / 2 - galeriiKesk);
+          return kaugus < parim.kaugus ? { indeks, kaugus } : parim;
+        },
+        { indeks: 0, kaugus: Number.POSITIVE_INFINITY },
+      ).indeks;
+      const sihtIndeks = Math.max(
+        0,
+        Math.min(kaadrid.length - 1, lahinIndeks + suund),
+      );
+      const sihtMoot = kaadrid[sihtIndeks].getBoundingClientRect();
+      const liikumine = sihtMoot.left + sihtMoot.width / 2 - galeriiKesk;
       const vahendatudLiikumine = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
@@ -206,7 +232,13 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
           aria-label={keel === "en" ? "Previous photograph" : "Eelmine foto"}
           onClick={() => keriFoto(-1)}
         >
-          <span aria-hidden="true">←</span>
+          <svg
+            aria-hidden="true"
+            className="fotogalerii-kolmnurk"
+            viewBox="0 0 24 24"
+          >
+            <path d="m15 4-8 8 8 8" />
+          </svg>
         </button>
 
         <div
@@ -230,7 +262,13 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
           aria-label={keel === "en" ? "Next photograph" : "Järgmine foto"}
           onClick={() => keriFoto(1)}
         >
-          <span aria-hidden="true">→</span>
+          <svg
+            aria-hidden="true"
+            className="fotogalerii-kolmnurk"
+            viewBox="0 0 24 24"
+          >
+            <path d="m9 4 8 8-8 8" />
+          </svg>
         </button>
       </div>
     </section>
