@@ -40,9 +40,9 @@ export function Sektsioon({
     kitsas: "max-w-4xl",
   };
   const polsterdused = {
-    tavaline: "py-20 sm:py-28 lg:py-36",
-    ohuke: "py-14 sm:py-16 lg:py-24",
-    suur: "py-24 sm:py-32 lg:py-44",
+    tavaline: "py-16 sm:py-20 lg:py-24",
+    ohuke: "py-12 sm:py-14 lg:py-20",
+    suur: "py-20 sm:py-24 lg:py-32",
   };
 
   return (

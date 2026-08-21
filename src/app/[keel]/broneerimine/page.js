@@ -65,7 +65,7 @@ export default async function Broneerimine({ params }) {
         data-taust="broneerimine.vorm"
         style={{ "--kate-varv": KATTE_VARV.linen }}
       >
-        <div className="mx-auto grid max-w-[1400px] gap-16 px-6 py-20 sm:py-28 lg:grid-cols-[1.3fr_0.7fr] lg:gap-24 lg:px-12 lg:py-36">
+        <div className="mx-auto grid max-w-[1400px] gap-16 px-6 py-16 sm:py-20 lg:grid-cols-[1.3fr_0.7fr] lg:gap-24 lg:px-12 lg:py-24">
           <Ilmub>
             <p className="silt" style={v("vormSilt")}>
               {s("vormSilt", broneerimine.vormSilt)}

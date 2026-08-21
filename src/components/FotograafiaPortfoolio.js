@@ -218,7 +218,7 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
       style={{ "--kate-varv": KATTE_VARV.mets }}
       aria-labelledby="fotograafia-portfoolio-pealkiri"
     >
-      <div className="mx-auto max-w-[1400px] px-6 pb-12 pt-16 sm:pb-16 sm:pt-20 lg:px-12 lg:pb-20 lg:pt-24">
+      <div className="mx-auto max-w-[1400px] px-6 pb-10 pt-14 sm:pb-12 sm:pt-16 lg:px-12 lg:pb-16 lg:pt-20">
         <Ilmub className="grid gap-5 md:grid-cols-[0.65fr_1.35fr] md:items-end md:gap-16">
           <p className="silt silt-tume">{tekst.silt}</p>
           <div>
@@ -235,7 +235,7 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
         </Ilmub>
       </div>
 
-      <div className="fotogalerii-ümbris pb-16 sm:pb-20 lg:pb-24">
+      <div className="fotogalerii-ümbris pb-14 sm:pb-16 lg:pb-20">
         <button
           type="button"
           className="fotogalerii-nool fotogalerii-nool-vasak"

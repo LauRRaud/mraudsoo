@@ -397,7 +397,7 @@ export default async function Avaleht({ params }) {
         data-taust="avaleht.minust"
         style={{ "--kate-varv": KATTE_VARV.bone }}
       >
-        <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-20 sm:py-28 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24 lg:px-12 lg:py-36">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24 lg:px-12 lg:py-24">
           <div className="w-full max-w-[440px] justify-self-center lg:justify-self-start">
             <Foto
               nimi="marta-diivanil"

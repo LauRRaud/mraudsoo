@@ -297,7 +297,7 @@ export default async function Minust({ params }) {
         data-taust="minust.foto"
         style={{ "--kate-varv": KATTE_VARV.linen }}
       >
-        <div className="mx-auto max-w-[1400px] px-6 py-20 sm:py-28 lg:px-12 lg:py-36">
+        <div className="mx-auto max-w-[1400px] px-6 py-16 sm:py-20 lg:px-12 lg:py-24">
           <div className="mx-auto max-w-[1000px]">
             <Foto
               nimi="marta-lamades"
@@ -323,7 +323,7 @@ export default async function Minust({ params }) {
         data-taust="minust.terviklikkus"
         style={{ "--kate-varv": KATTE_VARV.sage }}
       >
-        <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-20 sm:py-28 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24 lg:px-12 lg:py-36">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 py-16 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24 lg:px-12 lg:py-24">
           <div>
             <Ilmub>
               <Pealkiri
