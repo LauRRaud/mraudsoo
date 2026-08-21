@@ -199,6 +199,8 @@ export default async function TeenuseLeht({ params }) {
   const onGarderoobiInventuur =
     teenus.slug?.toLowerCase() === "garderoobi-korrastus";
   const onJoontegaNimekiri = onStiiliselgus || onGarderoobiInventuur;
+  const onKaheVeerulineNimekiri =
+    onTeadlikOstlemine || onJoontegaNimekiri;
   const onUksUheleTeekond = teenus.slug?.toLowerCase() === "uks-uhele-teekond";
 
   /*
@@ -486,7 +488,7 @@ export default async function TeenuseLeht({ params }) {
 
       {kuvabNimekirja && (
         <Sektsioon taust={nimekirjaTaust} taustaVoti="teenuseLeht.nimekiri">
-          {onTeadlikOstlemine ? (
+          {onKaheVeerulineNimekiri ? (
             <div className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24">
               <Ilmub className="lg:sticky lg:top-32 lg:self-start">
                 <h2
@@ -536,36 +538,16 @@ export default async function TeenuseLeht({ params }) {
               <Ilmub
                 ruhm
                 as="ul"
-                className={`mt-11 max-w-3xl ${
-                  onJoontegaNimekiri
-                    ? "border-t border-gold/35"
-                    : `space-y-5 ${onPuhaRuum ? "mx-auto" : ""}`
-                }`}
+                className={`mt-11 max-w-3xl space-y-5 ${onPuhaRuum ? "mx-auto" : ""}`}
               >
                 {nimekiri.map((punkt, punktJrk) => {
-                  const puhasPunkt = punkt.replace(/^\s*•\s*/, "").trim();
-
                   return (
-                    <li
-                      key={punkt}
-                      className={
-                        onJoontegaNimekiri
-                          ? "border-b border-gold/25 py-6 sm:py-8"
-                          : ""
-                      }
-                    >
+                    <li key={punkt}>
                       <p
-                        className={`kuva text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink ${
-                          onJoontegaNimekiri
-                            ? "max-w-[40ch] text-left"
-                            : `text-center ${onPuhaRuum ? "" : "sm:text-left"}`
-                        }`}
+                        className={`kuva text-center text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink ${onPuhaRuum ? "" : "sm:text-left"}`}
                         style={v(`nimekiri.${punktJrk}`)}
                       >
-                        {s(
-                          `nimekiri.${punktJrk}`,
-                          onJoontegaNimekiri ? puhasPunkt : punkt,
-                        )}
+                        {s(`nimekiri.${punktJrk}`, punkt)}
                       </p>
                     </li>
                   );
