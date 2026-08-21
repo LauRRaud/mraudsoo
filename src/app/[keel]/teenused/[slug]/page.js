@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import FotograafiaPortfoolio from "@/components/FotograafiaPortfoolio";
 import Ilmub from "@/components/Ilmub";
 import { Nupp, Pealkiri, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu, laeSisuSync } from "@/sisu/lae";
@@ -14,6 +15,15 @@ import { plokiStiil, tekstiKuju, tumePlokiStiil } from "@/sisu/tekstikujud";
 /* Teenuse otsimine slugi järgi — massiiv võib admini kaudu olla asendatud */
 function leiaTeenus(teenused, slug) {
   return teenused.find((teenus) => teenus.slug === slug);
+}
+
+/* Järgmise teenuse nimi on hierarhias tume; muud admini fondi- ja mõõduvalikud säilivad. */
+function ilmaVarvita(stiil) {
+  if (!stiil) return undefined;
+  const tulemus = { ...stiil };
+  delete tulemus.color;
+  delete tulemus["--oma-varv"];
+  return tulemus;
 }
 
 /*
@@ -52,6 +62,44 @@ function kirjakohaOsad(plokk) {
     tekst: loigud[0] ?? "",
     selgitus: loigud.slice(1),
   };
+}
+
+/*
+  KIRJAKOHT SISSEJUHATUSE LÕIGUNA.
+
+  Adminis on Stiiliselguse salm praegu ühe lõiguna:
+      „Ma tänan sind ...”\nPsalm 139:14
+
+  Sisu kuju ei ole vaja selle pärast muuta ega serveri uuemaid tekste
+  vaikeväärtustega asendada. Kui viimane rida on kirjakoha viide, tõstame
+  selle lõigu lihtsalt Salm-komponendi abil oma rõhupinnale.
+*/
+function loiguKirjakoht(loik) {
+  if (typeof loik !== "string") return null;
+
+  const read = loik
+    .split(/\r?\n/)
+    .map((rida) => rida.trim())
+    .filter(Boolean);
+  if (read.length < 2) return null;
+
+  const viide = read.at(-1);
+  if (!VIITE_MUSTER.test(viide)) return null;
+
+  const tekst = read.slice(0, -1).join("\n").replace(/^—\s*/, "").trim();
+  return tekst ? { viide, tekst } : null;
+}
+
+/* Vähemalt kolm noolega seotud mõtet moodustavad eraldi vertikaalse ahela. */
+function loiguNooleAhel(loik) {
+  if (typeof loik !== "string" || !loik.includes("→")) return null;
+
+  const sammud = loik
+    .split("→")
+    .map((samm) => samm.trim())
+    .filter(Boolean);
+
+  return sammud.length >= 3 ? sammud : null;
 }
 
 /*
@@ -144,6 +192,27 @@ export default async function TeenuseLeht({ params }) {
   const loigud = Array.isArray(teenus.loigud) ? teenus.loigud : [];
   const plokid = Array.isArray(teenus.plokid) ? teenus.plokid : [];
   const nimekiri = Array.isArray(teenus.nimekiri) ? teenus.nimekiri : [];
+  const onTeadlikOstlemine = teenus.slug?.toLowerCase() === "teadlik-ostlemine";
+  const onFotograafia = teenus.slug?.toLowerCase() === "fotograafia";
+  const onPuhaRuum = teenus.slug?.toLowerCase() === "puha-ruum";
+
+  /*
+    Salm ja mõtteahel võivad olla adminis endiselt tavalised lõigud. Hoiame
+    algse järjekorranumbri alles, et Marta valitud tekstikuju jõuaks ka uude
+    kuvamiskohta. Ülejäänud sissejuhatuse tekstid jäävad täpselt samaks.
+  */
+  const loiguKirjed = loigud.map((tekst, indeks) => ({ tekst, indeks }));
+  const kirjakohaKirje = loiguKirjed
+    .map((kirje) => ({ ...kirje, kirjakoht: loiguKirjakoht(kirje.tekst) }))
+    .find((kirje) => kirje.kirjakoht);
+  const ahelaKirje = loiguKirjed
+    .map((kirje) => ({ ...kirje, sammud: loiguNooleAhel(kirje.tekst) }))
+    .find((kirje) => kirje.sammud);
+  const sissejuhatavadLoigud = loiguKirjed.filter(
+    (kirje) =>
+      kirje.indeks !== kirjakohaKirje?.indeks &&
+      kirje.indeks !== ahelaKirje?.indeks,
+  );
 
   /* Kirjakohaplokid ette ära märgitud: eraldajad sõltuvad naabritest */
   const salmid = plokid.map(onKirjakoht);
@@ -227,20 +296,76 @@ export default async function TeenuseLeht({ params }) {
           </p>
         </Ilmub>
 
-        {loigud.length > 0 && (
+        {sissejuhatavadLoigud.length > 0 && (
           <Ilmub ruhm className="mt-10 space-y-6">
-            {loigud.map((loik, loiguJrk) => (
+            {sissejuhatavadLoigud.map(({ tekst, indeks }) => (
               <Tekst
-                key={loik}
-                stiil={v(`loigud.${loiguJrk}`)}
-                kuju={s.kuju(`loigud.${loiguJrk}`)}
+                key={`${indeks}-${tekst}`}
+                stiil={v(`loigud.${indeks}`)}
+                kuju={s.kuju(`loigud.${indeks}`)}
               >
-                {loik}
+                {tekst}
               </Tekst>
             ))}
           </Ilmub>
         )}
       </Sektsioon>
+
+      {/* Sissejuhatusse kirjutatud salm saab Püha Ruumi kirjakohtade kuju. */}
+      {kirjakohaKirje && (
+        <Sektsioon
+          taust="sage"
+          laius="kitsas"
+          polsterdus="ohuke"
+          taustaVoti="teenuseLeht.kirjakoht"
+        >
+          <Ilmub>
+            <Salm
+              viide={kirjakohaKirje.kirjakoht.viide}
+              tekst={kirjakohaKirje.kirjakoht.tekst}
+              stiil={v(`loigud.${kirjakohaKirje.indeks}`)}
+              kuju={s.kuju(`loigud.${kirjakohaKirje.indeks}`)}
+            />
+          </Ilmub>
+        </Sektsioon>
+      )}
+
+      {/*
+        Stiiliselguse mõtteahel — üks mõte korraga, kuldsed nooled allapoole.
+        See tume vaheakord lahutab ka sissejuhatuse ja plokid selgelt ära.
+      */}
+      {ahelaKirje && (
+        <Sektsioon
+          taust="mets"
+          laius="kitsas"
+          polsterdus="ohuke"
+          taustaVoti="teenuseLeht.ahel"
+        >
+          <Ilmub ruhm as="ol" className="mx-auto max-w-3xl text-center">
+            {ahelaKirje.sammud.map((samm, indeks) => (
+              <li key={`${indeks}-${samm}`}>
+                {indeks % 2 === 0 ? (
+                  <p className="mikro mx-auto max-w-2xl text-[clamp(0.82rem,2.3vw,1.05rem)] leading-[1.65] tracking-[0.18em] text-luu">
+                    {samm}
+                  </p>
+                ) : (
+                  <p className="kuva mx-auto max-w-2xl text-[clamp(1.8rem,5.4vw,3.2rem)] italic leading-[1.18] text-luu">
+                    {samm}
+                  </p>
+                )}
+                {indeks < ahelaKirje.sammud.length - 1 && (
+                  <span
+                    aria-hidden="true"
+                    className="my-6 block font-serif text-2xl leading-none text-kuld-hele sm:my-8 sm:text-3xl"
+                  >
+                    ↓
+                  </span>
+                )}
+              </li>
+            ))}
+          </Ilmub>
+        </Sektsioon>
+      )}
 
       {/*
         Plokid — teenuse pikem sisu osadeks jaotatuna.
@@ -313,6 +438,13 @@ export default async function TeenuseLeht({ params }) {
         </Sektsioon>
       )}
 
+      {onFotograafia && (
+        <FotograafiaPortfoolio
+          keel={kood}
+          taustaVoti="teenuseLeht.portfoolio"
+        />
+      )}
+
       {/*
         Teenuse tsitaat — üks Marta lause, mis kannab kogu teenuse mõtet.
         Ilma viiteta salm: püstjoon, lause kuvakirjas, vajadusel järelmõte all.
@@ -339,31 +471,73 @@ export default async function TeenuseLeht({ params }) {
 
       {nimekiri.length > 0 && (
         <Sektsioon taust={nimekirjaTaust} taustaVoti="teenuseLeht.nimekiri">
-          <Ilmub>
-            <Pealkiri
-              silt={nimekirjaSilt}
-              className="max-w-2xl"
-              siltStiil={vl("nimekirjaSilt")}
-              stiil={v("nimekirjaPealkiri")}
-              siltKuju={sl.kuju("nimekirjaSilt")}
-              kuju={s.kuju("nimekirjaPealkiri")}
-            >
-              {teenus.nimekirjaPealkiri}
-            </Pealkiri>
-          </Ilmub>
+          {onTeadlikOstlemine ? (
+            <div className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24">
+              <Ilmub className="lg:sticky lg:top-32 lg:self-start">
+                <div aria-hidden="true" className="pystjoon mx-0" />
+                <h2
+                  className="kuva mt-8 max-w-md text-[clamp(2.4rem,5vw,4.15rem)] leading-[1.05] text-gold-deep"
+                  style={v("nimekirjaPealkiri")}
+                >
+                  {s("nimekirjaPealkiri", teenus.nimekirjaPealkiri)}
+                </h2>
+              </Ilmub>
 
-          {/* Litaania, mitte tabel: kuvakirjas read ilma joonteta. Mobiilis keskel, laiemal ekraanil vasakus servas */}
-          <Ilmub ruhm as="ul" className="mt-11 max-w-3xl space-y-5">
-            {nimekiri.map((punkt, punktJrk) => (
-              <li
-                key={punkt}
-                className="kuva text-center text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink sm:text-left"
-                style={v(`nimekiri.${punktJrk}`)}
+              <Ilmub ruhm as="ul" className="border-t border-gold/35">
+                {nimekiri.map((punkt, punktJrk) => {
+                  const puhasPunkt = punkt.replace(/^\s*•\s*/, "").trim();
+
+                  return (
+                    <li
+                      key={punkt}
+                      className="border-b border-gold/25 py-6 sm:py-8"
+                    >
+                      <p
+                        className="kuva max-w-[32ch] text-[clamp(1.4rem,2.6vw,2rem)] leading-[1.35] text-ink"
+                        style={v(`nimekiri.${punktJrk}`)}
+                      >
+                        {s(`nimekiri.${punktJrk}`, puhasPunkt)}
+                      </p>
+                    </li>
+                  );
+                })}
+              </Ilmub>
+            </div>
+          ) : (
+            <>
+              <Ilmub>
+                <Pealkiri
+                  silt={nimekirjaSilt}
+                  className={`max-w-2xl ${onPuhaRuum ? "mx-auto text-center" : ""}`}
+                  siltStiil={vl("nimekirjaSilt")}
+                  stiil={v("nimekirjaPealkiri")}
+                  siltKuju={sl.kuju("nimekirjaSilt")}
+                  kuju={s.kuju("nimekirjaPealkiri")}
+                >
+                  {teenus.nimekirjaPealkiri}
+                </Pealkiri>
+              </Ilmub>
+
+              {/* Püha Ruumi litaania on keskne palvehetk; teised loendid jäävad laial ekraanil vasakule. */}
+              <Ilmub
+                ruhm
+                as="ul"
+                className={`mt-11 max-w-3xl space-y-5 ${onPuhaRuum ? "mx-auto" : ""}`}
               >
-                {s(`nimekiri.${punktJrk}`, punkt)}
-              </li>
-            ))}
-          </Ilmub>
+                {nimekiri.map((punkt, punktJrk) => (
+                  <li
+                    key={punkt}
+                    className={`kuva text-center text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink ${
+                      onPuhaRuum ? "" : "sm:text-left"
+                    }`}
+                    style={v(`nimekiri.${punktJrk}`)}
+                  >
+                    {s(`nimekiri.${punktJrk}`, punkt)}
+                  </li>
+                ))}
+              </Ilmub>
+            </>
+          )}
         </Sektsioon>
       )}
 
@@ -407,10 +581,9 @@ export default async function TeenuseLeht({ params }) {
                 href={t(`/teenused/${jargmine.slug}`)}
                 className="group mt-6 block"
               >
-                {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
                 <h2
-                  className="kuva text-[clamp(1.75rem,3.4vw,2.5rem)] text-[var(--oma-varv,var(--color-ink))] transition-all duration-500 group-hover:translate-x-1.5 group-hover:text-gold-deep"
-                  style={vj("nimi", { varvMuutujaks: true })}
+                  className="kuva text-[clamp(1.75rem,3.4vw,2.5rem)] text-ink transition-all duration-500 group-hover:translate-x-1.5 group-hover:text-gold-deep"
+                  style={ilmaVarvita(vj("nimi"))}
                 >
                   {sj("nimi", jargmine.nimi)}
                 </h2>

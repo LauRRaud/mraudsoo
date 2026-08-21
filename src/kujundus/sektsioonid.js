@@ -57,7 +57,10 @@ export const TAUSTA_SEKTSIOONID = [
     sektsioonid: [
       { votme: "teenuseLeht.hero", nimi: "Päis — teenuse nimi", tume: true },
       { votme: "teenuseLeht.sissejuhatus", nimi: "Sissejuhatus" },
+      { votme: "teenuseLeht.kirjakoht", nimi: "Sissejuhatuse kirjakoht" },
+      { votme: "teenuseLeht.ahel", nimi: "Vertikaalne mõtteahel", tume: true },
       { votme: "teenuseLeht.plokid", nimi: "Teenuse plokid" },
+      { votme: "teenuseLeht.portfoolio", nimi: "Fotograafia portfoolio", tume: true },
       { votme: "teenuseLeht.tsitaat", nimi: "Teenuse tsitaat" },
       { votme: "teenuseLeht.nimekiri", nimi: "„Mida see annab” loend" },
       { votme: "teenuseLeht.kutse", nimi: "Kutse ja järgmine teenus" },

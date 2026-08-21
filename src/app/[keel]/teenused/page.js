@@ -65,7 +65,7 @@ export default async function Teenused({ params }) {
         data-taust="teenused.register"
         style={{ "--kate-varv": KATTE_VARV.linen }}
       >
-        <div className="mx-auto max-w-[1400px] px-6 pb-20 sm:pb-28 lg:px-12 lg:pb-36">
+        <div className="mx-auto max-w-[1400px] px-6 pb-16 sm:pb-20 lg:px-12 lg:pb-24">
           {/*
             Register, mitte tabel: iga teenus on omaette plokk kahes veerus,
             jooni ei ole — plokke lahutab õhk. Sama vorm mis avalehel, ainult
@@ -74,7 +74,7 @@ export default async function Teenused({ params }) {
           <Ilmub
             ruhm
             as="ul"
-            className="grid gap-x-20 gap-y-16 pt-16 sm:grid-cols-2 sm:pt-20 lg:gap-x-28 lg:gap-y-20 lg:pt-24"
+            className="grid gap-x-16 gap-y-10 pt-12 sm:grid-cols-2 sm:gap-y-12 sm:pt-14 lg:gap-x-24 lg:gap-y-14 lg:pt-16"
           >
             {teenused.map((teenus, jrk) => (
               <li key={teenus.slug}>
@@ -102,12 +102,14 @@ export default async function Teenused({ params }) {
                     )}
                   </p>
                   {/* „Loe lähemalt” siin ei ole — kogu plokk on juba link, sama mis avalehel */}
-                  <p
-                    className="mt-5 max-w-[46ch] text-lg leading-relaxed text-ink-soft"
-                    style={vt(`${jrk}.kuva.teenusteLeht.luhike`)}
-                  >
-                    {st(`${jrk}.kuva.teenusteLeht.luhike`, teenus.luhike)}
-                  </p>
+                  {teenus.luhike && (
+                    <p
+                      className="mt-5 max-w-[46ch] text-lg leading-relaxed text-ink-soft"
+                      style={vt(`${jrk}.kuva.teenusteLeht.luhike`)}
+                    >
+                      {st(`${jrk}.kuva.teenusteLeht.luhike`, teenus.luhike)}
+                    </p>
+                  )}
                 </Link>
               </li>
             ))}

@@ -186,7 +186,7 @@ export const vaikimisiSisuEn = {
       viide: "Genesis 1:27",
       tekst: "“And God created man in his own image…”",
       selgitus:
-        "For me this means that no person is accidental. We are not created as copies. In all of us there is something that reflects God — beauty, creativity, strength, tenderness, depth, light and presence.",
+        "Every person is made in God's image, with unique worth, beauty and gifts.",
     },
 
     pooordumine: {
@@ -210,14 +210,14 @@ export const vaikimisiSisuEn = {
           tekst:
             "“Watch and pray, that you may not enter into temptation. The spirit indeed is willing, but the flesh is weak.”",
           selgitus:
-            "This verse underlines the need to be spiritually awake and prayerful in order to avoid temptation, acknowledging the conflict between a person's willpower and their physical weakness. It is Jesus' warning to the disciples, noting that although the inner desire (the spirit) is to follow God, human nature (the flesh) is weak and needs strength through the support of prayer.",
+            "The spirit may desire what is good, but human strength is not enough. Jesus calls us to watch and pray, relying on God's strength.",
         },
         {
           viide: "Romans 7:19",
           tekst:
             "“For the good which I desire, I don't do; but the evil which I don't desire, that I practice.”",
           selgitus:
-            "We are not created to carry life by our own strength alone. We may know what is right and still experience how limited our own will and strength are. We need God — His grace, His truth and His leading.",
+            "We may know what is right, yet our own strength is not enough. We need God's grace, truth and guidance.",
         },
         {
           /* Lühendatud samast kohast kui eesti pool — ainult kaljule ehitaja */
@@ -225,21 +225,21 @@ export const vaikimisiSisuEn = {
           tekst:
             "“Everyone therefore who hears these words of mine and does them will be likened to a wise man who built his house on a rock ...”",
           selgitus:
-            "The question is not only what we know, but what we build our life upon. A strong foundation is born when our life begins to rest on God's word.",
+            "A strong life grows not only from knowing the truth, but from living by it. God's word is the foundation that carries us.",
         },
         {
           viide: "Matthew 6:24",
           tekst:
             "“No one can serve two masters, for either he will hate the one and love the other, or else he will be devoted to one and despise the other. You can't serve both God and Mammon.”",
           selgitus:
-            "Our heart needs clarity about whom we belong to and what guides our choices. God does not call us to live in endless striving, trying to serve different expectations and values at once. He calls us to live in His truth.",
+            "The heart needs clarity about whom we belong to and what guides our choices. God calls us to live in His truth with an undivided heart.",
         },
         {
           viide: "Matthew 16:24",
           tekst:
             "“If anyone desires to come after me, let him deny himself and follow me.”",
           selgitus:
-            " — In following Christ we learn to let go of the need to steer and control everything ourselves, to entrust our life into God's hands and to grow ever more into the life to which He calls us.",
+            "Following Christ means releasing the need to control everything ourselves and entrusting our lives to God.",
         },
         {
           /* Kuues kirje ei ole salm, vaid Marta oma lause — viide on tühi */
@@ -581,26 +581,48 @@ export const vaikimisiSisuEn = {
       toon: "soe",
     },
     {
-      /*
-        FOTOGRAAFIA — ainus teenus, mille kohta Martalt teksti ei ole.
-        Sama lünk mis eesti pool: kui ta annab laused, tuleb neid muuta
-        MÕLEMAS keeles (või admin-lehelt kummaski keeles eraldi).
-      */
       slug: "fotograafia",
-      nimi: "Photography",
-      alapealkiri: "Black and white",
-      luhike: "Natural and genuine moments …",
-      sissejuhatus: "Portrait",
+      nimi: "PHOTOGRAPHY",
+      alapealkiri: "Your genuine, timeless self",
+      luhike: "",
+      sissejuhatus:
+        "90 minutes of Sacred Space and a portrait session in the studio — one complete experience in which you can slow down, be present and allow who you truly are to become visible.",
       loigud: [
-        "Black and white leaves what matters: the light, the presence and the person themselves.",
+        "You do not need to know how to be in front of a camera. I will guide you calmly so that you can feel free and natural.",
+        "A black-and-white photograph leaves what matters — the light, the presence and the person themselves.",
       ],
-      plokid: [],
-      nimekirjaPealkiri: "What this gives",
-      nimekiri: [],
+      plokid: [
+        {
+          pealkiri: "Sacred Space — 90 minutes",
+          loigud: [
+            "Before stepping in front of the camera, we take time to slow down, listen and notice what is genuinely present within you. This gives the session a calm and meaningful starting point.",
+          ],
+        },
+        {
+          pealkiri: "Portrait session in the studio",
+          loigud: [
+            "The experience continues in the studio. I gently guide you through light, movement and different poses while leaving room for real moments and your natural presence.",
+          ],
+        },
+        {
+          pealkiri: "Your photographs",
+          loigud: [
+            "After the session, you receive a selection of carefully edited black-and-white portraits — timeless photographs that carry your essence, not only your outward appearance.",
+          ],
+        },
+      ],
+      nimekirjaPealkiri: "The experience includes …",
+      nimekiri: [
+        "90 minutes of Sacred Space",
+        "a calmly guided portrait session in the studio",
+        "a selection of edited black-and-white portraits",
+      ],
       toon: "sygav",
       tsitaat: {
-        tekst: "",
-        selgitus: "",
+        tekst:
+          "“I will give thanks to you, for I am fearfully and wonderfully made.”\n\nPsalm 139:14",
+        selgitus:
+          "Timeless You — time to pause and notice what is unique and timeless within you.",
       },
     },
   ],
@@ -677,9 +699,10 @@ export const vaikimisiSisuEn = {
     },
     {
       nimi: "Photography",
-      kestus: "1–2 hours",
+      kestus: "90 min + photo session",
       hind: "180 €",
-      kirjeldus: "A black-and-white portrait session and edited photographs.",
+      kirjeldus:
+        "Sacred Space, a studio portrait session and edited black-and-white photographs.",
     },
   ],
 

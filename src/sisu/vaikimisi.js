@@ -187,7 +187,7 @@ export const vaikimisiSisu = {
       viide: "1. Moosese 1:27",
       tekst: "„Ja Jumal lõi inimese oma näo järgi…”",
       selgitus:
-        "Minu jaoks tähendab see, et ükski inimene ei ole juhuslik. Me ei ole loodud koopiatena. Meis kõigis on midagi Jumalast peegelduvat — ilu, loovust, tugevust, õrnust, sügavust, valgust ja kohalolu.",
+        "Iga inimene on loodud Jumala näo järgi — ainulaadse väärtuse, ilu ja annetega.",
     },
 
     /*
@@ -233,33 +233,34 @@ export const vaikimisiSisu = {
           tekst:
             "„Valvake ja palvetage, et te ei satuks kiusatusse! Vaim on küll valmis, aga liha on nõder.”",
           selgitus:
-            "See piiblisalm rõhutab vajadust olla vaimselt ärkvel ja palvemeelne, et vältida kiusatusi, tunnistades inimese tahtejõu ja füüsilise nõrkuse vahelist konflikti. See on Jeesuse hoiatus jüngritele märkides, et kuigi sisemine soov (vaim) on järgida Jumalat, on inimloomus (liha) nõrk ja vajab palvetoe kaudu jõudu.",
+            "Vaim võib soovida head, kuid inimese jõust ei piisa. Jeesus kutsub meid valvama ja palvetama ning toetuma Jumala jõule.",
         },
         {
           viide: "Roomlastele 7:19",
           tekst: "„Ma ei tee head, mida ma tahan, vaid kurja, mida ma ei taha.”",
           selgitus:
-            "Inimene ei ole loodud elama ainult oma jõust … me vajame Jumalat.",
+            "Me võime teada, mis on õige, kuid oma jõust ei piisa. Vajame Jumala armu, tõde ja juhtimist.",
         },
         {
           viide: "Matteuse 7:24-27",
           tekst:
             "„Kes kuuleb mu sõnu ja teeb nende järgi… on nagu mees, kes ehitas oma maja kaljule… Aga kes ei tee… on nagu see, kes ehitas liivale.”",
-          selgitus: "",
+          selgitus:
+            "Tugev elu ei sünni üksnes tõe teadmisest, vaid selle järgi elamisest. Jumala sõna on vundament, mis kannab.",
         },
         {
           viide: "Matteuse 6:24",
           tekst:
             "„Keegi ei saa teenida kahte Issandat, sest ta kas vihkab ühte ja armastab teist või hoidub ühe poole ega hooli teisest. Te ei saa teenida Jumalat ja mammonat.”",
           selgitus:
-            "Jumal ei kutsu meid elama kurnatuses. Ta kutsub meid elama Tões.",
+            "Süda vajab selgust, kellele kuulume ja mis meie valikuid juhib. Jumal kutsub meid elama jagamatu südamega Tema tões.",
         },
         {
           viide: "Matteuse 16:24",
           tekst:
             "„Kui keegi tahab käia minu järel, siis ta salgagu iseennast… ja järgnegu mulle.”",
           selgitus:
-            "Enam ei ole minu tee, vaid Tema tee. Kui ma lasen lahti oma teest, avaneb tee, mida ma ise ei oleks kunagi näinud. Ma ei ela enam ainult oma soovide, plaanide ja arusaamise järgi… vaid usaldan Jumala juhtimist oma elus.",
+            "Kristust järgides loobume vajadusest kõike ise juhtida ja usaldame oma elu Jumala kätte.",
         },
       ],
     },
@@ -585,24 +586,49 @@ export const vaikimisiSisu = {
       toon: "soe",
     },
     {
-      /*
-        FOTOGRAAFIA — ainus teenus, mille kohta Martalt teksti ei ole.
-        Allikas annab ainult „Must valge” ja ühe lause. Siinsed laused on
-        ajutised — küsi Martalt 2–3 lauset ja „Mida see annab” loend.
-      */
       slug: "fotograafia",
-      nimi: "Fotograafia",
-      alapealkiri: "Must-valge",
-      luhike:
-        "Loomulikud ja ehedad hetked, mis jäädvustavad inimese sellisena, nagu ta on.",
-      sissejuhatus: "Portreed, mis ei püüa kedagi kellekski teiseks teha.",
+      nimi: "FOTOGRAAFIA",
+      alapealkiri: "Ehe ajatu Sina",
+      luhike: "",
+      sissejuhatus:
+        "90 minutit Püha Ruumi ja portreefotosessioon stuudios — üks terviklik kogemus, kus saad aeglustuda, olla kohal ja lasta nähtavaks sellel, kes sa päriselt oled.",
       loigud: [
-        "Must-valge jätab alles selle, mis on oluline: valguse, kohalolu ja inimese enda.",
+        "Sa ei pea oskama kaamera ees olla. Juhendan sind rahulikult, et saaksid ennast vabalt ja loomulikult tunda.",
+        "Mustvalge foto jätab alles selle, mis on oluline — valguse, kohalolu ja inimese enda.",
       ],
-      plokid: [],
-      nimekirjaPealkiri: "Mida see annab",
-      nimekiri: [],
+      plokid: [
+        {
+          pealkiri: "Püha Ruum — 90 minutit",
+          loigud: [
+            "Enne kaamera ette astumist võtame aja, et aeglustuda, kuulata ja märgata, mis on sinus praegu päriselt kohal. See loob sessioonile rahuliku ja tähendusliku lähtekoha.",
+          ],
+        },
+        {
+          pealkiri: "Portreefotosessioon stuudios",
+          loigud: [
+            "Sessioon jätkub stuudios. Ma juhendan sind õrnalt läbi valguse, liikumise ja erinevate pooside, kuid jätan alles ruumi päris hetkedele ja sinu loomulikule kohalolule.",
+          ],
+        },
+        {
+          pealkiri: "Sinu fotod",
+          loigud: [
+            "Pärast sessiooni saad valiku hoolikalt töödeldud mustvalgeid portreesid — ajatud fotod, mis kannavad sinu olemust, mitte ainult välist kuju.",
+          ],
+        },
+      ],
+      nimekirjaPealkiri: "Kogemus sisaldab …",
+      nimekiri: [
+        "90 minutit Püha Ruumi",
+        "rahulikult juhendatud portreefotosessiooni stuudios",
+        "valikut töödeldud mustvalgeid portreesid",
+      ],
       toon: "sygav",
+      tsitaat: {
+        tekst:
+          "“Ma tänan sind, et olen nii kardetavalt ja imeliselt loodud.”\n\nPsalm 139:14",
+        selgitus:
+          "Ajatu Sina — aeg peatuda ja märgata seda, mis sinus on ainulaadne ja ajatu.",
+      },
     },
   ],
 
@@ -689,9 +715,10 @@ export const vaikimisiSisu = {
     },
     {
       nimi: "Fotograafia",
-      kestus: "1–2 tundi",
+      kestus: "90 min + fotosessioon",
       hind: "180 €",
-      kirjeldus: "Must-valge portreesessioon ja töödeldud pildid.",
+      kirjeldus:
+        "Püha Ruum, portreefotosessioon stuudios ja töödeldud mustvalged pildid.",
     },
   ],
 

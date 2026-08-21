@@ -408,6 +408,124 @@
     background-color: color-mix(in srgb, var(--color-kuld-hele) 70%, transparent);
   }
 
+  /*
+    FOTOGRAAFIA PORTFOOLIO — üks aeglane, katkematu pildirida.
+
+    Kolm ühesugust rühma moodustavad keskse silmuse, milles jätkub mõlemas
+    suunas alati üks täisrühm kerimisruumi. JavaScript liigutab ala aeglaselt
+    vasakult paremale, kuid sama ala jääb noole, puuteplaadi ja sõrmega
+    juhitavaks. Kasutaja tegevuse ajal automaatne liikumine peatub.
+  */
+  .fotogalerii-ümbris {
+    position: relative;
+  }
+
+  .fotogalerii {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    overscroll-behavior-inline: contain;
+    touch-action: pan-x;
+    cursor: grab;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 4%,
+      black 96%,
+      transparent
+    );
+  }
+
+  .fotogalerii:active {
+    cursor: grabbing;
+  }
+
+  .fotogalerii::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fotogalerii-rada {
+    display: flex;
+    width: max-content;
+  }
+
+  .fotogalerii-ruhm {
+    display: flex;
+    flex-shrink: 0;
+    gap: clamp(1rem, 2vw, 2rem);
+    padding-right: clamp(1rem, 2vw, 2rem);
+  }
+
+  .fotogalerii-kaader {
+    width: clamp(16rem, 30vw, 30rem);
+    flex: none;
+    filter: grayscale(1) contrast(1.04);
+  }
+
+  .fotogalerii-nool {
+    position: absolute;
+    z-index: 2;
+    top: calc(50% - 2rem);
+    display: grid;
+    width: 3.25rem;
+    height: 3.25rem;
+    place-items: center;
+    border: 1px solid rgb(251 248 241 / 45%);
+    border-radius: 999px;
+    background: rgb(20 55 45 / 82%);
+    color: var(--luu);
+    font-size: 1.5rem;
+    line-height: 1;
+    backdrop-filter: blur(8px);
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .fotogalerii-nool:hover,
+  .fotogalerii-nool:focus-visible {
+    border-color: var(--kuld-hele);
+    background: rgb(20 55 45 / 96%);
+    transform: scale(1.06);
+  }
+
+  .fotogalerii-nool:focus-visible {
+    outline: 2px solid var(--kuld-hele);
+    outline-offset: 3px;
+  }
+
+  .fotogalerii-nool-vasak {
+    left: clamp(0.75rem, 2vw, 2rem);
+  }
+
+  .fotogalerii-nool-parem {
+    right: clamp(0.75rem, 2vw, 2rem);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fotogalerii {
+      mask-image: none;
+    }
+
+    .fotogalerii-nool {
+      transition: none;
+    }
+
+    .fotogalerii-ruhm[aria-hidden="true"] {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .fotogalerii-nool {
+      top: calc(50% - 1.5rem);
+      width: 2.75rem;
+      height: 2.75rem;
+      font-size: 1.25rem;
+    }
+  }
+
   /* Kaar — foto ülaserv on poolkaar nagu kirikuaken */
   .kaar {
     border-radius: 999rem 999rem 0 0;

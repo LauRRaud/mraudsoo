@@ -379,7 +379,7 @@ export default async function Minust({ params }) {
             {s("lopp.tsitaat", lopp.tsitaat)}
           </blockquote>
         </Ilmub>
-        <Ilmub viive={180} className="mt-12">
+        <Ilmub viive={180} className="mt-14 sm:mt-16">
           <Nupp href={t("/broneerimine")} nool>
             {lopp.nuppTekst}
           </Nupp>

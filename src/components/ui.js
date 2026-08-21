@@ -208,9 +208,9 @@ export function Tekst({
 }
 
 /*
-  Salm — kirjakoht oma vaikse hetkena: püstjoon, viide sildina,
-  salm kuvakirjas, Marta selgitus all. Kasutusel lehel „Minust” ja
-  teenuselehtede plokkides.
+  Salm — kirjakoht oma vaikse hetkena: püstjoon, salm kuldses kuvakirjas,
+  viide selle all tumedas kuvakirjas ja Marta selgitus kõige lõpus.
+  Kasutusel lehel „Minust” ja teenuselehtede plokkides.
 
   Selgitus seisab ALATI salmi all lahti. Varem oli ta lehel „Minust”
   <details> sees ja avanes „Loe tõlgendust” klõpsust — siis jäi lühiselgitus
@@ -230,10 +230,53 @@ export function Salm({
   kuju,
   selgituseKuju,
 }) {
+  const viiteMuster = /^(?:\d+\.\s*)?[\p{L}.\s]+\s\d+:\d+(?:[–-]\d+)?$/u;
+  let kuvatavViide = viide;
+  let kuvatavTekst = tekst;
+  let kuvatavViiteStiil = viiteStiil;
+  let kuvatavStiil = stiil;
+  let kuvatavViiteKuju = viiteKuju;
+  let kuvatavKuju = kuju;
+
+  /*
+    Vanemas avalehe sisus on salm ja viide väljade vahel tagurpidi. Teisal
+    võib viide olla salmiga sama tekstivälja viimane lõik. Normaliseerime
+    mõlemad juhud ainult kuvamisel, et serveri uuemat sisupuud mitte ümber
+    kirjutada.
+  */
+  if (
+    typeof viide === "string" &&
+    typeof tekst === "string" &&
+    viide.length > 50 &&
+    viiteMuster.test(tekst.trim())
+  ) {
+    kuvatavViide = tekst.trim();
+    kuvatavTekst = viide.trim();
+    kuvatavViiteStiil = stiil;
+    kuvatavStiil = viiteStiil;
+    kuvatavViiteKuju = kuju;
+    kuvatavKuju = viiteKuju;
+  } else if (!viide && typeof tekst === "string") {
+    const osad = tekst
+      .trim()
+      .split(/\n\s*\n/)
+      .map((osa) => osa.trim())
+      .filter(Boolean);
+    const viimane = osad.at(-1);
+
+    if (osad.length > 1 && viiteMuster.test(viimane)) {
+      kuvatavViide = viimane;
+      kuvatavTekst = osad.slice(0, -1).join("\n\n");
+      /* Viide ei päri tsitaadi kuldset värvi ega suurust. */
+      kuvatavViiteStiil = undefined;
+      kuvatavViiteKuju = undefined;
+    }
+  }
+
   const selgitused = (Array.isArray(selgitus) ? selgitus : [selgitus]).filter(
     Boolean
   );
-  const pikk = typeof tekst === "string" && tekst.length > 120;
+  const pikk = typeof kuvatavTekst === "string" && kuvatavTekst.length > 120;
 
   /*
     selgituseStiil võib olla üks stiil (kõigile lõikudele) või funktsioon
@@ -262,26 +305,29 @@ export function Salm({
   return (
     <figure className={`text-center ${className}`}>
       <div aria-hidden="true" className={`pystjoon${tume ? " pystjoon-tume" : ""}`} />
-      {viide && (
-        <figcaption
-          style={viiteStiil}
-          className={`silt mt-7${tume ? " silt-tume" : ""}`}
-        >
-          {rakendaKuju(viide, viiteKuju)}
-        </figcaption>
-      )}
       <blockquote
-        style={stiil}
-        className={`kuva mx-auto max-w-2xl leading-[1.3] ${viide ? "mt-6" : "mt-8"} ${
-          tume ? "text-luu" : "text-ink"
+        style={kuvatavStiil}
+        className={`kuva mx-auto mt-8 max-w-2xl leading-[1.3] ${
+          tume ? "text-luu" : "text-gold-deep"
         } ${
           pikk
             ? "text-[clamp(1.3rem,2.6vw,1.75rem)]"
             : "text-[clamp(1.55rem,3.4vw,2.3rem)]"
         }`}
       >
-        {rakendaKuju(tekst, kuju)}
+        {rakendaKuju(kuvatavTekst, kuvatavKuju)}
       </blockquote>
+
+      {kuvatavViide && (
+        <figcaption
+          style={kuvatavViiteStiil}
+          className={`kuva mx-auto mt-8 text-[clamp(1.25rem,2.4vw,1.75rem)] leading-[1.3] ${
+            tume ? "text-kuld-hele" : "text-ink"
+          }`}
+        >
+          {rakendaKuju(kuvatavViide, kuvatavViiteKuju)}
+        </figcaption>
+      )}
 
       {selgitused.length > 0 && (
         <div className="mx-auto mt-8 max-w-[54ch] space-y-4">

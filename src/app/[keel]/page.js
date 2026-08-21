@@ -346,7 +346,7 @@ export default async function Avaleht({ params }) {
         <Ilmub
           ruhm
           as="ul"
-          className="mt-16 grid gap-x-16 gap-y-14 sm:grid-cols-2 lg:gap-x-24"
+          className="mt-12 grid gap-x-16 gap-y-10 sm:grid-cols-2 sm:gap-y-12 lg:gap-x-24 lg:gap-y-14"
         >
           {sisu.teenused.map((teenus, jrk) => (
             <li key={teenus.slug}>
@@ -373,12 +373,14 @@ export default async function Avaleht({ params }) {
                     teenus.alapealkiri,
                   )}
                 </p>
-                <p
-                  className="mt-4 max-w-[44ch] text-lg leading-relaxed text-ink-soft"
-                  style={vt(`${jrk}.kuva.avaleht.luhike`)}
-                >
-                  {st(`${jrk}.kuva.avaleht.luhike`, teenus.luhike)}
-                </p>
+                {teenus.luhike && (
+                  <p
+                    className="mt-4 max-w-[44ch] text-lg leading-relaxed text-ink-soft"
+                    style={vt(`${jrk}.kuva.avaleht.luhike`)}
+                  >
+                    {st(`${jrk}.kuva.avaleht.luhike`, teenus.luhike)}
+                  </p>
+                )}
               </Link>
             </li>
           ))}
