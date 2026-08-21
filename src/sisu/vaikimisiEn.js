@@ -181,11 +181,6 @@ export const vaikimisiSisuEn = {
       ],
     },
 
-    tolgendus: {
-      ava: "Read the interpretation",
-      peida: "Hide the interpretation",
-    },
-
     /* Genesis 1:27 (WEB), lühendatud samast kohast kui eesti pool */
     kirjakoht: {
       viide: "Genesis 1:27",

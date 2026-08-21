@@ -212,13 +212,9 @@ export function Tekst({
   salm kuvakirjas, Marta selgitus all. Kasutusel lehel „Minust” ja
   teenuselehtede plokkides.
 
-  `selgitusPeidus` paneb selgituse <details> sisse: salm jääb esimeseks ja
-  vaikseks, tõlgendus avaneb klõpsust. Marta soov — „mitte kohe avalik vaid
-  võimalus avada ja lugeda”. Päris <details>, mitte oma JS: töötab ka ilma
-  skriptita, käib klaviatuurilt ja brauseri lehesisene otsing avab ta ise.
-
-  Teenuselehtedel seda EI kasutata — seal ei ole „selgitus” tõlgendus, vaid
-  ploki enda tekst (vt teenused/[slug] kirjakohaOsad), mis peab jääma näha.
+  Selgitus seisab ALATI salmi all lahti. Varem oli ta lehel „Minust”
+  <details> sees ja avanes „Loe tõlgendust” klõpsust — siis jäi lühiselgitus
+  märkamatuks, seepärast on ta nüüd kohe näha nagu kõigil teistel lehtedel.
 */
 export function Salm({
   viide,
@@ -226,9 +222,6 @@ export function Salm({
   selgitus = [],
   tume = false,
   className = "",
-  selgitusPeidus = false,
-  avaSilt = "Loe tõlgendust",
-  peidaSilt = "Peida tõlgendus",
   /* Admin-lehelt antud tekstikujud (vt src/sisu/tekstikujud.js) */
   viiteStiil,
   stiil,
@@ -254,7 +247,6 @@ export function Salm({
   const selgituseKujul =
     typeof selgituseKuju === "function" ? selgituseKuju : () => selgituseKuju;
 
-  /* Read on samad mõlemal juhul — peitu läheb ümbris, mitte tekst ise */
   const selgituseRead = selgitused.map((loik, jrk) => (
     <p
       key={loik}
@@ -291,27 +283,11 @@ export function Salm({
         {rakendaKuju(tekst, kuju)}
       </blockquote>
 
-      {selgitused.length > 0 &&
-        (selgitusPeidus ? (
-          <details className="tolgendus mt-7">
-            {/*
-              Ilma noole ja märgita: ↓ luges kerimisviitena. Avaja on tekst,
-              mille alla kasvab menüüst tuttav alajoon, ja sõna ise ütleb
-              seisundi („Loe tõlgendust” ↔ „Peida tõlgendus”).
-            */}
-            <summary className={`silt alajoon${tume ? " silt-tume" : ""}`}>
-              <span className="tolgendus-kinni">{avaSilt}</span>
-              <span className="tolgendus-lahti">{peidaSilt}</span>
-            </summary>
-            <div className="mx-auto mt-7 max-w-[54ch] space-y-4">
-              {selgituseRead}
-            </div>
-          </details>
-        ) : (
-          <div className="mx-auto mt-8 max-w-[54ch] space-y-4">
-            {selgituseRead}
-          </div>
-        ))}
+      {selgitused.length > 0 && (
+        <div className="mx-auto mt-8 max-w-[54ch] space-y-4">
+          {selgituseRead}
+        </div>
+      )}
     </figure>
   );
 }

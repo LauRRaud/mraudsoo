@@ -183,16 +183,6 @@ export const vaikimisiSisu = {
       ],
     },
 
-    /*
-      Salmide tõlgendused on peidus ja avanevad klõpsust — Marta soov:
-      „mitte kohe avalik vaid võimalus avada ja lugeda”. Need kaks sõna
-      seisavad avajal ja kehtivad kõigi selle lehe salmide kohta.
-    */
-    tolgendus: {
-      ava: "Loe tõlgendust",
-      peida: "Peida tõlgendus",
-    },
-
     kirjakoht: {
       viide: "1. Moosese 1:27",
       tekst: "„Ja Jumal lõi inimese oma näo järgi…”",

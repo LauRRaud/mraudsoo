@@ -48,7 +48,6 @@ export default async function Minust({ params }) {
   const {
     hero,
     lugu,
-    tolgendus,
     kirjakoht,
     pooordumine,
     annid,
@@ -161,14 +160,6 @@ export default async function Minust({ params }) {
             viide={kirjakoht.viide}
             tekst={kirjakoht.tekst}
             selgitus={kirjakoht.selgitus}
-            /*
-              Tõlgendus avaneb klõpsust (vt Salm). Sildid tulevad sisupuust,
-              aga ILMA tekstikujuta: nad on avaja, mitte Marta tekst, ja
-              KUJUNDATAVAD registris neid ei ole.
-            */
-            selgitusPeidus
-            avaSilt={tolgendus.ava}
-            peidaSilt={tolgendus.peida}
             viiteStiil={v("kirjakoht.viide")}
             stiil={v("kirjakoht.tekst")}
             selgituseStiil={v("kirjakoht.selgitus")}
@@ -245,9 +236,6 @@ export default async function Minust({ params }) {
                 viide={koht.viide}
                 tekst={koht.tekst}
                 selgitus={koht.selgitus}
-                selgitusPeidus
-                avaSilt={tolgendus.ava}
-                peidaSilt={tolgendus.peida}
                 viiteStiil={v(`pooordumine.kirjakohad.${jrk}.viide`)}
                 stiil={v(`pooordumine.kirjakohad.${jrk}.tekst`)}
                 selgituseStiil={v(`pooordumine.kirjakohad.${jrk}.selgitus`)}
