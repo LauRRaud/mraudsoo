@@ -195,6 +195,10 @@ export default async function TeenuseLeht({ params }) {
   const onTeadlikOstlemine = teenus.slug?.toLowerCase() === "teadlik-ostlemine";
   const onFotograafia = teenus.slug?.toLowerCase() === "fotograafia";
   const onPuhaRuum = teenus.slug?.toLowerCase() === "puha-ruum";
+  const onStiiliselgus = teenus.slug?.toLowerCase() === "stiiliselgus";
+  const onGarderoobiInventuur =
+    teenus.slug?.toLowerCase() === "garderoobi-korrastus";
+  const onJoontegaNimekiri = onStiiliselgus || onGarderoobiInventuur;
   const onUksUheleTeekond = teenus.slug?.toLowerCase() === "uks-uhele-teekond";
 
   /*
@@ -527,21 +531,42 @@ export default async function TeenuseLeht({ params }) {
               <Ilmub
                 ruhm
                 as="ul"
-                className={`mt-11 max-w-3xl space-y-5 ${onPuhaRuum ? "mx-auto" : ""}`}
+                className={`mt-11 max-w-3xl ${
+                  onJoontegaNimekiri
+                    ? "border-t border-gold/35"
+                    : `space-y-5 ${onPuhaRuum ? "mx-auto" : ""}`
+                }`}
               >
-                {nimekiri.map((punkt, punktJrk) => (
-                  <li
-                    key={punkt}
-                    className={`kuva text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink ${
-                      onFotograafia
-                        ? "text-left"
-                        : `text-center ${onPuhaRuum ? "" : "sm:text-left"}`
-                    }`}
-                    style={v(`nimekiri.${punktJrk}`)}
-                  >
-                    {s(`nimekiri.${punktJrk}`, punkt)}
-                  </li>
-                ))}
+                {nimekiri.map((punkt, punktJrk) => {
+                  const puhasPunkt = punkt.replace(/^\s*•\s*/, "").trim();
+
+                  return (
+                    <li
+                      key={punkt}
+                      className={
+                        onJoontegaNimekiri
+                          ? "border-b border-gold/25 py-6 sm:py-8"
+                          : ""
+                      }
+                    >
+                      <p
+                        className={`kuva text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink ${
+                          onFotograafia
+                            ? "text-left"
+                            : onJoontegaNimekiri
+                              ? "max-w-[40ch] text-left"
+                              : `text-center ${onPuhaRuum ? "" : "sm:text-left"}`
+                        }`}
+                        style={v(`nimekiri.${punktJrk}`)}
+                      >
+                        {s(
+                          `nimekiri.${punktJrk}`,
+                          onJoontegaNimekiri ? puhasPunkt : punkt,
+                        )}
+                      </p>
+                    </li>
+                  );
+                })}
               </Ilmub>
             </>
           )}
