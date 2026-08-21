@@ -84,7 +84,7 @@ export default async function Teenused({ params }) {
                 >
                   {/* Värv tuleb muutujana, et hiirekursori kuldne üleminek jääks peale */}
                   <h2
-                    className="kuva text-[clamp(2.15rem,7vw,2.6rem)] text-[var(--oma-varv,var(--color-ink))] transition-colors duration-300 group-hover:text-gold-deep"
+                    className="kuva text-[clamp(1.75rem,6vw,2.6rem)] text-[var(--oma-varv,var(--color-ink))] transition-colors duration-300 group-hover:text-gold-deep"
                     style={vt(`${jrk}.kuva.teenusteLeht.nimi`, {
                       varvMuutujaks: true,
                     })}

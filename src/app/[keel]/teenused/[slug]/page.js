@@ -195,6 +195,7 @@ export default async function TeenuseLeht({ params }) {
   const onTeadlikOstlemine = teenus.slug?.toLowerCase() === "teadlik-ostlemine";
   const onFotograafia = teenus.slug?.toLowerCase() === "fotograafia";
   const onPuhaRuum = teenus.slug?.toLowerCase() === "puha-ruum";
+  const onUksUheleTeekond = teenus.slug?.toLowerCase() === "uks-uhele-teekond";
 
   /*
     Salm ja mõtteahel võivad olla adminis endiselt tavalised lõigud. Hoiame
@@ -344,15 +345,9 @@ export default async function TeenuseLeht({ params }) {
           <Ilmub ruhm as="ol" className="mx-auto max-w-3xl text-center">
             {ahelaKirje.sammud.map((samm, indeks) => (
               <li key={`${indeks}-${samm}`}>
-                {indeks % 2 === 0 ? (
-                  <p className="mikro mx-auto max-w-2xl text-[clamp(0.82rem,2.3vw,1.05rem)] leading-[1.65] tracking-[0.18em] text-luu">
-                    {samm}
-                  </p>
-                ) : (
-                  <p className="kuva mx-auto max-w-2xl text-[clamp(1.8rem,5.4vw,3.2rem)] italic leading-[1.18] text-luu">
-                    {samm}
-                  </p>
-                )}
+                <p className="kuva mx-auto max-w-2xl text-[clamp(1.65rem,5.4vw,3.2rem)] italic leading-[1.18] text-luu">
+                  {samm}
+                </p>
                 {indeks < ahelaKirje.sammud.length - 1 && (
                   <span
                     aria-hidden="true"
@@ -380,13 +375,24 @@ export default async function TeenuseLeht({ params }) {
           {plokid.map((plokk, i) => {
             const plokiLoigud = Array.isArray(plokk.loigud) ? plokk.loigud : [];
             const salm = salmid[i] ? kirjakohaOsad(plokk) : null;
+            const onTeekonnaLopuPealkiri =
+              onUksUheleTeekond && plokiLoigud.length === 0;
 
             return (
               <div key={`${plokk.pealkiri}-${i}`}>
                 {i > 0 && !salmid[i] && <div className={`joon ${plokiVahe}`} />}
                 {i > 0 && salmid[i] && <div className={plokiVahe} />}
 
-                {salm ? (
+                {onTeekonnaLopuPealkiri ? (
+                  <Ilmub className="text-center">
+                    <h2
+                      className="kuva whitespace-nowrap text-[clamp(1.55rem,3vw,2rem)] leading-[1.25] text-gold-deep"
+                      style={v(`plokid.${i}.pealkiri`)}
+                    >
+                      {s(`plokid.${i}.pealkiri`, plokk.pealkiri)}
+                    </h2>
+                  </Ilmub>
+                ) : salm ? (
                   <Ilmub>
                     {/*
                       Kirjakohaploki viide on ploki PEALKIRI ja salm on esimene
