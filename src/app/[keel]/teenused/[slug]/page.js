@@ -480,9 +480,8 @@ export default async function TeenuseLeht({ params }) {
           {onTeadlikOstlemine ? (
             <div className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24">
               <Ilmub className="lg:sticky lg:top-32 lg:self-start">
-                <div aria-hidden="true" className="pystjoon mx-0" />
                 <h2
-                  className="kuva mt-8 max-w-md text-[clamp(2.4rem,5vw,4.15rem)] leading-[1.05] text-gold-deep"
+                  className="kuva max-w-md text-[clamp(2.4rem,5vw,4.15rem)] leading-[1.05] text-gold-deep"
                   style={v("nimekirjaPealkiri")}
                 >
                   {s("nimekirjaPealkiri", teenus.nimekirjaPealkiri)}
@@ -533,8 +532,10 @@ export default async function TeenuseLeht({ params }) {
                 {nimekiri.map((punkt, punktJrk) => (
                   <li
                     key={punkt}
-                    className={`kuva text-center text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink ${
-                      onPuhaRuum ? "" : "sm:text-left"
+                    className={`kuva text-[clamp(1.3rem,2.3vw,1.7rem)] leading-[1.4] text-ink ${
+                      onFotograafia
+                        ? "text-left"
+                        : `text-center ${onPuhaRuum ? "" : "sm:text-left"}`
                     }`}
                     style={v(`nimekiri.${punktJrk}`)}
                   >
