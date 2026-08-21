@@ -350,7 +350,7 @@ export default async function TeenuseLeht({ params }) {
           <Ilmub ruhm as="ol" className="mx-auto max-w-3xl text-center">
             {ahelaKirje.sammud.map((samm, indeks) => (
               <li key={`${indeks}-${samm}`}>
-                <p className="kuva mx-auto max-w-2xl text-[clamp(1.65rem,5.4vw,3.2rem)] italic leading-[1.18] text-luu">
+                <p className="kuva mx-auto max-w-2xl text-[clamp(1.5rem,4.6vw,2.7rem)] italic leading-[1.18] text-luu">
                   {samm}
                 </p>
                 {indeks < ahelaKirje.sammud.length - 1 && (
@@ -378,7 +378,11 @@ export default async function TeenuseLeht({ params }) {
       {plokid.length > 0 && (
         <Sektsioon taust="linen" laius="kitsas" taustaVoti="teenuseLeht.plokid">
           {plokid.map((plokk, i) => {
-            const plokiLoigud = Array.isArray(plokk.loigud) ? plokk.loigud : [];
+            const plokiLoigud = Array.isArray(plokk.loigud)
+              ? plokk.loigud.filter(
+                  (loik) => typeof loik === "string" && loik.trim().length > 0,
+                )
+              : [];
             const salm = salmid[i] ? kirjakohaOsad(plokk) : null;
             const onTeekonnaLopuPealkiri =
               onUksUheleTeekond && plokiLoigud.length === 0;
@@ -421,10 +425,10 @@ export default async function TeenuseLeht({ params }) {
                 ) : (
                   <Ilmub
                     as="article"
-                    className="grid gap-5 sm:grid-cols-[1fr_1.65fr] sm:gap-12"
+                    className="grid gap-5 md:grid-cols-[1.2fr_1.35fr] md:gap-12"
                   >
                     <h2
-                      className="kuva text-[clamp(1.35rem,2.8vw,1.9rem)] leading-[1.25] text-gold-deep sm:pt-1"
+                      className="kuva text-balance text-[clamp(1.3rem,2.5vw,1.7rem)] leading-[1.25] text-gold-deep md:pt-1"
                       style={v(`plokid.${i}.pealkiri`)}
                     >
                       {s(`plokid.${i}.pealkiri`, plokk.pealkiri)}
