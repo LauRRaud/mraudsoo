@@ -414,7 +414,7 @@
     Kolm ühesugust rühma moodustavad keskse silmuse, milles jätkub mõlemas
     suunas alati üks täisrühm kerimisruumi. JavaScript liigutab ala aeglaselt
     vasakult paremale, kuid sama ala jääb noole, puuteplaadi ja sõrmega
-    juhitavaks. Kasutaja tegevuse ajal automaatne liikumine peatub.
+    juhitavaks. Kasutaja horisontaalse tegevuse järel on ainult lühike paus.
   */
   .fotogalerii-ümbris {
     position: relative;
@@ -426,11 +426,6 @@
     scrollbar-width: none;
     overscroll-behavior-inline: contain;
     touch-action: pan-x;
-    cursor: grab;
-  }
-
-  .fotogalerii:active {
-    cursor: grabbing;
   }
 
   .fotogalerii::-webkit-scrollbar {

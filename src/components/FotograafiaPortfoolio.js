@@ -33,6 +33,9 @@ const TEKST = {
   },
 };
 
+const AUTOMAATSE_LIIKUMISE_KIIRUS = 0.075;
+const KASUTAJA_PAUS_MS = 1200;
+
 function Pildirida({ keel, peidetud = false }) {
   return (
     <div
@@ -71,7 +74,7 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
   const kerimisAsukohtRef = useRef(null);
 
   const peataAjutiselt = useCallback(() => {
-    pausKuniRef.current = performance.now() + 3500;
+    pausKuniRef.current = performance.now() + KASUTAJA_PAUS_MS;
   }, []);
 
   const keriFoto = useCallback(
@@ -171,7 +174,7 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
         ) {
           kerimisAsukohtRef.current = galerii.scrollLeft;
         }
-        kerimisAsukohtRef.current -= vahe * 0.055;
+        kerimisAsukohtRef.current -= vahe * AUTOMAATSE_LIIKUMISE_KIIRUS;
         galerii.scrollLeft = kerimisAsukohtRef.current;
       } else {
         kerimisAsukohtRef.current = galerii.scrollLeft;
@@ -197,8 +200,15 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
   };
 
   const lopetaLohistamine = () => {
+    if (!lohistabRef.current) return;
     lohistabRef.current = false;
     peataAjutiselt();
+  };
+
+  const peataHorisontaalselKerimisel = (sundmus) => {
+    if (Math.abs(sundmus.deltaX) > Math.abs(sundmus.deltaY)) {
+      peataAjutiselt();
+    }
   };
 
   return (
@@ -247,7 +257,8 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
           onPointerDown={alustaLohistamist}
           onPointerUp={lopetaLohistamine}
           onPointerCancel={lopetaLohistamine}
-          onWheel={peataAjutiselt}
+          onPointerLeave={lopetaLohistamine}
+          onWheel={peataHorisontaalselKerimisel}
         >
           <div ref={radaRef} className="fotogalerii-rada">
             <Pildirida keel={keel} />
