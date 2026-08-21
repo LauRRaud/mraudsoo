@@ -82,6 +82,7 @@ export function Pealkiri({
   tase: Tase = "h2",
   tume = false,
   className = "",
+  suuruseClassName = "",
   /* Admin-lehelt antud tekstikuju (vt src/sisu/tekstikujud.js) */
   stiil,
   siltStiil,
@@ -100,7 +101,7 @@ export function Pealkiri({
         className={`kuva ${tume ? "text-luu" : "text-ink"} ${
           Tase === "h1"
             ? "text-[clamp(2.5rem,5.5vw,4.25rem)]"
-            : "text-[clamp(2.1rem,4vw,3.4rem)]"
+            : suuruseClassName || "text-[clamp(2.1rem,4vw,3.4rem)]"
         } ${silt ? "mt-5" : ""}`}
       >
         {rakendaKuju(children, kuju)}

@@ -329,7 +329,8 @@ export default async function Avaleht({ params }) {
         {/* Pealkiri ütleb „kuus viisi” ise — eraldi silti pole vaja */}
         <Ilmub className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
           <Pealkiri
-            className="max-w-xl"
+            className="max-w-lg"
+            suuruseClassName="text-[clamp(1.95rem,3.4vw,3rem)]"
             stiil={v("teenusedPlokk.pealkiri")}
             kuju={s.kuju("teenusedPlokk.pealkiri")}
           >
@@ -346,7 +347,7 @@ export default async function Avaleht({ params }) {
         <Ilmub
           ruhm
           as="ul"
-          className="mt-12 grid gap-x-16 gap-y-10 sm:grid-cols-2 sm:gap-y-12 lg:gap-x-24 lg:gap-y-14"
+          className="mt-10 grid gap-x-16 gap-y-10 sm:grid-cols-2 sm:gap-y-12 lg:gap-x-24 lg:gap-y-14"
         >
           {sisu.teenused.map((teenus, jrk) => (
             <li key={teenus.slug}>
