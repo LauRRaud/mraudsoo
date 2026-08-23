@@ -513,7 +513,7 @@ export const vaikimisiSisu = {
       ],
       "nimekirjaPealkiri": "Kogemus sisaldab …",
       "nimekiri": [
-        "45 minutit Püha Ruumi",
+        "60 minutit Püha Ruumi",
         "rahulikult juhendatud portreefotosessiooni stuudios",
         "valikut töödeldud mustvalgeid portreesid"
       ],

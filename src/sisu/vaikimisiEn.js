@@ -513,7 +513,7 @@ export const vaikimisiSisuEn = {
       ],
       "nimekirjaPealkiri": "The experience includes …",
       "nimekiri": [
-        "45 minutes of Sacred Space",
+        "60 minutes of Sacred Space",
         "a calmly guided portrait session in the studio",
         "a selection of edited black-and-white portraits"
       ],
