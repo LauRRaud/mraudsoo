@@ -21,7 +21,7 @@ import {
   sisuTunnus,
   vaikimisiSisu,
 } from "@/sisu/lae";
-import { keeleks, onKeel } from "@/sisu/keeled";
+import { KEELED, keeleks, onKeel } from "@/sisu/keeled";
 import { kontrolliTunnust } from "@/sisu/lukk";
 import { loeVarukoopia, logi } from "@/sisu/ajalugu";
 import { TEKSTIKUJUDE_VOTI, eemaldaHaru } from "@/sisu/tekstikujud";
@@ -427,6 +427,21 @@ export async function kustutaTaustaPiltTegevus(nimi) {
     return {
       ok: false,
       viga: "Pilt on mõne sektsiooni taustaks. Võta see enne sektsioonilt maha.",
+    };
+  }
+
+  const keelteSisud = await Promise.all(
+    KEELED.map(({ kood }) => laeSisu(kood)),
+  );
+  const galeriis = keelteSisud.some((sisu) =>
+    sisu.fotograafiaGalerii?.pildid?.some((pilt) => pilt.fail === nimi),
+  );
+
+  if (galeriis) {
+    return {
+      ok: false,
+      viga:
+        "Pilt on fotograafia galeriis kasutusel. Eemalda või vaheta see enne galeriis.",
     };
   }
 

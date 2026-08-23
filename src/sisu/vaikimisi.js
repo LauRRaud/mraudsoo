@@ -632,6 +632,39 @@ export const vaikimisiSisu = {
     },
   ],
 
+  fotograafiaGalerii: {
+    pealkiri: "Ehe, ajatu kohalolu",
+    kirjeldus:
+      "Valgus, liikumine ja päris hetk — portree, milles saad olla sina ise.",
+    pildid: [
+      {
+        fail: "marta-portree.jpg",
+        alt: "Marta loomulikus valguses",
+        kuvasuhe: "pustine",
+      },
+      {
+        fail: "marta-seistes.jpg",
+        alt: "Marta seismas heledas stuudios",
+        kuvasuhe: "pustine",
+      },
+      {
+        fail: "marta-diivanil.jpg",
+        alt: "Marta rahulikult diivanil",
+        kuvasuhe: "pustine",
+      },
+      {
+        fail: "marta-lamades.jpg",
+        alt: "Marta heledas stuudios",
+        kuvasuhe: "lai",
+      },
+      {
+        fail: "marta-tutrega.jpg",
+        alt: "Marta tütrega stuudios",
+        kuvasuhe: "pustine",
+      },
+    ],
+  },
+
   teenuseLeht: {
     nimekirjaSilt: "Mida see annab",
     kutseSilt: "Alustame",

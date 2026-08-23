@@ -34,6 +34,7 @@ import {
   onKujundatav,
   teenuseKujuVariandid,
 } from "@/sisu/tekstikujud";
+import FotograafiaGaleriiHaldus from "@/components/FotograafiaGaleriiHaldus";
 import { KUVA_FONDID, TEKSTI_FONDID } from "@/kujundus/fondiNimekiri";
 
 /* ------------------------------------------------------------------ */
@@ -54,6 +55,7 @@ const SILDID = {
   teenusedLeht: "Teenuste koondleht",
   teenused: "Teenused",
   teenuseLeht: "Kõigi teenuse alamlehtede ühised tekstid",
+  fotograafiaGalerii: "Fotograafia pildigalerii",
   hinnakiriLeht: "Hinnakirja leht",
   hinnakiri: "Hinnakirja read",
   teekond: "Stiiliteekond",
@@ -151,6 +153,12 @@ const SEKTSIOONID = [
     nimi: "Teenused",
     teed: ["teenusedLeht", "teenuseLeht", "teenused"],
     leht: "/teenused",
+  },
+  {
+    id: "fotograafia",
+    nimi: "Fotograafia pildid",
+    teed: ["fotograafiaGalerii"],
+    leht: "/teenused/fotograafia",
   },
   {
     id: "hinnakiri",
@@ -1601,7 +1609,14 @@ export default function AdminToimeti({
                 )}
 
                 <div className="space-y-5">
-                  {Array.isArray(sisu[tee]) ? (
+                  {tee === "fotograafiaGalerii" ? (
+                    <FotograafiaGaleriiHaldus
+                      keel={keel}
+                      galerii={sisu[tee]}
+                      muuda={(uus) => muuda([tee], uus)}
+                      keelatud={tootab}
+                    />
+                  ) : Array.isArray(sisu[tee]) ? (
                     <Massiiv
                       voti={tee}
                       vaartus={sisu[tee]}

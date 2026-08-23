@@ -627,6 +627,39 @@ export const vaikimisiSisuEn = {
     },
   ],
 
+  fotograafiaGalerii: {
+    pealkiri: "Genuine, timeless presence",
+    kirjeldus:
+      "Light, movement and a real moment — a portrait in which you can be yourself.",
+    pildid: [
+      {
+        fail: "marta-portree.jpg",
+        alt: "Marta in natural light",
+        kuvasuhe: "pustine",
+      },
+      {
+        fail: "marta-seistes.jpg",
+        alt: "Marta standing in a light studio",
+        kuvasuhe: "pustine",
+      },
+      {
+        fail: "marta-diivanil.jpg",
+        alt: "Marta sitting quietly on a sofa",
+        kuvasuhe: "pustine",
+      },
+      {
+        fail: "marta-lamades.jpg",
+        alt: "Marta in a light studio",
+        kuvasuhe: "lai",
+      },
+      {
+        fail: "marta-tutrega.jpg",
+        alt: "Marta with her daughter in a studio",
+        kuvasuhe: "pustine",
+      },
+    ],
+  },
+
   teenuseLeht: {
     nimekirjaSilt: "What this gives",
     kutseSilt: "Let us begin",

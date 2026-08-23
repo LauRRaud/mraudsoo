@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Ilmub from "@/components/Ilmub";
 import { KATTE_VARV, Nupp, Salm, Sektsioon, Tekst } from "@/components/ui";
 import { laeSisu } from "@/sisu/lae";
@@ -27,7 +28,7 @@ export default async function Hinnakiri({ params }) {
   const kood = keeleks(keel);
   const sisu = await laeSisu(kood);
   const t = (rada) => tee(kood, rada);
-  const { hinnakiriLeht, hinnakiri, teekond } = sisu;
+  const { hinnakiriLeht, hinnakiri, teenused, teekond } = sisu;
 
   /* Admin-lehelt antud üksikute tekstide kuju */
   const v = plokiStiil(sisu.tekstiKujud, "hinnakiriLeht");
@@ -88,39 +89,65 @@ export default async function Hinnakiri({ params }) {
             teistest kordades pikem — kindel laius hoiab kuue rea rütmi paigas.
           */}
           <Ilmub ruhm as="ul" className="mt-10">
-            {hinnakiri.map((rida, jrk) => (
-              <li
-                key={rida.nimi}
-                className="grid grid-cols-1 gap-x-10 gap-y-3 border-t border-gold/25 py-8 sm:grid-cols-[1fr_13rem] sm:py-10 lg:grid-cols-[1fr_16rem]"
-              >
-                <div>
-                  <h2
-                    className="kuva text-[clamp(1.45rem,2.8vw,2rem)] text-ink"
-                    style={vr(`${jrk}.nimi`)}
-                  >
-                    {sr(`${jrk}.nimi`, rida.nimi)}
-                  </h2>
-                  <p
-                    className="mt-2 max-w-[52ch] text-lg leading-relaxed text-ink-soft"
-                    style={vr(`${jrk}.kirjeldus`)}
-                  >
-                    {sr(`${jrk}.kirjeldus`, rida.kirjeldus)}
-                  </p>
-                </div>
+            {hinnakiri.map((rida, jrk) => {
+              const teenus = teenused[jrk];
+              const reaSisu = (
+                <>
+                  <div className="pr-8 sm:pr-0">
+                    <h2
+                      className="kuva text-[clamp(1.45rem,2.8vw,2rem)] text-[var(--oma-varv,var(--color-ink))] transition-colors duration-300 group-hover:text-gold-deep group-focus-visible:text-gold-deep group-active:text-gold-deep"
+                      style={vr(`${jrk}.nimi`, { varvMuutujaks: true })}
+                    >
+                      {sr(`${jrk}.nimi`, rida.nimi)}
+                    </h2>
+                    <p
+                      className="mt-2 max-w-[52ch] text-lg leading-relaxed text-ink-soft"
+                      style={vr(`${jrk}.kirjeldus`)}
+                    >
+                      {sr(`${jrk}.kirjeldus`, rida.kirjeldus)}
+                    </p>
+                  </div>
 
-                <div className="sm:text-right">
-                  <p
-                    className="kuva text-[clamp(1.4rem,2.5vw,1.9rem)] text-gold-deep"
-                    style={vr(`${jrk}.hind`)}
-                  >
-                    {sr(`${jrk}.hind`, rida.hind)}
-                  </p>
-                  <p className="mikro mt-1 text-ink-faint" style={vr(`${jrk}.kestus`)}>
-                    {sr(`${jrk}.kestus`, rida.kestus)}
-                  </p>
-                </div>
-              </li>
-            ))}
+                  <div className="pr-8 sm:pr-10 sm:text-right">
+                    <p
+                      className="kuva text-[clamp(1.4rem,2.5vw,1.9rem)] text-gold-deep"
+                      style={vr(`${jrk}.hind`)}
+                    >
+                      {sr(`${jrk}.hind`, rida.hind)}
+                    </p>
+                    <p
+                      className="mikro mt-1 text-ink-faint"
+                      style={vr(`${jrk}.kestus`)}
+                    >
+                      {sr(`${jrk}.kestus`, rida.kestus)}
+                    </p>
+                  </div>
+                </>
+              );
+
+              return (
+                <li key={rida.nimi} className="border-t border-gold/25">
+                  {teenus?.slug ? (
+                    <Link
+                      href={t(`/teenused/${teenus.slug}`)}
+                      className="group relative grid grid-cols-1 gap-x-10 gap-y-3 py-8 transition-colors duration-300 hover:bg-bone/40 focus-visible:bg-bone/40 active:bg-bone/60 sm:grid-cols-[1fr_13rem] sm:py-10 lg:grid-cols-[1fr_16rem]"
+                    >
+                      {reaSisu}
+                      <span
+                        aria-hidden="true"
+                        className="absolute right-0 top-8 text-2xl text-gold-deep transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1 group-active:translate-x-1 sm:top-10"
+                      >
+                        →
+                      </span>
+                    </Link>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-x-10 gap-y-3 py-8 sm:grid-cols-[1fr_13rem] sm:py-10 lg:grid-cols-[1fr_16rem]">
+                      {reaSisu}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </Ilmub>
           <div className="joon" />
         </div>

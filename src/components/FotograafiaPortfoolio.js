@@ -1,71 +1,53 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
-import Foto from "@/components/Foto";
 import Ilmub from "@/components/Ilmub";
 import { KATTE_VARV } from "@/components/ui";
-
-const PILDID = [
-  { nimi: "marta-portree", altEt: "Portree loomulikus valguses", altEn: "Portrait in natural light" },
-  { nimi: "marta-seistes", altEt: "Seisev portree stuudios", altEn: "Standing studio portrait" },
-  { nimi: "marta-diivanil", altEt: "Rahulik portree diivanil", altEn: "Quiet portrait on a sofa" },
-  {
-    nimi: "marta-lamades",
-    altEt: "Ajatu portree heledas stuudios",
-    altEn: "Timeless portrait in a light studio",
-    lai: true,
-  },
-  { nimi: "marta-tutrega", altEt: "Kahe inimese portree stuudios", altEn: "Portrait of two people in a studio" },
-];
-
-const TEKST = {
-  et: {
-    silt: "Portfoolio",
-    pealkiri: "Ehe, ajatu kohalolu",
-    kirjeldus:
-      "Valgus, liikumine ja päris hetk — portreed, milles saad olla sina ise.",
-  },
-  en: {
-    silt: "Portfolio",
-    pealkiri: "Genuine, timeless presence",
-    kirjeldus:
-      "Light, movement and a real moment — portraits in which you can be yourself.",
-  },
-};
+import { fotograafiaPildiAadress } from "@/sisu/fotograafiaGalerii";
 
 const AUTOMAATSE_LIIKUMISE_KIIRUS = 0.075;
 const KASUTAJA_PAUS_MS = 1200;
 
-function Pildirida({ keel, peidetud = false }) {
+function Pildirida({ pildid, peidetud = false }) {
   return (
     <div
       className="fotogalerii-ruhm"
       aria-hidden={peidetud ? "true" : undefined}
     >
-      {PILDID.map((pilt) => (
+      {pildid.map((pilt, indeks) => (
         <div
           className={`fotogalerii-kaader${pilt.lai ? " fotogalerii-kaader-lai" : ""}`}
-          key={`${pilt.nimi}-${peidetud}`}
+          key={`${pilt.fail}-${indeks}-${peidetud}`}
         >
-          <Foto
-            nimi={pilt.nimi}
-            alt={peidetud ? "" : keel === "en" ? pilt.altEn : pilt.altEt}
-            kuvasuhe={pilt.lai ? "3 / 2" : "4 / 5"}
-            sizes={
-              pilt.lai
-                ? "(max-width: 640px) 100vw, 48vw"
-                : "(max-width: 640px) 72vw, 30vw"
-            }
-            className="h-full w-full"
-          />
+          <div className="relative h-full w-full overflow-hidden">
+            <Image
+              src={pilt.aadress}
+              alt={peidetud ? "" : pilt.alt}
+              fill
+              quality={100}
+              sizes={
+                pilt.lai
+                  ? "(max-width: 640px) 100vw, 48vw"
+                  : "(max-width: 640px) 72vw, 30vw"
+              }
+              className="object-cover"
+            />
+          </div>
         </div>
       ))}
     </div>
   );
 }
 
-export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
-  const tekst = TEKST[keel] ?? TEKST.et;
+export default function FotograafiaPortfoolio({ keel, taustaVoti, galerii }) {
+  const pildid = (Array.isArray(galerii?.pildid) ? galerii.pildid : [])
+    .map((pilt) => ({
+      ...pilt,
+      aadress: fotograafiaPildiAadress(pilt?.fail),
+      lai: pilt?.kuvasuhe === "lai",
+    }))
+    .filter((pilt) => pilt.aadress);
   const galeriiRef = useRef(null);
   const radaRef = useRef(null);
   const lohistabRef = useRef(false);
@@ -211,27 +193,26 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
     }
   };
 
+  if (pildid.length === 0) return null;
+
   return (
     <section
       className="overflow-hidden bg-mets"
       data-taust={taustaVoti}
       style={{ "--kate-varv": KATTE_VARV.mets }}
-      aria-labelledby="fotograafia-portfoolio-pealkiri"
+      aria-labelledby="fotograafia-galerii-pealkiri"
     >
       <div className="mx-auto max-w-[1400px] px-6 pb-10 pt-14 sm:pb-12 sm:pt-16 lg:px-12 lg:pb-16 lg:pt-20">
-        <Ilmub className="grid gap-5 md:grid-cols-[0.65fr_1.35fr] md:items-end md:gap-16">
-          <p className="silt silt-tume">{tekst.silt}</p>
-          <div>
-            <h2
-              id="fotograafia-portfoolio-pealkiri"
-              className="kuva max-w-3xl text-[clamp(2.35rem,5vw,4.3rem)] leading-[1.08] text-luu"
-            >
-              {tekst.pealkiri}
-            </h2>
-            <p className="mt-5 max-w-2xl text-lg leading-[1.75] text-luu/80">
-              {tekst.kirjeldus}
-            </p>
-          </div>
+        <Ilmub className="max-w-4xl">
+          <h2
+            id="fotograafia-galerii-pealkiri"
+            className="kuva max-w-3xl text-[clamp(2.35rem,5vw,4.3rem)] leading-[1.08] text-luu"
+          >
+            {galerii.pealkiri}
+          </h2>
+          <p className="mt-5 max-w-2xl text-lg leading-[1.75] text-luu/80">
+            {galerii.kirjeldus}
+          </p>
         </Ilmub>
       </div>
 
@@ -261,9 +242,9 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti }) {
           onWheel={peataHorisontaalselKerimisel}
         >
           <div ref={radaRef} className="fotogalerii-rada">
-            <Pildirida keel={keel} />
-            <Pildirida keel={keel} peidetud />
-            <Pildirida keel={keel} peidetud />
+            <Pildirida pildid={pildid} />
+            <Pildirida pildid={pildid} peidetud />
+            <Pildirida pildid={pildid} peidetud />
           </div>
         </div>
 

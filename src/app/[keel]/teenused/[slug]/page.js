@@ -458,6 +458,7 @@ export default async function TeenuseLeht({ params }) {
       {onFotograafia && (
         <FotograafiaPortfoolio
           keel={kood}
+          galerii={sisu.fotograafiaGalerii}
           taustaVoti="teenuseLeht.portfoolio"
         />
       )}
