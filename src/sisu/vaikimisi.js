@@ -1,847 +1,673 @@
 /*
-  VAIKIMISI SISU — kogu kodulehe tekst ühes puus.
+  VAIKIMISI SISU — EESTI KEEL.
 
-  See fail on lähtepunkt: siin olev sisu kuvatakse siis, kui midagi ei ole veel
-  admin-lehelt muudetud. Admin-lehelt salvestatud muudatused kirjutatakse faili
-  data/sisu.json ja need kirjutavad siinsed väärtused üle (vt src/sisu/lae.js).
-
-  Seepärast: siia kirjutatakse ainult vaikimisi tekstid, mitte kasutaja muudatused.
-  Puu kuju (võtmete nimed) määratakse siin — data/sisu.json tundmatud võtmed
-  jäetakse tähelepanuta, nii ei lähe leht katki, kui vaikimisi sisu hiljem täieneb.
-
-  SÕNASTUSE REEGEL: Marta tekstid on siin sõna-sõnalt nii, nagu need on tema
-  piltidel (`koduleht pildid` → `TEKSTID-KOIK.md`). Kirjavahemärke, reavahetusi
-  ega kolmpunkte ei ühtlustata „ilusamaks” — tema kirjaviis on osa tema häälest.
-  Kolmpunkt on tema piltidel üks märk „…”, mitte kolm punkti. Reavahetus tekstis
-  (\n) tähendab, et pildil olid need read eraldi — leht hoiab need eraldi.
-  Vt `TEKSTIKONTROLL.md` juurkaustas.
+  Puu on 23.08.2026 serveris kehtinud adminisisu tõmmis. Admini muudatused
+  elavad endiselt data/sisu.<keel>.json failis ja kirjutavad need väärtused üle.
+  Mõlema keele võtmed, massiivide pikkused, slugid ja tehnilised väljad peavad
+  jääma samaks, et tõlge ei kaoks laadimisel vaikselt ära.
 */
 
 export const vaikimisiSisu = {
-  meta: {
-    saidiNimi: "Marta Raudsoo",
-    tunnuslause: "Püha Ruum, kohalolu ja selgus",
-    kirjeldus:
-      "Kohalolu, selgus ja stiil — et inimene võiks elada rohkem kooskõlas sellega, kelleks Jumal on ta loonud. Püha Ruum, stiiliselgus, garderoobi korrastus, teadlik ostlemine ja fotograafia.",
+  "meta": {
+    "saidiNimi": "Marta Raudsoo",
+    "tunnuslause": "Püha Ruum, kohalolu ja selgus",
+    "kirjeldus": "Kohalolu, selgus ja stiil — et inimene võiks elada rohkem kooskõlas sellega, kelleks Jumal on ta loonud. Püha Ruum, stiiliselgus, garderoobi korrastus, teadlik ostlemine ja fotograafia."
   },
-
-  kontakt: {
-    email: "martaraudsoo@gmail.com",
-    instagram: "https://www.instagram.com/martaraudsoo/",
-    instagramNimi: "@martaraudsoo",
-    facebook: "https://www.facebook.com/marta.raudsoo",
-    substack: "https://substack.com/@martaraudsoo",
+  "kontakt": {
+    "email": "martaraudsoo@gmail.com",
+    "instagram": "https://www.instagram.com/martaraudsoo/",
+    "instagramNimi": "@martaraudsoo",
+    "facebook": "https://www.facebook.com/marta.raudsoo",
+    "substack": "https://substack.com/@martaraudsoo"
   },
-
-  navi: [
-    { nimi: "Avaleht", tee: "/" },
-    { nimi: "Minust", tee: "/minust" },
-    { nimi: "Teenused", tee: "/teenused" },
-    { nimi: "Hinnakiri", tee: "/hinnakiri" },
-    { nimi: "Blogi", tee: "/blogi" },
-    { nimi: "Broneerimine", tee: "/broneerimine" },
-  ],
-
-  avaleht: {
-    hero: {
-      silt: "Püha Kohalolu Kristuses",
-      pealkiri: "Püha Ruum",
-      alapealkiri: "Inimese terviklik korrastumine",
-      tekst:
-        "Usun, et Jumal on loonud iga inimese ainulaadseks. Minu kutsumus on aidata inimesel taas märgata oma väärtust, tuua ellu selgust ja luua kooskõla sisemise olemuse ning välise väljenduse vahel.",
-      nuppEsmane: "Broneeri aeg",
-      nuppTeine: "Vaata teenuseid",
-    },
-
-    kutsumus: {
-      silt: "Kutsumus",
-      tsitaat:
-        "„Usun, et Jumal on kutsunud mind looma ruumi, kus inimene võib peatuda, olla kuuldud ning kogeda selgust.”",
-      loigud: [
-        "Mõnikord sünnib see vestluses ja palves. Mõnikord garderoobi korrastades, teadlikke valikuid tehes või fotosessioonil. Välised sammud saavad sageli peegeldada seda, mida Jumal teeb inimese südames.",
-        "Minu teenused ei ole eraldi maailmad. Need on kõik ühe ja sama kutsumuse erinevad väljendusviisid. Väline ja sisemine ei ole lahus — riided, kodu, välimus ja valikud kannavad sageli inimese sisemist seisundit.",
-      ],
-      /* Loend failist „Lehe iseloomustus” — kuidas kutsumus praktikas väljendub */
-      valjendusSissejuhatus:
-        "Minu töö ühendab kohalolu ja praktilise korrastamise. See võib väljenduda läbi:",
-      valjendus: [
-        "sügava kuulamise ja peegeldamise",
-        "eluetappide ja valikute selguse loomise",
-        "isikliku stiili avastamise",
-        "garderoobi korrastamise",
-        "teadliku ja eesmärgipärase ostlemise",
-      ],
-    },
-
-    /*
-      Liikumine. Pealkiri on Marta enda lause („Lehe iseloomustus”, kus see on
-      eraldi välja toodud kui tema oma sõnad) — varem seisis siin minu kirjutatud
-      lause, mida allikates ei olnud.
-    */
-    liikumine: {
-      silt: "Liikumine",
-      pealkiri:
-        "„Mis loovad samuti ellu selgust, kergust, tasakaalu, rahu, rõõmu ja vabadust.”",
-      read: [
-        { millest: "Kaosest", milleks: "selgusesse" },
-        { millest: "Raskusest", milleks: "kergusesse" },
-        { millest: "Killustatusest", milleks: "tasakaalu" },
-        { millest: "Rahutusest", milleks: "rahusse" },
-        { millest: "Lõksust", milleks: "vabadusse" },
-      ],
-    },
-
-    /*
-      Marta enda sõnad Instagramist — sinu unikaalne essents.
-      Pildil (IG 76) on see kahes osas: suur pealkiri ja väiksem alarida.
-      Varem olid need mõttekriipsuga üheks reaks liidetud — see kriips oli minu.
-    */
-    essents: {
-      silt: "Essents",
-      pealkiri: "Sinu unikaalne essents",
-      alapealkiri: "Kelleks JUMAL on sind loonud …",
-      loigud: [
-        "Sinu essents … ei ole lihtsalt stiil. See ei ole ainult riided, värvid või vormid. See on sinu kohalolu. Sinu ehe viis olla. Sinu sisemine ilu. Sinu kordumatu väljendus. Sinu Jumala näo järgi loodud unikaalsus.",
-        "Aga lisaks sellele usun … et iga inimene kannab endas midagi ainulaadset. Midagi, mida Jumal on just temasse pannud. Iga inimese elul on tähendus, suund ja kutsumus — ning tema olemuses on midagi, mis ei ole kellegi teisega asendatav.",
-        "Ja riietus võib olla üks viis, kuidas see nähtavale tuleb. Mitte selleks, et tõestada oma väärtust, ega olla keegi teine. Ka mitte selleks, et sobituda maailma mõõdupuusse. Vaid selleks, et tulla rohkem kooskõlla sellega, kes sa päriselt oled.",
-      ],
-      /* Marta lause failist „Lehe iseloomustus” — seni lehel kasutamata */
-      tsitaat:
-        "„Jumal ei loo inimesi juhuslikult. Iga inimese sees on väärtus, isikupära ja ilu, mida saab õppida märkama ja austama.”",
-    },
-
-    /*
-      Kirjakoht avalehele — seni ei olnud avalehel ühtegi salmi, kuigi leht
-      algab usulise alusega. Tuli minust-lehe salmiridast, kus neid oli kuus.
-    */
-    kirjakoht: {
-      viide: "Johannese 10:10",
-      tekst: "„Mina olen tulnud, et neil oleks elu ja seda ülirohkesti.”",
-      selgitus: "",
-    },
-
-    teenusedPlokk: {
-      silt: "Teenused",
-      /* Arv käib teenuste massiivi pikkusega kaasas */
-      pealkiri: "Kuus viisi, kuidas sama kutsumus praktikas väljendub",
-      linkTekst: "Kõik teenused",
-    },
-
-    /*
-      Marta lause seisis siin pooleks murtuna: esimene pool oli pealkiri,
-      teine pool eraldi lõik. Nüüd on see terve lause ühe tsitaadina.
-
-      Silti siin EI OLE: sõna „Minust” seisab juba menüüs ja ploki all
-      lingis, kolmas kordus samal ekraanil oli üleliigne.
-    */
-    minustPlokk: {
-      tsitaat:
-        "„Kõik, mis minus on head, on Jumala kingitus. Minu soov ei ole juhtida inimesi enda juurde, vaid aidata neil kasvada oma suhtes Jumalaga.”",
-      loigud: [
-        "Pakun inimestele ruumi, kus on võimalik peatuda, olla kuuldud ja märgata uuesti seda, mis on elus oluline.",
-      ],
-      linkTekst: "Loe minust",
-    },
-
-    /* Lehe lõpetus on Marta enda slaid (IG 90), mitte minu kutselause */
-    kutse: {
-      silt: "Järgmine samm kuulub sinule",
-      pealkiri: "„Ja võib-olla on aeg näha ennast nii, nagu Jumal sind on loonud.”",
-      nuppEsmane: "Broneeri aeg",
-      nuppTeine: "Vaata hinnakirja",
-    },
-  },
-
-  minust: {
-    hero: {
-      silt: "Minust",
-      pealkiri: "Pakun ruumi, kus on võimalik peatuda",
-      tekst:
-        "Pakun inimestele ruumi, kus on võimalik peatuda, olla kuuldud ja märgata uuesti seda, mis on elus oluline.",
-    },
-
-    /*
-      Marta enda lugu Instagramist — kutsumuse sünd.
-      Pealkiri on lihtsalt „Minu lugu”: varem seisis siin „Igatsus kohtuda
-      iseenda unikaalsusega”, mis oli minu kirjutatud kokkuvõte (pealkiri
-      TEKSTID-KOIK.md-st), mitte ühelgi pildil olev tekst.
-    */
-    lugu: {
-      silt: "Minu lugu",
-      pealkiri: "Minu lugu",
-      loigud: [
-        "Nii kaua kui ma ennast mäletan, olen ma igatsenud kohtuda iseenda unikaalsusega. Mitte lihtsalt oma stiili, välimuse või rollide kaudu, vaid selle tõelise minaga — inimesega, kelleks JUMAL on mind loonud.",
-        "Olen alateadlikult tundnud kutset ja tõmmet mõista: milline on see kordumatu „mina”, kelle Jumal on loonud?",
-        "Ma mäletan ennast juba noorena … inimesi vaatlemas.",
-        "Mitte lihtsalt nende riideid või välimust, vaid midagi enamat. Mind on alati paelunud, miks inimene riietub nii, nagu ta riietub …",
-        "… ja miks ta on valinud just selle töö, selle viisi olla, selle väljenduse. Miks mõni inimene justkui peidab end. Miks mõni mõjub kohe kohalolevalt. Miks mõne inimese puhul on tunne, et tema väline pilt ja sisemine olemus ei ole omavahel kooskõlas.",
-        "Ma tundsin sageli, nagu näeksin või tajuksin inimese juures midagi, mida ma ei osanud seletada. Vahel tundus see isegi kummaline.",
-        "Aga täna ma mõistan, et see ei olnud juhuslik.",
-        "See oli kutse. See oli sisemine suund. See oli and, mis vajas minus juurdumist ja küpsemist. Ma usun, et Jumal on pannud meie sisse annid.",
-        "Mõnikord tunneme neid kaua enne, kui oskame neile nime anda. Mõnikord vajavad need aega, kogemusi ja kasvamist, enne kui me julgeme neid päriselt kuulata.",
-        "Täna mõistan, et minu südames on olnud alati igatsus aidata inimesel kohtuda iseendaga — mitte selle versiooniga, kelleks ta on püüdnud saada, vaid selle inimesega, kelleks Jumal on ta loonud.",
-      ],
-    },
-
-    kirjakoht: {
-      viide: "1. Moosese 1:27",
-      tekst: "„Ja Jumal lõi inimese oma näo järgi…”",
-      selgitus:
-        "Iga inimene on loodud Jumala näo järgi — ainulaadse väärtuse, ilu ja annetega.",
-    },
-
-    /*
-      Marta usu- ja pöördumislugu — Instagramist, tema enda sõnadega.
-      Lõikude kaar: äratundmine (süda igatseb tõde) → vale alus → pöördepunkt
-      → mida see andis → kutsumus. Kirjakohad käivad loo juurde ja järgivad
-      sama kuju mis minust.kirjakoht.
-
-      Reavahetused (\n) on pildilt: „Kui töö = turvalisus” oli kolm eraldi rida.
-    */
-    pooordumine: {
-      silt: "Süda igatseb tõde",
-      /* Pildi (IG 112) pealkiri koos punktireaga, mis seob selle alloleva lõiguga */
-      pealkiri: "Täna ma näen selgemalt kui iial varem …",
-      loigud: [
-        "Inimese sees on kaks reaalsust korraga.",
-        "Igatsus elada õigesti, soov olla aus, vajadus rahu ja lihtsuse järele - süda tunneb ära, mis on õige …",
-        "Aga samal ajal… meie inimlik pool on väsinud, kardab, hoiab kinni harjumustest, läheb tagasi vanadesse mustritesse ja nii tekib vastuolu sa tead, mis on õige… aga ei ela seda.",
-        "Sinu süda teab tõde aga Jumala vägi aitab sul seda elada",
-        "Täna ma soovin küsida … millele me tegelikult oma elu ehitame?",
-        "… kui elu on ehitatud sõltuvustele, siis oleme ehitanud liivale. Ja kui see kõik kõigub ja laguneb - kukub ka inimene.",
-        "Kui töö = turvalisus\nraha = väärtus\nroll = identiteet",
-        "See ei ole tõeline alus …",
-        "… Aga ma elasin aastaid nii. Fookus oli arvete maksmine, ellujäämine, süsteemis püsimine. Ja kuigi väliselt tundus justkui „korras”… siis enda sees olin ma katki.",
-        "Täna ma saan ausalt tunnistada - ma teenisin süsteemi, mitte Jumalat. Ja kui puudub suhe Jumalaga, hakkame alati teenima midagi muud … seni kuni ei ole kohtunud tõega.",
-        "Jumala sõna kuulekus … loob stabiilse vundamendi (kalju), mis peab vastu eluraskustele, samas kui sõnade eiramine viib vaimse huku ja kokkuvarisemiseni.",
-        "Minu jaoks algas muutus siis…",
-        "… kui ma hakkasin päriselt lahti laskma valest. See ei olnud lihtne, see oli valus, ebakindel ja murdis mu vanad alused. Aga samal ajal hakkas sündima midagi uut …",
-        "Ja kui ma andsin oma elu …",
-        "… oma töö, oma kutsumise, oma tuleviku. Jumala kätte - siis on hakanud muutuma …",
-        "… Mu süda, mu meel, mu suhe eluga.",
-        "Ristimine oli minu jaoks pöördepunkt.",
-        "Me ei kaota midagi, vastupidi - kohtume tõe, tee ja eluga.",
-        "Sest Jumala tee lammutab selle, mis ei ole tõde ja ehitab selle, mis jääb.",
-      ],
-      /* Loo lõpetus — Marta oma slaid (IG 121), seisab tsitaadina loo lõpus */
-      tsitaat:
-        "„Ei ole enam lihtsalt töö vaid KUTSUMUS, ei ole enam pingutus, vaid TEENIMINE ARMASTUSEST, ei juhi enam hirm vaid RAHU.”",
-      /* Sama kuju mis minust.kirjakoht. Selgitus on tühi seal, kus pildil seda ei olnud. */
-      kirjakohad: [
-        {
-          viide: "Markuse 14:38",
-          tekst:
-            "„Valvake ja palvetage, et te ei satuks kiusatusse! Vaim on küll valmis, aga liha on nõder.”",
-          selgitus:
-            "Vaim võib soovida head, kuid inimese jõust ei piisa. Jeesus kutsub meid valvama ja palvetama ning toetuma Jumala jõule.",
-        },
-        {
-          viide: "Roomlastele 7:19",
-          tekst: "„Ma ei tee head, mida ma tahan, vaid kurja, mida ma ei taha.”",
-          selgitus:
-            "Me võime teada, mis on õige, kuid oma jõust ei piisa. Vajame Jumala armu, tõde ja juhtimist.",
-        },
-        {
-          viide: "Matteuse 7:24-27",
-          tekst:
-            "„Kes kuuleb mu sõnu ja teeb nende järgi… on nagu mees, kes ehitas oma maja kaljule… Aga kes ei tee… on nagu see, kes ehitas liivale.”",
-          selgitus:
-            "Tugev elu ei sünni üksnes tõe teadmisest, vaid selle järgi elamisest. Jumala sõna on vundament, mis kannab.",
-        },
-        {
-          viide: "Matteuse 6:24",
-          tekst:
-            "„Keegi ei saa teenida kahte Issandat, sest ta kas vihkab ühte ja armastab teist või hoidub ühe poole ega hooli teisest. Te ei saa teenida Jumalat ja mammonat.”",
-          selgitus:
-            "Süda vajab selgust, kellele kuulume ja mis meie valikuid juhib. Jumal kutsub meid elama jagamatu südamega Tema tões.",
-        },
-        {
-          viide: "Matteuse 16:24",
-          tekst:
-            "„Kui keegi tahab käia minu järel, siis ta salgagu iseennast… ja järgnegu mulle.”",
-          selgitus:
-            "Kristust järgides loobume vajadusest kõike ise juhtida ja usaldame oma elu Jumala kätte.",
-        },
-      ],
-    },
-
-    /* Annid — Marta enda sõnastus, 1. Korintlastele 12 põhjal */
-    annid: {
-      silt: "Annid",
-      pealkiri: "Annid, mida olen oma teekonnal ära tundnud",
-      sissejuhatus:
-        "Korintlastele 12 õpetab, et Püha Vaim annab oma ande ühiseks kasuks. Oma teekonnal olen kõige enam märganud, et Jumal kasutab minu kaudu eelkõige:",
-      loend: [
-        {
-          nimi: "tarkuse jagamist",
-          kirjeldus: "aidata näha olukordi laiemalt ja mõista järgmisi samme",
-        },
-        {
-          nimi: "tunnetust",
-          kirjeldus: "märgata seda, mis vajab tähelepanu või korrastumist",
-        },
-        {
-          nimi: "usu julgustamist",
-          kirjeldus: "tuletada meelde lootust ja usaldust Jumala vastu",
-        },
-        {
-          nimi: "kuulamist ja kohalolu",
-          kirjeldus:
-            "luua turvaline ruum, kus inimene võib olla aus ning kogeda selgust",
-        },
-      ],
-    },
-
-    tsitaat: {
-      tekst:
-        "„Need ei ole minu saavutused. Need on Jumala armu kingitused, mida soovin kasutada ustavalt teiste teenimiseks.”",
-    },
-
-    terviklikkus: {
-      silt: "Terviklikkus",
-      pealkiri: "Jumal hoolib terviklikust inimesest",
-      loigud: [
-        /* Sõna-sõnalt pildilt (IG 226): koma, punkti ega mõttekriipsu seal ei ole */
-        "Selles teekonnas hakkab korrastuma - vaimne emotsionaalne, füüsiline maailm\nMitte eraldi vaid koos.",
-        "Seepärast kohtuvad minu töös sisemine ja väline — kuulamine ja praktilised sammud, kohalolu ja korrastumine.",
-        "Kui südames sünnib selgus, saab see hakata peegelduma ka igapäevases elus: valikutes, garderoobis, kodus, eneseväljenduses ja suhetes.",
-      ],
-    },
-
-    lopp: {
-      tsitaat:
-        "„Kõik, mis minus on head, on Jumala kingitus. Minu soov ei ole juhtida inimesi enda juurde, vaid aidata neil kasvada oma suhtes Jumalaga.”",
-      nuppTekst: "Võta ühendust",
-    },
-  },
-
-  teenusedLeht: {
-    hero: {
-      silt: "Teenused",
-      pealkiri: "Ühe kutsumuse erinevad väljendusviisid",
-      tekst:
-        "Minu teenused ei ole eraldi maailmad. Püha Ruum ei ole üks teenus ning stiiliselgus, garderoobi korrastus, teadlik ostlemine ja fotograafia teised. Need on kõik ühe ja sama kutsumuse erinevad väljendusviisid.",
-    },
-    loeLahemalt: "Loe lähemalt",
-    /* Marta sõnad (IG 241) — kehtivad kõigi teenuste kohta, mitte ainult Püha Ruumi */
-    tsitaat:
-      "„Minu tee ei ole ainult minu oma — see on teenimine läbi kohalolu, kuulamise ja sügava empaatia.”",
-    tsitaadiSilt: "Kohalolu",
-    lopp: {
-      pealkiri: "Ei tea, kust alustada?",
-      tekst:
-        "Kirjuta lihtsalt, mis sind praegu kõige rohkem puudutab. Leiame koos õige koha, kust alustada.",
-      nuppEsmane: "Võta ühendust",
-      nuppTeine: "Hinnakiri",
-    },
-  },
-
-  teenused: [
+  "navi": [
     {
-      slug: "puha-ruum",
-      nimi: "Püha Ruum",
-      alapealkiri: "Püha Kohalolu Kristuses",
-      luhike:
-        "Turvaline ruum kuulamiseks, peegelduseks, palveks ja selguse leidmiseks.",
-      sissejuhatus:
-        "Pakun inimestele ruumi, kus on võimalik peatuda, olla kuuldud ja märgata uuesti seda, mis on elus oluline.",
-      loigud: [
-        "Usun, et Jumal kasutab erinevaid inimesi erineval viisil. Minu südames on saanud oluliseks luua keskkond, kus võivad sündida:",
-        "Kõik see sünnib usus, palves ja sooviga anda kogu au Jumalale.",
+      "nimi": "Avaleht",
+      "tee": "/"
+    },
+    {
+      "nimi": "Minust",
+      "tee": "/minust"
+    },
+    {
+      "nimi": "Teenused",
+      "tee": "/teenused"
+    },
+    {
+      "nimi": "Hinnakiri",
+      "tee": "/hinnakiri"
+    },
+    {
+      "nimi": "Blogi",
+      "tee": "/blogi"
+    },
+    {
+      "nimi": "Broneerimine",
+      "tee": "/broneerimine"
+    }
+  ],
+  "avaleht": {
+    "hero": {
+      "silt": "Kohalolu Kristuses",
+      "pealkiri": "Püha Ruum",
+      "alapealkiri": "Elu korrastumine Jumala ligiolus",
+      "tekst": "Ruum, kus kohtuda oma Jumalast antud identiteedi ja väärtusega, et kasvada üha enam kooskõlla sellega, kelleks oled loodud.",
+      "nuppEsmane": "Broneeri aeg",
+      "nuppTeine": "Vaata teenuseid"
+    },
+    "kutsumus": {
+      "silt": "Kutsumus",
+      "tsitaat": "Jumal on kutsunud mind looma ruumi, kus inimene saab aeglustuda, olla kuuldud ning leida selgust ja rahu Jumala ligiolu ja Sõna valguses.",
+      "loigud": [
+        "See võib sündida vestluses ja palves, aga ka kodu, garderoobi korrastamises, fotosessioonil või eneseväljenduse kaudu. \n\nJumal hoolib inimesest tervikuna ning sisemine ja väline on omavahel seotud - mis toimub südames ja kuidas see väljendub me elus."
       ],
-      plokid: [
+      "valjendusSissejuhatus": "See võib väljenduda:",
+      "valjendus": [
+        "• kuulamises ja peegeldamises",
+        "• elu ja suuna mõtestamises",
+        "• Jumala antud identiteedi ja andide märkamises",
+        "• kodu ja garderoobi korrastamises",
+        "• teadlikumates elu- ja stiilivalikutes"
+      ]
+    },
+    "liikumine": {
+      "silt": "Liikumine",
+      "pealkiri": "“Mis loob ellu selgust, kergust, tasakaalu, rahu, rõõmu ja vabadust.”",
+      "read": [
         {
-          pealkiri: "Psalm 62:1",
-          loigud: [
+          "millest": "Kaosest",
+          "milleks": "selgusesse"
+        },
+        {
+          "millest": "Raskusest",
+          "milleks": "kergusesse"
+        },
+        {
+          "millest": "Killustatusest",
+          "milleks": "tasakaalu"
+        },
+        {
+          "millest": "Rahutusest",
+          "milleks": "rahusse"
+        },
+        {
+          "millest": "Lõksust",
+          "milleks": "vabadusse"
+        }
+      ]
+    },
+    "essents": {
+      "silt": "Essents",
+      "pealkiri": "Sinu unikaalne essents",
+      "alapealkiri": "Kelleks JUMAL on sind loonud …",
+      "loigud": [
+        "Sinu essents on enamat kui stiil. See on sinu ehe kohalolu, sisemine ilu, Jumalalt saadud annid ja kordumatu viis ennast väljendada.\n\nSinu lugu, olemus ja anded ei ole juhuslikud, vaid osa Jumala heast plaanist. Ka riietus võib seda nähtavaks teha, et väljendada ehedamalt seda, kelleks Jumal on sind loonud."
+      ],
+      "tsitaat": "„Jumal ei loo inimesi juhuslikult. Igas inimeses on väärtus, isikupära ja ilu, mida õppida märkama ja austama.”"
+    },
+    "kirjakoht": {
+      "viide": "“Mina olen tulnud, et neil oleks  elu ja seda ülirohkesti.”",
+      "tekst": "Johannese 10:10",
+      "selgitus": ""
+    },
+    "teenusedPlokk": {
+      "silt": "Teenused",
+      "pealkiri": "Kuus viisi, kuidas kutsumus praktikas väljendub",
+      "linkTekst": "Kõik teenused"
+    },
+    "minustPlokk": {
+      "tsitaat": "“Kõik hea minus on Jumala kingitus. Minu soov on aidata inimesel kasvada oma suhtes Jumalaga ja näha ennast Tema pilgu läbi — väärtusliku, armastatud ja ainulaadsena.”",
+      "loigud": [],
+      "linkTekst": "Loe minust"
+    },
+    "kutse": {
+      "silt": "“Ja võib-olla on aeg näha ennast nii, nagu Jumal sind on loonud.”",
+      "pealkiri": "Sinu järgmine samm  …",
+      "nuppEsmane": "Broneeri aeg",
+      "nuppTeine": "Vaata hinnakirja"
+    }
+  },
+  "minust": {
+    "hero": {
+      "silt": "",
+      "pealkiri": "Ruum peatumiseks ...",
+      "tekst": "... et märgata uuesti seda, mis on elus oluline."
+    },
+    "lugu": {
+      "silt": "Minu lugu",
+      "pealkiri": "Nii kaua kui ennast mäletan, on minus olnud igatsus ...",
+      "loigud": [
+        "... mõista elu ja inimest sügavamalt - kelleks Jumal on meid loonud ja mis kujundab seda, kuidas me oma elu elame?",
+        "Juba noorena panid minu enda kogemused mind küsima, miks sünnime just sellistesse oludesse, just sellistesse olukordadesse ning millele inimene lõpuks oma elu rajab?",
+        "Võib-olla just sellepärast olen alati vaadelnud inimest tervikuna - tema valikuid, suhteid, kodu, tööd, eluviisi ja eneseväljendust.",
+        "Täna mõistan, et selles oli juba osa minu kutsumusest: aidata inimesel märgata, mis tema elu kujundab, mis vajab korrastamist ja kuidas kasvada üha enam kooskõlla sellega, kelleks Jumal on ta loonud.",
+        "Usun, et Jumala antud annid vajavad aega, et meis küpseda teadlikuks teenimiseks. "
+      ]
+    },
+    "kirjakoht": {
+      "viide": "1. Moosese 1:27",
+      "tekst": "„Ja Jumal lõi inimese oma näo järgi…”",
+      "selgitus": "Jumala näo järgi looduna kannab iga inimene endas ainulaadset väärtust ja ilu"
+    },
+    "pooordumine": {
+      "silt": "Süda igatseb tõde",
+      "pealkiri": "",
+      "loigud": [
+        "Täna näen selgemalt kui varem, kui sageli elame sisemises vastuolus. Süda tunneb ära, mis on õige, kuid hirm, väsimus, harjumused ja vanad mustrid hoiavad meid tagasi.",
+        "Me võime teada tõde, kuid vajame Jumala väge, et selles elada.",
+        "— Olen pidanud ka ise küsima: Millele ma tegelikult oma elu ehitan?",
+        "Aastaid olid minu turvalisuseks töö, raha, rollid ja süsteemis püsimine. Väliselt võis kõik näida korras, kuid sisemiselt ei olnud mu elu rajatud õigele alusele.",
+        "Muutus algas siis, kui andsin oma elu, töö, kutsumuse ja tuleviku päriselt Jumala kättesse. Ristimine sai minu jaoks märgiks vana elu maha jätmisest ja uuest elust Kristuses.",
+        "— Kristuses me ei kaota seda, kelleks Jumal on meid loonud. Tema puhastab, uuendab ja rajab meie elu tõele.",
+        " „Nüüd ei ela enam mina, vaid Kristus elab minus.”\nGalaatlastele 2:20"
+      ],
+      "tsitaat": "— Enam ei ole lihtsalt töö, vaid KUTSUMUS. Mitte pingutus, vaid TEENIMINE ARMASTUSEST.\nMitte hirm, vaid RAHU.",
+      "kirjakohad": [
+        {
+          "viide": "Markuse 14:38",
+          "tekst": "„Valvake ja palvetage, et te ei satuks kiusatusse! Vaim on küll valmis, aga liha on nõder.”",
+          "selgitus": "Vaim võib soovida head, kuid inimese jõust ei piisa. Palves toetume Jumalale."
+        },
+        {
+          "viide": "Roomlastele 7:19",
+          "tekst": "„Ma ei tee head, mida ma tahan, vaid kurja, mida ma ei taha.”",
+          "selgitus": "Vajame Jumala armu, et elada tões ja teha head."
+        },
+        {
+          "viide": "Matteuse 7:24-27",
+          "tekst": "„Kes kuuleb mu sõnu ja teeb nende järgi, on nagu mees, kes ehitas oma maja kaljule ...”",
+          "selgitus": "Jumala Sõna on vundament, millele rajatud elu kannab."
+        },
+        {
+          "viide": "Matteuse 6:24",
+          "tekst": "„Keegi ei saa teenida kahte Issandat, sest ta kas vihkab ühte ja armastab teist või hoidub ühe poole ega hooli teisest. Te ei saa teenida Jumalat ja mammonat.”",
+          "selgitus": "Tõeline vabadus sünnib siis, kui laseme Jumalal oma elu juhtida."
+        },
+        {
+          "viide": "Matteuse 16:24",
+          "tekst": "„Kui keegi tahab käia minu järel, siis ta salgagu iseennast ja järgnegu mulle.”",
+          "selgitus": "Kristust järgides õpime loobuma kontrollist ja usaldama oma elu Jumala kätte."
+        },
+        {
+          "viide": "",
+          "tekst": "Enam ei ole mitte ainult minu tee, minu plaan ja minu tahtmine — vaid Tema tee, Tema tõde ja Tema juhtimine. \n\nJohannese 14:6",
+          "selgitus": ""
+        }
+      ]
+    },
+    "annid": {
+      "silt": "Annid",
+      "pealkiri": "... mida olen oma teekonnal ära tundnud",
+      "sissejuhatus": "Korintlastele 12 õpetab, et Püha Vaim annab oma ande ühiseks kasuks. Oma teekonnal olen kõige enam märganud, et Jumal kasutab minu kaudu eelkõige:",
+      "loend": [
+        {
+          "nimi": "Tarkuse sõna",
+          "kirjeldus": "Näha olukordi laiemalt ning aidata tuua selgust sinna, kus inimene ise ei pruugi veel tervikpilti näha."
+        },
+        {
+          "nimi": "Tunnetuse sõna",
+          "kirjeldus": "Märgata ja sõnastada seda, millele Jumal tähelepanu juhib."
+        },
+        {
+          "nimi": "Usk",
+          "kirjeldus": "Tuletada meelde usaldust Jumala vastu ka seal, kus lahendust või järgmist sammu ei ole veel näha, ning julgustada Jumala peale lootma. "
+        },
+        {
+          "nimi": "Kuulamist ja kohalolu",
+          "kirjeldus": "Ruumi tegemine Jumalale -  kus inimene saab Jumala ligiolus olla aus ning kogeda rahu ja selgust. "
+        }
+      ]
+    },
+    "tsitaat": {
+      "tekst": "„Need ei ole minu saavutused. Need on Jumala armu kingitused, mida soovin kasutada ustavalt teiste teenimiseks.”"
+    },
+    "terviklikkus": {
+      "silt": "Terviklikkus",
+      "pealkiri": "Jumal hoolib inimesest tervikuna.",
+      "loigud": [
+        "Terviklikkus algab sellest, millele me oma elu rajame. Sellel teekonnal vaatame vaimset, emotsionaalset ja füüsilist elu mitte eraldi, vaid ühe tervikuna — mis meid kannab, mis vajab korrastamist ja mis vajab uut suunda.",
+        "Seepärast kohtuvad minu töös sisemine ja väline maailm: kuulamine ja praktilised sammud, kohalolu ja korrastumine.",
+        "Kui südames sünnib selgus ja elu saab rajatud kindlamale alusele, hakkab see peegelduma ka igapäevaelus — meie valikutes, suhetes, kodus, garderoobis ja eneseväljenduses.",
+        "— Sisemine muutus saab nähtavaks selles, kuidas me elame."
+      ]
+    },
+    "lopp": {
+      "tsitaat": "„Kõik hea, mis meis, on Jumala kingitus. Minu soov on aidata seda märgata ning kasvada oma suhtes Jumalaga.”",
+      "nuppTekst": "Võta ühendust"
+    }
+  },
+  "teenusedLeht": {
+    "hero": {
+      "silt": "Teenused",
+      "pealkiri": "Ühe kutsumuse erinevad väljendusviisid",
+      "tekst": "Teenused ei ole eraldi maailmad vaid ühe kutsumuse erinevad väljendusviisid. Püha Ruum on selle keskmes - neid kõiki ühendab soov toetada inimest tervikuna, Jumala ligiolus."
+    },
+    "loeLahemalt": "Loe lähemalt",
+    "tsitaat": "\"Sest meie oleme tema teos, Kristuses Jeesuses loodud heade tegude tegemiseks, nii nagu Jumal on juba enne meile seadnud, et me teeksime seda.\"\n\n                         Efeslastele 2:10                                           ",
+    "tsitaadiSilt": "",
+    "lopp": {
+      "pealkiri": "Ei tea, kust alustada?",
+      "tekst": "Kirjuta lihtsalt, mis sind praegu kõige rohkem puudutab. Leiame koos kust alustada.",
+      "nuppEsmane": "Võta ühendust",
+      "nuppTeine": "Hinnakiri"
+    }
+  },
+  "teenused": [
+    {
+      "slug": "puha-ruum",
+      "nimi": "PÜHA RUUM",
+      "alapealkiri": "Kohalolu Kristuses",
+      "luhike": "",
+      "sissejuhatus": "Usun, et Jumal puudutab ja juhib inimesi erinevate kohtumiste, kogemuste ja eluetappide kaudu. \n\nMinu südames on saanud oluliseks olla inimese kõrval viisil, mis aitab aeglustuda, kuulata ja märgata taas seda, mis on päriselt oluline.",
+      "loigud": [
+        "Kõik see sünnib usus ja palves ning kogu au kuulub Jumalale, kellelt tuleb tõeline muutus."
+      ],
+      "plokid": [
+        {
+          "pealkiri": "Psalm 62:1",
+          "loigud": [
             "„Üksnes Jumala juures on mu hing vait, temalt tuleb mu pääste.”",
-            "Vaikus = koht, kus hing leiab rahu, tõe ja selguse …",
-          ],
+            "Vaikuses pöördume tagasi Jumala poole."
+          ]
         },
         {
-          pealkiri: "Luuka 21:34",
-          loigud: [
+          "pealkiri": "Luuka 21:34",
+          "loigud": [
             "„Pidage aga endid silmas, et teie süda ei oleks koormatud…”",
-            "Kui süda on täis… siis ei ole enam ruumi kuulda.",
-            "Me kuulame, aga ei jõua mõista. Me kogeme, aga ei jõua integreerida. Me oleme kohal, aga ei jõua päriselt kohale.",
-          ],
+            "Jumal kutsub meid peatuma ja taas Tema poole pöörduma."
+          ]
         },
         {
-          pealkiri: "Jumal kutsub meid tagasi lihtsusesse",
-          loigud: [
-            "Ja võib-olla just sellepärast… Jumal kutsub meid tagasi lihtsusesse aga sügavale … vaikusesse, rahusse häälestumisesse.",
-            "Vaikus ei loo identiteeti, vaid paljastab tõe …",
-          ],
+          "pealkiri": "— Tagasi Jumala ligiolusse ",
+          "loigud": [
+            "Ja võib-olla just sellepärast kutsub Jumal meid tagasi lihtsusesse — sügavamale vaikusesse, rahusse ja Tema ligiolusse. Paika, kus müra vaibub, süda pöördub Jumala poole ning Tema hääl saab taas meie elus ruumi.",
+            "Vaikus paljastab tõe …"
+          ]
         },
         {
-          pealkiri: "Jesaja 30:15",
-          loigud: [
+          "pealkiri": "Jesaja 30:15",
+          "loigud": [
             "„Pöördudes ja vaikseks jäädes te pääseksite, rahus ja lootuses oleks teie jõud, kuid teie pole seda tahtnud.”",
-          ],
+            "Vaikuses ja usalduses leiame jõu Jumalas."
+          ]
         },
         {
-          pealkiri: "Luuka 5:16",
-          loigud: [
+          "pealkiri": "Luuka 5:16",
+          "loigud": [
             "„Temal oli aga viisiks minna tühja paika ja seal palvetada.”",
-            "Jeesus ise eemaldus regulaarselt mürast.",
-          ],
+            "Vaikuses kogeme Jumala ligiolu ja juhtimist."
+          ]
         },
         {
-          pealkiri: "Luuka 10:41–42",
-          loigud: [
-            "Marta ning Maarja loos ütleb Jeesus manitsedes Martat leebelt: „Sa muretsed ja vaevad ennast paljude asjadega, kuid tarvis on vaid üht. Maarja on ju valinud hea osa, mida ei võeta temalt ära.”",
-            "Me ei vaja mitte rohkem tegemist - müra, vaid kohalolu.",
-          ],
+          "pealkiri": "Luuka 10:41–42",
+          "loigud": [
+            "Marta ja Maarja loos ütleb Jeesus Martale: „Sa muretsed ja vaevad ennast paljude asjadega, kuid tarvis on vaid üht. Maarja on ju valinud hea osa, mida ei võeta temalt ära.”",
+            "Peatumises õpime valima Jumala kohalolu enne tegemisi."
+          ]
         },
         {
-          pealkiri: "Piibelik vagusus",
-          loigud: [
-            "Piibelik vagusus on sisemine vaikus, kus inimene lõpetab rabelemise ja hakkab kuulama Jumalat.",
-          ],
+          "pealkiri": "Piibelik vagusus …",
+          "loigud": [
+            "… on sisemine vaikus, mil inimene lõpetab rabelemise ja hakkab kuulama Jumalat.",
+            "Vaikuses pöördume teadlikumalt Jumala poole, õpime puhkama Tema ligiolus ja märkama Tema juhtimist."
+          ]
         },
         {
-          pealkiri: "Häälestunud kohalolu",
-          loigud: [
-            "Ma nimetaks seda häälestunud kohaloluks … See on koht, kus müra vaibub, tempo aeglustub ja süda saab taas ruumi.",
-            "Just vaikuses saab inimene tagasi ühendusse Jumalaga.",
-            "Häälestunud kohalolu on sisemine rahu keset elu, kus ei pea enam kõike kontrollima, tõestama ega kiirustama.",
-            "Häälestunud kohalolus saab vaikselt ilmsiks TÕDE, meie tõeline identiteet …",
-          ],
+          "pealkiri": "Kuhu me tegelikult teel oleme?",
+          "loigud": [
+            "Ja võib-olla ongi see meie teekonna sügavam suund — mitte aina rohkema tegemise, kogemise või teadmise poole, vaid tagasi Jumala ligiolusse.",
+            "Kui müra vaibub ja jääme Jumala ligiolusse, hakkab selgemalt nähtavale tulema tõde meie elu, väärtuse ja kutsumuse kohta.\n\nNii liigume samm-sammult Jumalale lähemale ning kasvame üha enam selleks, kelleks Tema on meid loonud."
+          ]
         },
         {
-          pealkiri: "Kuhu me tegelikult teel oleme",
-          loigud: [
-            "Ja võib-olla see ongi see, kuhu me tegelikult teel oleme… mitte rohkem tegemise, mitte rohkem kogemise, mitte rohkem teadmise poole - vaid tagasi …",
-            "… tagasi sellesse, kes me oleme Jumalas. Sest vaikuses ei kao midagi ära. Vaikuses hakkab ilmnema tõde. Ja samm-sammult… me liigume lähemale sellele, kes me oleme olnud kogu aeg.",
-          ],
-        },
-        {
-          pealkiri: "Ma aitan sul aeglustuda",
-          loigud: [
-            "Ma aitan sul aeglustuda, korrastada vaimset, emotsionaalset ja füüsilist maailma …",
-            "… ja kohtuda tõega - sellest kohast sünnivad õiged valikud.",
-          ],
-        },
+          "pealkiri": "Ma aitan sul aeglustuda",
+          "loigud": [
+            "Kui müra vaibub, saab nähtavaks tõde. Selgusest sünnivad valikud, mis on kooskõlas sellega, kelleks Jumal on sind loonud."
+          ]
+        }
       ],
-      nimekirjaPealkiri: "Selles ruumis võib sündida",
-      nimekiri: [
-        "kuulamine",
-        "selgus",
-        "korrastumine",
-        "julgustus",
-        "järgmiste sammude eristamine",
+      "nimekirjaPealkiri": "PÜHA RUUMIS võib sündida …",
+      "nimekiri": [
+        "RAHU",
+        "SELGUS",
+        "JULGUSTUS",
+        "USK",
+        "LOOTUS",
+        "UUS SUUND"
       ],
-      toon: "sygav",
+      "toon": "sygav",
+      "tsitaat": {
+        "tekst": "",
+        "selgitus": ""
+      }
     },
     {
-      slug: "uks-uhele-teekond",
-      nimi: "1:1 teekond",
-      alapealkiri: "Minuga teekond ei ole kiirendus. See on korrastumine.",
-      luhike:
-        "Kuupikkune teekond, kus vaimne, emotsionaalne ja füüsiline maailm hakkavad korrastuma koos.",
-      sissejuhatus:
-        "Mõnikord ei vaja me rohkem teadmisi… vaid ruumi, kus kõik saab vaikselt selgineda.",
-      loigud: [
-        "Kohtume ühe kuu jooksul kord nädalas. Kindlal päeval. Kindlas rütmis. Mitte selleks, et „rohkem teha”… vaid et hakata päriselt nägema.",
-        "Me vaatame üle sinu elu päriselt. Mis sind toetab… ja mis mitte. Kus sinu energia liigub… ja kuhu see vaikselt kaob.",
-        "Me ei kiirusta muutust. Aga me ei väldi ka tõde.",
+      "slug": "uks-uhele-teekond",
+      "nimi": "1:1 TEEKOND",
+      "alapealkiri": "Korrastumine",
+      "luhike": "",
+      "sissejuhatus": "Kuupikkune teekond, kus vaimne, emotsionaalne ja füüsiline elu hakkavad koos korrastuma.\n\nMõnikord ei vaja me rohkem teadmisi vaid ruumi, kus kõik saab vaikselt selgineda.",
+      "loigud": [
+        "Kohtume ühe kuu jooksul kord nädalas. Kindlal päeval. Kindlas rütmis. Mitte selleks, et „rohkem teha” vaid et hakata päriselt nägema.",
+        "Me vaatame üle sinu elu päriselt. Mis sind toetab ja mis mitte, ka sinu ajakasutust - kuhu su energia liigub ja kuhu see vaikselt kaob.",
+        "— Me ei kiirusta muutust. Aga me ei väldi ka tõde.",
+        "Usun, et meie keha ja keskkond väärivad tähelepanu. Piibel tuletab meelde, et meie ihu on Püha Vaimu tempel. Seetõttu kuuluvad tervikliku elu juurde ka puhkus, taastumine, oma keha eest hoolitsemine ja piiride märkamine.",
+        "—  Kodu võiks olla müravaba keskkond, kus on meil hea hingata, puhata, taastuda ja olla. "
       ],
-      plokid: [
+      "plokid": [
         {
-          pealkiri: "Füüsiline korrastus",
-          loigud: [
-            "Füüsiline korrastus on selle teekonna osa. Sinu ruum. Sinu garderoob. Sinu igapäevane keskkond - sest see, mis on nähtav, peegeldab seda, mis toimub su sees …",
-          ],
+          "pealkiri": "Füüsiline korrastus",
+          "loigud": [
+            "Ka füüsiline korrastus on selle teekonna osa — sinu ruum, garderoob ja igapäevane keskkond.\n\nSee, mis meid ümbritseb, mõjutab meie rahu, tähelepanu ja igapäevast rütmi. Mõnikord võib väline korratus peegeldada sisemist ülekoormust ning mõnikord aitab välise lihtsustamine luua rohkem ruumi ka sisemisele selgusele."
+          ]
         },
         {
-          pealkiri: "Suhted ja tegevused",
-          loigud: [
-            "Me puudutame ka suhteid. Ja tegevusi. Õpime märkama, kuhu sa annad oma energiat ja kas see kannab sind.",
-          ],
+          "pealkiri": "Suhted ja tegevused",
+          "loigud": [
+            "Vaatame ka sinu suhteid, kohustusi ja igapäevaseid tegevusi. Õpime märkama, kuhu liigub sinu aeg ja energia — mis sind kannab, mis kurnab ning millele on Jumal sind selles eluetapis tegelikult kutsunud."
+          ]
         },
         {
-          pealkiri: "Ja tasapisi",
-          loigud: [
-            "Ja tasapisi… hakkab tekkima selgus ja läbipaistvus. Mitte läbi pingutuse - vaid vaimse, emotsionaalse ja füüsilise maailma korrastumise.",
-          ],
+          "pealkiri": "Ja tasapisi",
+          "loigud": [
+            "… hakkab tekkima rohkem selgust, lihtsust ja läbipaistvust.\n\nMitte läbi suurema pingutamise - vaid vaimse, emotsionaalse ja füüsilise maailma korrastumise kaudu. "
+          ]
         },
+        {
+          "pealkiri": "— SEE TEEKOND",
+          "loigud": []
+        }
       ],
-      tsitaat: {
-        tekst: "„See ei ole lihtsalt muutus. See on tagasi tulemine iseenda juurde.”",
-        selgitus:
-          "Kui tunned, et oled selleks valmis… siis see teekond on sinu jaoks",
-      },
-      nimekirjaPealkiri: "Vaatame koos, mis vajab sinu elus korrastust",
-      nimekiri: [
-        "telefoni/arvuti korrastus",
-        "sotsiaameedia korrastus",
-        "füüsilise ruumi korrastus",
-        "organiseerimine, süstematiseerimine - kodu, garderoob",
-      ],
-      toon: "sygav",
+      "nimekirjaPealkiri": "Vaatame koos, mis vajab sinu elus korrastust",
+      "nimekiri": [],
+      "toon": "sygav",
+      "tsitaat": {
+        "tekst": "... on liikumine tõe suunas, mis vabastab.",
+        "selgitus": "Kui tunned, et oled selleks valmis - siis see teekond on sinu jaoks"
+      }
     },
     {
-      slug: "stiiliselgus",
-      nimi: "Stiiliselgus",
-      alapealkiri: "Nähtavaks saanud olemus",
-      luhike:
-        "Aitan luua selguse, mis väljendab inimese olemust, väärtusi ja eluhooaega.",
-      sissejuhatus:
-        "Esimene samm sinu isikliku stiili essentsi, garderoobi inventuuri ja teadlikumate valikute suunas.",
-      loigud: [
-        "Stiil ei ole ainult välimus. See on viis, kuidas inimene väljendab seda, kes ta on.",
+      "slug": "STIILISELGUS",
+      "nimi": "STIILISELGUS",
+      "alapealkiri": "STIIL JA KOHALOLU",
+      "luhike": "",
+      "sissejuhatus": "Esimene samm sinu stiili, garderoobi ja teadlikumate valikute suunas.",
+      "loigud": [
+        "Stiil ei ole ainult välimus. See võib väljendada sinu olemust, väärtusi ja eluhooaega.",
+        "— “Ma tänan sind, et ma olen nii kardetavalt ja imeliselt loodud.”\nPsalm 139:14",
+        "Stiiliselgus aitab sul mõista oma loomulikku stiilisuunda, märgata, mis sind päriselt toetab, ning teha teadlikumaid valikuid.",
+        "Jumal on sind loonud  →  sinu olemusel on väärtus\n →  stiil on üks selle väljenduse vorm  →  stiiliselgus aitab seda teadlikumalt märgata."
       ],
-      plokid: [
+      "plokid": [
         {
-          pealkiri: "3 küsimustikku + personaalne peegeldus + visuaalne stiilisuund",
-          loigud: [
-            "See on esimene ja kõige olulisem samm.",
-            "Stiiliselgus ei ole lihtsalt küsimustike täitmine ega vastuste ülevaade.",
-          ],
+          "pealkiri": "3 küsimustikku + personaalne peegeldus + visuaalne stiilisuund",
+          "loigud": [
+            "See ei ole lihtsalt küsimustike täitmine. See on sinu isikliku stiili lahtimõtestamine."
+          ]
         },
         {
-          pealkiri: "Personaalne visuaalne stiilisuund",
-          loigud: [
-            "Lisaks loon sulle personaalse visuaalse stiilisuuna — sinu stiiliessentsi ja kohalolu visuaalse kaardi.",
-            "See aitab näha, millised toonid, vormid, kangad, detailid ja tervikpilt toetavad sinu olemust ning annavad su stiilile selgema suuna.",
-          ],
+          "pealkiri": "Personaalne visuaalne stiilisuund",
+          "loigud": [
+            "See on sinu isiklik visuaalne kaart - mis toetab sinu olemust ning annab su stiilile selgema suuna.",
+            ""
+          ]
         },
         {
-          pealkiri: "Stiiliessents ja energeetiline kohalolu",
-          loigud: [
-            "Stiiliessents = milline stiil sind toetab.",
-            "Energeetiline kohalolu = kuidas sina mõjud.",
-            "Stiiliessents räägib sinu stiilikeelest.",
-            "Energeetiline kohalolu räägib sinu olemuse mõjust.",
-          ],
-        },
+          "pealkiri": "Stiiliessents ja kohalolu",
+          "loigud": [
+            "Stiiliessents on sinu olemus, väärtused, iseloom, ilu ja ainulaadne väljendus.\n\nKohalolu väljendab seda kuidas sinu sisemine olemus tuleb nähtavale selles, kuidas sa ennast kannad, riietud ja ruumis oled."
+          ]
+        }
       ],
-      tsitaat: {
-        tekst:
-          "„See on personaalne peegeldus sellest, kuidas sinu olemus, stiil, keha ja kohalolu omavahel kohtuvad.”",
-        selgitus: "",
-      },
-      nimekirjaPealkiri: "Saad selgust …",
-      nimekiri: [
-        "milline on sinu põhiline stiiliessents / millised lisaessentsid annavad sinu stiilile sügavust",
-        "milline on sinu energeetiline kohalolu",
-        "millised toonid, lõiked, materjalid ja detailid sind toetavad",
-        "millises riietuses tunned end päriselt nähtuna",
-        "milline stiilisuund aitab sul liikuda lähemale iseendale",
+      "nimekirjaPealkiri": "SAAD SELGUSE …",
+      "nimekiri": [
+        "• milline on sinu põhiline stiiliessents ja mis annab sellele sügavust",
+        "• milline on sinu loomulik kohalolu ja selle mõju",
+        "• millised toonid, lõiked, materjalid ja detailid sind toetavad",
+        "• millistes riietes tunned end päriselt iseendana",
+        "• milline visuaalne suund aitab sinu olemusel nähtavamaks saada"
       ],
-      toon: "soe",
+      "toon": "soe",
+      "tsitaat": {
+        "tekst": "See on personaalne peegeldus sellest, kuidas sinu olemus, stiil ja kohalolu omavahel kohtuvad.",
+        "selgitus": ""
+      }
     },
     {
-      slug: "garderoobi-korrastus",
-      nimi: "Garderoobi korrastus",
-      alapealkiri: "Kergus · Rahu · Tasakaal · Rõõm",
-      luhike:
-        "Loome koos korra ja lihtsuse, et igapäevased valikud toetaksid sinu elu.",
-      sissejuhatus:
-        "Kui stiiliselgus on loodud, on järgmine loomulik samm garderoobi INVENTUUR.",
-      loigud: [
+      "slug": "garderoobi-korrastus",
+      "nimi": "GARDEROOBI INVENTUUR",
+      "alapealkiri": "KORD JA SELGUS",
+      "luhike": "",
+      "sissejuhatus": "Garderoobi inventuur ei ole ainult sorteerimine, vaid võimalus märgata, kas garderoob peegeldab seda, kes sa täna oled.",
+      "loigud": [
         "Mis toetab, mis ei kaunista enam?",
-        "Garderoobi korrastades ei korrasta me ainult riideid — vaid aitame märgata: kes sa oled, mis sulle päriselt sobib, millest on aeg lahti lasta ja kuidas väljendada oma olemust ausamalt.",
+        "Märkame ka seda, mis sulle päriselt sobib, millest on aeg lahti lasta ja kuidas oma olemust ausamalt väljendada."
       ],
-      plokid: [],
-      tsitaat: {
-        tekst:
-          "„Tulemuseks on garderoob, mis loob rohkem kergust, selgust ja rahu — ning on kooskõlas sinu elu, keha ja olemusega.”",
-        selgitus: "",
-      },
-      nimekirjaPealkiri: "Vaatame koos",
-      nimekiri: [
-        "mis sind toetab",
-        "mis varjab",
-        "mis ei tundu enam sinu moodi",
-        "mida saab uutmoodi kombineerida",
-        "millest võib rahulikult lahti lasta",
-        "mida tasub taaskasutusse viia",
-        "mis on garderoobist puudu",
+      "plokid": [],
+      "nimekirjaPealkiri": "Vaatame koos",
+      "nimekiri": [
+        "• mis sind toetab",
+        "• mis ei lase sinu olemusel nähtavale tulla",
+        "• mida saab uutmoodi kombineerida",
+        "• millest on aeg rahulikult lahti lasta",
+        "• mida tasub taaskasutusse viis või ära anda. ",
+        "• mis on garderoobist puudu"
       ],
-      toon: "soe",
+      "toon": "soe",
+      "tsitaat": {
+        "tekst": " “Tulemuseks on garderoob, mis loob rohkem kergust, selgust ja rahu — ning on kooskõlas sinu olemuse ja eluga.”",
+        "selgitus": ""
+      }
     },
     {
-      slug: "teadlik-ostlemine",
-      nimi: "Teadlik ostlemine",
-      alapealkiri: "Valikud, mis lähtuvad vajadusest",
-      luhike:
-        "Kogemus teha läbimõeldud valikuid, mis lähtuvad vajadusest, mitte survest või emotsioonist.",
-      sissejuhatus:
-        "Kui garderoob on üle vaadatud, saab ostlemine muutuda palju teadlikumaks.",
-      loigud: [],
-      plokid: [],
-      tsitaat: {
-        tekst:
-          "„… kuidas liikuda vanast mina-pildist lähemale sellele versioonile sinust, kes on oodanud, et teda märgataks.”",
-        selgitus: "",
-      },
-      nimekirjaPealkiri: "Nüüd tead …",
-      nimekiri: [
-        "mida sinu garderoob päriselt vajab",
-        "millised toonid, lõiked ja materjalid sind toetavad",
-        "millised riided on kooskõlas sinu elu, keha ja olemusega",
-        "kuidas teha valikuid teadlikumalt, mitte enam hetke emotsioonist",
-        "millised riided aitavad sul tunda end enesekindlamalt, vabamalt ja rohkem iseendana",
+      "slug": "teadlik-ostlemine",
+      "nimi": "TEADLIK OSTLEMINE",
+      "alapealkiri": "TEADLIKUD VALIKUD",
+      "luhike": "",
+      "sissejuhatus": "Teadlik ostlemine on kogemus, mis toetab teha läbimõeldud valikuid, mis lähtuvad vajadusest, mitte survest või emotsioonist. \n\nKui garderoob on üle vaadatud, saab ostlemine muutuda palju teadlikumaks.",
+      "loigud": [],
+      "plokid": [],
+      "nimekirjaPealkiri": "Nüüd tead …",
+      "nimekiri": [
+        "• mida sinu garderoob päriselt vajab",
+        "• millised toonid, lõiked ja materjalid sind toetavad",
+        "• mis sobib sinu elu, keha ja olemusega",
+        "•  kuidas teha valikuid teadlikult ja rahulikult",
+        "•  milles tunned end rohkem iseendana"
       ],
-      toon: "soe",
+      "toon": "soe",
+      "tsitaat": {
+        "tekst": "“ Inimene vaatab, mis on silma ees, aga Issand vaatab südamesse.”\n                 \n  1. Saamueli 16:7",
+        "selgitus": "Väline saab hakata peegeldama seda, kes sa päriselt oled."
+      }
     },
     {
-      slug: "fotograafia",
-      nimi: "FOTOGRAAFIA",
-      alapealkiri: "Ehe ajatu Sina",
-      luhike: "",
-      sissejuhatus:
-        "90 minutit Püha Ruumi ja portreefotosessioon stuudios — üks terviklik kogemus, kus saad aeglustuda, olla kohal ja lasta nähtavaks sellel, kes sa päriselt oled.",
-      loigud: [
-        "Sa ei pea oskama kaamera ees olla. Juhendan sind rahulikult, et saaksid ennast vabalt ja loomulikult tunda.",
-        "Mustvalge foto jätab alles selle, mis on oluline — valguse, kohalolu ja inimese enda.",
+      "slug": "fotograafia",
+      "nimi": "FOTOGRAAFIA",
+      "alapealkiri": "Ajatu Sina",
+      "luhike": "",
+      "sissejuhatus": "Ettevalmistus pildistamiseks Püha Ruumis (60 minutit) ja portreefotosessioon (kuni 60 min) stuudios või sinu kodus. ",
+      "loigud": [
+        "Terviklik kogemus, kus saad aeglustuda ja lasta nähtavaks sellel, kes sa päriselt oled.\n\nSa ei pea oskama kaamera ees olla. Juhendan sind rahulikult, et saaksid ennast vabalt ja loomulikult tunda.",
+        "NB! Mustvalge foto jätab alles selle, mis on oluline — valguse, kohalolu ja inimese."
       ],
-      plokid: [
+      "plokid": [
         {
-          pealkiri: "Püha Ruum — 90 minutit",
-          loigud: [
-            "Enne kaamera ette astumist võtame aja, et aeglustuda, kuulata ja märgata, mis on sinus praegu päriselt kohal. See loob sessioonile rahuliku ja tähendusliku lähtekoha.",
-          ],
+          "pealkiri": "Püha Ruum — 60 minutit",
+          "loigud": [
+            "Enne kaamera ette astumist võtame aja, et aeglustuda, kuulata ja märgata, mis on sinus praegu päriselt kohal. See loob sessioonile rahuliku ja tähendusliku lähtekoha."
+          ]
         },
         {
-          pealkiri: "Portreefotosessioon stuudios",
-          loigud: [
-            "Sessioon jätkub stuudios. Ma juhendan sind õrnalt läbi valguse, liikumise ja erinevate pooside, kuid jätan alles ruumi päris hetkedele ja sinu loomulikule kohalolule.",
-          ],
+          "pealkiri": "Portreefotosessioon",
+          "loigud": [
+            "Sessioon jätkub stuudios või kodus. Ma juhendan sind õrnalt läbi valguse, liikumise ja erinevate pooside, kuid jätan alles ruumi päris hetkedele ja sinu loomulikule kohalolule."
+          ]
         },
         {
-          pealkiri: "Sinu fotod",
-          loigud: [
-            "Pärast sessiooni saad valiku hoolikalt töödeldud mustvalgeid portreesid — ajatud fotod, mis kannavad sinu olemust, mitte ainult välist kuju.",
-          ],
-        },
+          "pealkiri": "Sinu fotod",
+          "loigud": [
+            "Pärast sessiooni saad valiku hoolikalt töödeldud mustvalgeid portreesid — ajatud fotod, mis kannavad sinu ehedat olemust."
+          ]
+        }
       ],
-      nimekirjaPealkiri: "Kogemus sisaldab …",
-      nimekiri: [
-        "90 minutit Püha Ruumi",
+      "nimekirjaPealkiri": "Kogemus sisaldab …",
+      "nimekiri": [
+        "45 minutit Püha Ruumi",
         "rahulikult juhendatud portreefotosessiooni stuudios",
-        "valikut töödeldud mustvalgeid portreesid",
+        "valikut töödeldud mustvalgeid portreesid"
       ],
-      toon: "sygav",
-      tsitaat: {
-        tekst:
-          "“Ma tänan sind, et olen nii kardetavalt ja imeliselt loodud.”\n\nPsalm 139:14",
-        selgitus:
-          "Ajatu Sina — aeg peatuda ja märgata seda, mis sinus on ainulaadne ja ajatu.",
-      },
-    },
+      "toon": "sygav",
+      "tsitaat": {
+        "tekst": "“Ma tänan sind, et olen nii kardetavalt ja imeliselt loodud.”\n\nPsalm 139:14",
+        "selgitus": "Ajatu Sina — aeg peatuda ja märgata seda, mis sinus on ainulaadne ja ajatu."
+      }
+    }
   ],
-
-  fotograafiaGalerii: {
-    pealkiri: "Ehe, ajatu kohalolu",
-    kirjeldus:
-      "Valgus, liikumine ja päris hetk — portree, milles saad olla sina ise.",
-    pildid: [
+  "fotograafiaGalerii": {
+    "pealkiri": "Ehe, ajatu kohalolu",
+    "kirjeldus": "Valgus, liikumine ja päris hetk — portree, milles saad olla sina ise.",
+    "pildid": [
       {
-        fail: "marta-portree.jpg",
-        alt: "Marta loomulikus valguses",
-        kuvasuhe: "pustine",
+        "fail": "marta-portree.jpg",
+        "alt": "Marta loomulikus valguses",
+        "kuvasuhe": "pustine"
       },
       {
-        fail: "marta-seistes.jpg",
-        alt: "Marta seismas heledas stuudios",
-        kuvasuhe: "pustine",
+        "fail": "marta-seistes.jpg",
+        "alt": "Marta seismas heledas stuudios",
+        "kuvasuhe": "pustine"
       },
       {
-        fail: "marta-diivanil.jpg",
-        alt: "Marta rahulikult diivanil",
-        kuvasuhe: "pustine",
+        "fail": "marta-diivanil.jpg",
+        "alt": "Marta rahulikult diivanil",
+        "kuvasuhe": "pustine"
       },
       {
-        fail: "marta-lamades.jpg",
-        alt: "Marta heledas stuudios",
-        kuvasuhe: "lai",
+        "fail": "marta-lamades.jpg",
+        "alt": "Marta heledas stuudios",
+        "kuvasuhe": "lai"
       },
       {
-        fail: "marta-tutrega.jpg",
-        alt: "Marta tütrega stuudios",
-        kuvasuhe: "pustine",
-      },
-    ],
+        "fail": "marta-tutrega.jpg",
+        "alt": "Marta tütrega stuudios",
+        "kuvasuhe": "pustine"
+      }
+    ]
   },
-
-  teenuseLeht: {
-    nimekirjaSilt: "Mida see annab",
-    kutseSilt: "Alustame",
-    kutsePealkiri: "Kas see kõnetas sind?",
-    kutseTekst:
-      "Kirjuta julgelt. Vastan ise ja leiame koos sobiva aja ning viisi.",
-    nuppEsmane: "Broneeri aeg",
-    nuppTeine: "Hinnakiri",
-    jargmineSilt: "Järgmine teenus",
-    loeLahemalt: "Loe lähemalt",
+  "teenuseLeht": {
+    "nimekirjaSilt": "",
+    "kutseSilt": "Alustame",
+    "kutsePealkiri": "Kas see kõnetas sind?",
+    "kutseTekst": "Kirjuta julgelt ja leiame koos sobiva aja ning viisi.",
+    "nuppEsmane": "Broneeri aeg",
+    "nuppTeine": "Hinnakiri",
+    "jargmineSilt": "Järgmine teenus",
+    "loeLahemalt": "Loe lähemalt"
   },
-
-  hinnakiriLeht: {
-    hero: {
-      silt: "Hinnakiri",
-      pealkiri: "Selge kokkulepe juba enne alustamist",
-      tekst:
-        "Iga teekond on erinev. Kui sa ei tea, milline teenus sind kõige rohkem aitaks, kirjuta lihtsalt — mõtleme koos.",
+  "hinnakiriLeht": {
+    "hero": {
+      "silt": "Hinnakiri",
+      "pealkiri": "Selgus enne alustamist",
+      "tekst": "Iga teekond on erinev. Kui sa ei tea, milline teenus sind kõige rohkem toetaks, kirjuta — mõtleme koos."
     },
-    uksikudSilt: "Üksikteenused",
-    teekondSilt: "Kolm sammu koos",
-    sisaldabSilt: "Sisaldab",
-    /* Marta lause failist „Lehe iseloomustus” — seni lehel kasutamata */
-    tsitaat:
-      "„Väärtus on inimesel juba Jumalalt. Mina aitan seda märgata ja väljendada.”",
-    tsitaadiSilt: "Väärtus",
-    lopp: {
-      pealkiri: "Kui hind on takistuseks, räägi sellest.",
-      tekst:
-        "Leiame lahenduse. Mulle on olulisem, et sa saaksid abi, kui see, et kõik käiks ühtemoodi.",
-      nuppTekst: "Võta ühendust",
-    },
+    "uksikudSilt": "Üksikteenused",
+    "teekondSilt": "Kolm sammu koos",
+    "sisaldabSilt": "Sisaldab",
+    "tsitaat": "“Et sa mu silmis oled kallis ja austatud … ” \n\nJesaja 43:4",
+    "tsitaadiSilt": "Sinu väärtus on juba Jumalas. Mina aitan sul seda märgata ja väljendada.",
+    "lopp": {
+      "pealkiri": "Kui hind on takistuseks, räägi sellest.",
+      "tekst": "Leiame lahenduse. Mulle on olulisem, et sa saaksid abi, kui see, et kõik käiks ühtemoodi.",
+      "nuppTekst": "Võta ühendust"
+    }
   },
-
-  /*
-    HINNAKIRI — ETTEPANEK, vajab Marta kinnitust.
-    Üksikteenused kokku 490 €, Stiiliteekonnana koos 450 € (sääst 40 €).
-  */
-  hinnakiri: [
+  "hinnakiri": [
     {
-      nimi: "Püha Ruum | Püha Kohalolu",
-      kestus: "1 tund",
-      hind: "60 €",
-      kirjeldus:
-        "Vestlus, kuulamine, peegeldus ja palve. Kohtume kas kohapeal või veebis.",
-    },
-    /*
-      1:1 teekond — HIND ON ETTEPANEK, vajab Marta kinnitust.
-      Kestus tuleb Marta enda tekstist: üks kuu, kohtumine kord nädalas ehk
-      neli kohtumist. Võrdluseks: Stiiliteekond (kolm kohtumist) 450 €.
-      1:1 kuu on mahult suurem ja katab lisaks vaimse, emotsionaalse ja
-      füüsilise maailma korrastuse — seepärast 480 €.
-    */
-    {
-      nimi: "1:1 teekond",
-      kestus: "Üks kuu, kord nädalas",
-      hind: "480 €",
-      kirjeldus:
-        "Neli kohtumist kindlal päeval ja kindlas rütmis. Vaatame koos üle elu, ruumi, garderoobi, suhted ja tegevused — vaimne, emotsionaalne ja füüsiline maailm korrastuvad koos.",
+      "nimi": "Püha Ruum | Püha Kohalolu",
+      "kestus": "1 tund",
+      "hind": "60 €",
+      "kirjeldus": "Vestlus, kuulamine, peegeldus ja palve. Kohtume kohapeal või veebis."
     },
     {
-      nimi: "Stiiliselgus",
-      kestus: "2–3 tundi",
-      hind: "150 €",
-      kirjeldus:
-        "Sinu stiiliessentsi kaardistamine: toonid, lõiked, materjalid ja see, mis sind päriselt toetab.",
+      "nimi": "1:1 teekond",
+      "kestus": "Üks kuu, kord nädalas",
+      "hind": "480 €",
+      "kirjeldus": "Neli kohtumist kindlal päeval ja kindlas rütmis. \n\nVaatame koos üle elu, ruumi, stiili, garderoobi, suhted ja tegevused — vaimne, emotsionaalne ja füüsiline maailm korrastuvad koos."
     },
     {
-      nimi: "Garderoobi korrastus",
-      kestus: "3–4 tundi",
-      hind: "180 €",
-      kirjeldus:
-        "Käime garderoobi koos läbi. Jääb kord, selgus ja arusaam sellest, mis on olemas ja mis puudu.",
+      "nimi": "Stiiliselgus",
+      "kestus": "2–3 tundi",
+      "hind": "150 €",
+      "kirjeldus": "Sinu stiiliessentsi kaardistamine + visuaalne teejuht. "
     },
     {
-      nimi: "Teadlik ostlemine",
-      kestus: "3 tundi",
-      hind: "160 €",
-      kirjeldus:
-        "Koos poes või veebis. Praktiline kogemus, mis jääb sind edaspidi teenima.",
+      "nimi": "Garderoobi korrastus",
+      "kestus": "2-4 tundi",
+      "hind": "al. 150 €",
+      "kirjeldus": "Käime garderoobi koos läbi. Jääb kord, selgus ja arusaam sellest mis sobib ja mis puudu."
     },
     {
-      nimi: "Fotograafia",
-      kestus: "90 min + fotosessioon",
-      hind: "180 €",
-      kirjeldus:
-        "Püha Ruum, portreefotosessioon stuudios ja töödeldud mustvalged pildid.",
+      "nimi": "Teadlik ostlemine",
+      "kestus": "- 3 tundi",
+      "hind": "al. 150 €",
+      "kirjeldus": "Praktiline ja inspireeriv kogemus, mis jääb sind edaspidi teenima."
     },
+    {
+      "nimi": "Fotograafia",
+      "kestus": "- 2,5 tundi",
+      "hind": "al. 180 €",
+      "kirjeldus": "Püha Ruum +  portreefotosessioon stuudios/kodus + töödeldud mustvalged pildid."
+    }
   ],
-
-  /* Stiiliteekond — kolm stiiliteenust ühe teekonnana */
-  teekond: {
-    nimi: "Stiiliteekond",
-    hind: "450 €",
-    vordlus: "eraldi 490 €",
-    kirjeldus:
-      "Kolm sammu ühe teekonnana: esmalt selgus selles, kes sa oled ja mis sind toetab, seejärel garderoobi korrastus ning lõpuks praktiline kogemus teadlikust ostlemisest. Teekonna tempo lepime kokku sinu elu järgi.",
-    sisaldab: [
+  "teekond": {
+    "nimi": "1:1 TEEKOND",
+    "hind": "450 €",
+    "vordlus": "eraldi 490 €",
+    "kirjeldus": "Kolm sammu ühe teekonnana: esmalt selgus selles, kes sa oled ja mis sind toetab, seejärel garderoobi korrastus ning lõpuks praktiline kogemus teadlikust ostlemisest. Teekonna tempo lepime kokku sinu elu järgi.",
+    "sisaldab": [
       "Stiiliselgus — sinu stiiliessents ja see, mis sind toetab",
       "Garderoobi korrastus — kord, selgus ja lihtsus",
-      "Teadlik ostlemine — praktiline kogemus koos",
-      "kirjalik kokkuvõte ja suund edasiseks",
-    ],
+      "Teadlik ostlemine — praktiline ja inspireeriv kogemus ",
+      "Kirjalik kokkuvõte, visuaalne teejuht ja suund edasiseks"
+    ]
   },
-
-  blogiLeht: {
-    hero: {
-      silt: "Blogi",
-      pealkiri: "Mõtteid teelt",
-      tekst:
-        "Mõtteid kohalolust, selgusest ja sellest, kuidas sisemine ja väline korrastumine käivad käsikäes.",
+  "blogiLeht": {
+    "hero": {
+      "silt": "Blogi",
+      "pealkiri": "",
+      "tekst": ""
     },
-    tyhiPealkiri: "Esimesed postitused on siia tulekul.",
-    tyhiTekst:
-      "Seniks kirjutan Substackis. Sealt leiad pikemad mõtted ja saad soovi korral tellida, et uus kirjutis sinuni jõuaks.",
-    substackTekst: "Loe Substackis",
+    "tyhiPealkiri": "Esimesed postitused on siia tulekul.",
+    "tyhiTekst": "Seniks kirjutan Substackis. Sealt leiad pikemad mõtted, kogemused ja saad soovi korral tellida, et uus kirjutis sinuni jõuaks.",
+    "substackTekst": "Loe Substackis"
   },
-
-  /*
-    BLOGI — postitused lisatakse admin-lehelt.
-    Iga postitus: { slug, pealkiri, kuupaev (ISO), sissejuhatus, loigud: [] }
-    Praegu tühi: Marta kirjutab hetkel Substackis, esimesed postitused tulevad siia hiljem.
-  */
-  postitused: [],
-
-  /*
-    OMALOODUD LEHED.
-
-    Marta lisab neid admin-lehelt. Iga leht saab aadressi /<slug> ja koosneb
-    plokkidest. Menüüsse lisamiseks tuleb lisada rida ka navi alla, tee kujul
-    "/minu-leht" — nii jaab kontroll selle ule, mis menuus nahtaval on.
-  */
-  lehed: [],
-
-  broneerimine: {
-    hero: {
-      silt: "Broneerimine",
-      pealkiri: "Alustame vestlusest",
-      tekst:
-        "Sa ei pea enne teadma, mida täpselt vajad. Kirjuta lihtsalt, mis sind praegu kõige rohkem puudutab — leiame koos õige koha, kust alustada.",
+  "postitused": [],
+  "lehed": [],
+  "broneerimine": {
+    "hero": {
+      "silt": "Broneerimine",
+      "pealkiri": "Alustame vestlusest",
+      "tekst": "Sa ei pea enne teadma, mida täpselt vajad. Kirjuta lihtsalt, mis sind praegu kõige rohkem puudutab — leiame koos õige koha, kust alustada."
     },
-    vormSilt: "Saada soov",
-    kontaktSilt: "Või kirjuta otse",
-    markus:
-      "Vastan ise ja võimalikult kiiresti. Kui sul on küsimus, mille kohta sa pole kindel, kas see üldse sobib — küsi ikkagi.",
-    /* Kirjakoht Marta piltidelt (IG 128) — kutse peatuda enne, kui kirjutad */
-    kirjakoht: {
-      viide: "Psalm 46:10",
-      tekst: "„Olge vagusi ja teadke, et mina olen Jumal.”",
-      selgitus: "See on kutse peatuda ja häälestuda …",
-    },
+    "vormSilt": "Saada soov",
+    "kontaktSilt": "Või kirjuta otse",
+    "markus": "Vastan võimalikult kiiresti. Kui sul on küsimus, mille kohta sa pole kindel, kas see üldse sobib — küsi ikkagi.",
+    "kirjakoht": {
+      "viide": "Matteuse 11:28",
+      "tekst": "„Tulge minu juurde kõik, kes olete vaevatud ja koormatud, ja mina annan teile hingamise.”",
+      "selgitus": "See on kutse tulla sellisena, nagu oled — selleks, et peatuda ja hingata  Jumala ligiolus."
+    }
   },
-
-  jalus: {
-    tutvustus:
-      "Kohalolu, selgus ja stiil — et inimene võiks elada rohkem kooskõlas sellega, kelleks Jumal on ta loonud.",
+  "jalus": {
+    "tutvustus": "— Püha Ruum, kohalolu ja selgus, et inimene võiks elada rohkem kooskõlas sellega, kelleks Jumal on ta loonud."
   },
-
-  eiLeitud: {
-    silt: "404",
-    pealkiri: "Seda lehte ei õnnestunud leida",
-    tekst: "Võib-olla on aadress muutunud. Alusta avalehelt või vaata teenuseid.",
-    nuppEsmane: "Avalehele",
-    nuppTeine: "Teenused",
+  "eiLeitud": {
+    "silt": "404",
+    "pealkiri": "Seda lehte ei õnnestunud leida",
+    "tekst": "Võib-olla on aadress muutunud. Alusta avalehelt või vaata teenuseid.",
+    "nuppEsmane": "Avalehele",
+    "nuppTeine": "Teenused"
   },
-
-  /*
-    ÜKSIKUTE TEKSTIDE KUJU.
-
-    Admin saab anda ühele tekstile oma värvi, suuruse, joonduse, kaldkirja,
-    rasvase kirja, jutumärgid ja fondi. Kaardi võti on selle teksti tee siin
-    puus, punktidega ühendatud. Vaikimisi on kaart tühi ja iga tekst kannab
-    oma sektsiooni tavakuju.
-
-    See haru EI käi tavalist kuju valideerimist läbi (vaikimisi väärtus on
-    tühi objekt ja siis kaoksid kõik võtmed) — tal on oma puhastus failis
-    src/sisu/tekstikujud.js, mida src/sisu/lae.js eraldi kutsub.
-  */
-  tekstiKujud: {},
+  "tekstiKujud": {}
 };

@@ -446,6 +446,20 @@ function loeMustand(keel) {
   }
 }
 
+/* Kitsal ekraanil salvestusribale: „21.08 17:37”. */
+function vormindaAegLuhike(iso) {
+  try {
+    return new Date(iso).toLocaleString("et-EE", {
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return "";
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Ühe teksti kuju                                                     */
 /* ------------------------------------------------------------------ */
@@ -491,7 +505,7 @@ function Lyliti({ peal, muuda, children, silt }) {
   rasvane kiri, jutumärgid ja font. Paneel avaneb alles siis, kui Marta
   seda küsib — muidu oleks iga tekstivälja all seitse juhtnuppu.
 */
-function Kujupaneel({ tee, nimi, kompaktne = false }) {
+function Kujupaneel({ tee, nimi }) {
   const kontekst = useContext(KujuKontekst);
   const [avatud, setAvatud] = useState(false);
 
@@ -506,7 +520,7 @@ function Kujupaneel({ tee, nimi, kompaktne = false }) {
     muudaKuju(tee, { ...kuju, [votme]: kuju[votme] === vaartus ? undefined : vaartus });
   }
 
-  if (!avatud && (!midagiSeatud || kompaktne)) {
+  if (!avatud) {
     return (
       <button
         type="button"
@@ -516,7 +530,7 @@ function Kujupaneel({ tee, nimi, kompaktne = false }) {
       >
         {nimi
           ? `${nimi}${midagiSeatud ? " · kujundatud" : ""}`
-          : "Kujunda see tekst"}
+          : `Kujunda see tekst${midagiSeatud ? " · kujundatud" : ""}`}
       </button>
     );
   }
@@ -741,15 +755,13 @@ function Kujupaneel({ tee, nimi, kompaktne = false }) {
         >
           Lähtesta kogu kuju
         </button>
-        {(!midagiSeatud || kompaktne) && (
-          <button
-            type="button"
-            onClick={() => setAvatud(false)}
-            className={NUPP_TEKST}
-          >
-            Sulge
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => setAvatud(false)}
+          className={NUPP_TEKST}
+        >
+          Sulge
+        </button>
       </div>
     </div>
   );
@@ -919,7 +931,6 @@ function Tekstivali({ id, voti, vaartus, muuda, siltTekst, tee }) {
                 key={variant.tee}
                 tee={variant.tee}
                 nimi={variant.nimi}
-                kompaktne
               />
             ))}
           </div>
@@ -971,6 +982,7 @@ function MassiiviNupud({ indeks, pikkus, liiguta, eemalda, nimetus }) {
 
 function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
   const id = tee.join("-");
+  const [valitudIndeks, setValitudIndeks] = useState(0);
   const teenuseNimekirjaRead =
     tee.length === 3 && tee[0] === "teenused" && voti === "nimekiri";
 
@@ -981,9 +993,15 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
   */
   const mall = uusElement(vaartus, voti);
   const objektid = vaartus.some((element) => onObjekt(element)) || onObjekt(mall);
+  const valikuline =
+    objektid && vaartus.some((element) => suurPlokk(element));
+  const aktiivneIndeks =
+    vaartus.length > 0 ? Math.min(valitudIndeks, vaartus.length - 1) : -1;
+  const aktiivneElement = vaartus[aktiivneIndeks];
 
   function lisa() {
     muuda(tee, [...vaartus, uusElement(vaartus, voti)]);
+    setValitudIndeks(vaartus.length);
   }
 
   function eemalda(indeks) {
@@ -991,6 +1009,11 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
       tee,
       vaartus.filter((_, jrk) => jrk !== indeks),
     );
+    setValitudIndeks((eelmine) => {
+      if (eelmine > indeks) return eelmine - 1;
+      if (eelmine === indeks) return Math.max(0, indeks - 1);
+      return eelmine;
+    });
   }
 
   function liiguta(indeks, suund) {
@@ -999,10 +1022,15 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
     const koopia = vaartus.slice();
     [koopia[indeks], koopia[uusIndeks]] = [koopia[uusIndeks], koopia[indeks]];
     muuda(tee, koopia);
+    setValitudIndeks((eelmine) => {
+      if (eelmine === indeks) return uusIndeks;
+      if (eelmine === uusIndeks) return indeks;
+      return eelmine;
+    });
   }
 
   return (
-    <fieldset className="border border-sage bg-bone p-4 sm:p-5">
+    <fieldset className="min-w-0 w-full border border-sage bg-bone p-4 sm:p-5">
       <legend className="mikro px-2 text-[0.7rem] text-ink-faint">
         {silt(voti)}
       </legend>
@@ -1017,6 +1045,72 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
         <p className="text-[0.9rem] text-ink-faint">Ridu veel ei ole.</p>
       )}
 
+      {valikuline ? (
+        <>
+          <div
+            className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3"
+            aria-label={`Vali ${silt(voti).toLowerCase()} kirje`}
+          >
+            {vaartus.map((element, indeks) => {
+              const aktiivne = indeks === aktiivneIndeks;
+              return (
+                <button
+                  key={`${id}-valik-${element?.slug ?? indeks}`}
+                  type="button"
+                  onClick={() => setValitudIndeks(indeks)}
+                  aria-pressed={aktiivne}
+                  className={`min-h-12 border px-4 py-3 text-left transition-colors ${
+                    aktiivne
+                      ? "border-rohe bg-rohe text-white"
+                      : "border-sage bg-linen text-ink-soft hover:border-rohe hover:text-rohe"
+                  }`}
+                >
+                  <span className="kuva block text-base leading-snug">
+                    {plokiNimi(element, indeks)}
+                  </span>
+                  <span
+                    className={`mt-1 block text-[0.72rem] ${
+                      aktiivne ? "text-white/75" : "text-ink-faint"
+                    }`}
+                  >
+                    {aktiivne ? "Praegu avatud" : "Ava muutmiseks"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {aktiivneElement && (
+            <div className="mt-5 border border-rohe/45 bg-linen p-4 sm:p-6">
+              <div className="flex flex-wrap items-start justify-between gap-4 border-b border-sage pb-4">
+                <div>
+                  <p className="mikro text-[0.65rem] text-ink-faint">
+                    Muudad praegu
+                  </p>
+                  <h3 className="kuva mt-1 text-xl text-ink">
+                    {plokiNimi(aktiivneElement, aktiivneIndeks)}
+                  </h3>
+                </div>
+                <MassiiviNupud
+                  indeks={aktiivneIndeks}
+                  pikkus={vaartus.length}
+                  liiguta={liiguta}
+                  eemalda={eemalda}
+                  nimetus={`kirje ${aktiivneIndeks + 1}`}
+                />
+              </div>
+              <div className="mt-5 space-y-4">
+                <Valjad
+                  vaartus={aktiivneElement}
+                  tee={[...tee, aktiivneIndeks]}
+                  muuda={muuda}
+                  sugavus={sugavus + 1}
+                />
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
       <div className="space-y-4">
         {vaartus.map((element, indeks) => (
           <div
@@ -1106,6 +1200,7 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
           </div>
         ))}
       </div>
+      )}
 
       <button type="button" onClick={lisa} className={`${NUPP_AARIS} mt-4`}>
         {objektid ? "Lisa plokk" : "Lisa rida"}
@@ -1184,6 +1279,119 @@ function Valjad({ vaartus, tee, muuda, sugavus = 0 }) {
   });
 }
 
+/*
+  Lehe esimene tase on valik, mitte pikk lahtine vorm.
+
+  Lihtsad tekstiväljad koonduvad ühe valiku „Üldtekstid” alla; iga suurem
+  plokk (hero, kutsumus, kirjakoht …) saab oma nupu. Nii näeb Marta kohe,
+  millised lehe osad on muudetavad, ja vormis on korraga ainult valitud osa.
+  Sügavamal jääb rekursiivne Valjad alles, seega uued sisuvõtmed ilmuvad
+  admini endiselt automaatselt.
+*/
+function KompaktneValjad({ vaartus, tee, muuda }) {
+  const kirjed = onObjekt(vaartus) ? valjadJarjekorras(vaartus, tee) : [];
+  const lihtsad = kirjed.filter(([, alamVaartus]) =>
+    typeof alamVaartus === "string",
+  );
+  const keerukad = kirjed.filter(([, alamVaartus]) =>
+    typeof alamVaartus !== "string",
+  );
+  const osad = [
+    ...(lihtsad.length > 0
+      ? [{ id: "__uldtekstid", nimi: "Üldtekstid", liik: "lihtsad", kirjed: lihtsad }]
+      : []),
+    ...keerukad.map(([voti, alamVaartus]) => ({
+      id: String(voti),
+      nimi: silt(voti),
+      liik: Array.isArray(alamVaartus) ? "massiiv" : "objekt",
+      voti,
+      vaartus: alamVaartus,
+    })),
+  ];
+  const [valitudOsa, setValitudOsa] = useState(osad[0]?.id ?? null);
+  const aktiivne = osad.find((osa) => osa.id === valitudOsa) ?? osad[0];
+
+  if (!onObjekt(vaartus)) return null;
+  if (osad.length <= 1) {
+    return <Valjad vaartus={vaartus} tee={tee} muuda={muuda} sugavus={0} />;
+  }
+
+  return (
+    <div>
+      <div
+        className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3"
+        aria-label="Vali muudetav leheosa"
+      >
+        {osad.map((osa) => {
+          const onAktiivne = osa.id === aktiivne?.id;
+          return (
+            <button
+              key={osa.id}
+              type="button"
+              onClick={() => setValitudOsa(osa.id)}
+              aria-pressed={onAktiivne}
+              className={`min-h-11 border px-4 py-3 text-left text-[0.9rem] transition-colors ${
+                onAktiivne
+                  ? "border-rohe bg-rohe text-white"
+                  : "border-sage bg-bone text-ink-soft hover:border-rohe hover:text-rohe"
+              }`}
+            >
+              {osa.nimi}
+            </button>
+          );
+        })}
+      </div>
+
+      {aktiivne && (
+        <div className="mt-5 border-l-2 border-rohe bg-bone px-4 py-5 sm:px-6">
+          <div className="mb-5 flex items-baseline justify-between gap-4 border-b border-sage pb-3">
+            <h3 className="kuva text-xl text-ink">{aktiivne.nimi}</h3>
+            <span className="mikro text-[0.62rem] text-ink-faint">
+              Valitud leheosa
+            </span>
+          </div>
+
+          <div className="space-y-4">
+            {aktiivne.liik === "lihtsad" &&
+              aktiivne.kirjed.map(([voti, alamVaartus]) => {
+                const alamTee = [...tee, voti];
+                return (
+                  <Tekstivali
+                    key={alamTee.join("-")}
+                    id={alamTee.join("-")}
+                    voti={voti}
+                    tee={alamTee}
+                    vaartus={alamVaartus}
+                    muuda={(uus) => muuda(alamTee, uus)}
+                  />
+                );
+              })}
+
+            {aktiivne.liik === "massiiv" && (
+              <Massiiv
+                voti={aktiivne.voti}
+                vaartus={aktiivne.vaartus}
+                tee={[...tee, aktiivne.voti]}
+                muuda={muuda}
+                sugavus={0}
+              />
+            )}
+
+            {aktiivne.liik === "objekt" && (
+              <Valjad
+                vaartus={aktiivne.vaartus}
+                tee={[...tee, aktiivne.voti]}
+                muuda={muuda}
+                sugavus={1}
+              />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* Toimeti                                                             */
 /* ------------------------------------------------------------------ */
@@ -1197,6 +1405,9 @@ export default function AdminToimeti({
   const [sisu, setSisu] = useState(algsisu);
   const [muudetud, setMuudetud] = useState(false);
   const [valitud, setValitud] = useState(SEKTSIOONID[0].id);
+  const [valitudSisuTee, setValitudSisuTee] = useState(
+    SEKTSIOONID[0].teed[0],
+  );
   const [teade, setTeade] = useState(null);
   const [tootab, setTootab] = useState(false);
   /*
@@ -1213,6 +1424,16 @@ export default function AdminToimeti({
 
   const sektsioon =
     SEKTSIOONID.find((kirje) => kirje.id === valitud) ?? SEKTSIOONID[0];
+  const aktiivneSisuTee = sektsioon.teed.includes(valitudSisuTee)
+    ? valitudSisuTee
+    : sektsioon.teed[0];
+
+  function valiSektsioon(id) {
+    const uusSektsioon =
+      SEKTSIOONID.find((kirje) => kirje.id === id) ?? SEKTSIOONID[0];
+    setValitud(uusSektsioon.id);
+    setValitudSisuTee(uusSektsioon.teed[0]);
+  }
 
   /* Hoiatus enne lahkumist, kui midagi on salvestamata */
   useEffect(() => {
@@ -1524,6 +1745,7 @@ export default function AdminToimeti({
           aria-label="Sisu sektsioonid"
           className="lg:sticky lg:top-28 lg:w-56 lg:shrink-0"
         >
+          <p className="mikro mb-3 text-[0.65rem] text-ink-faint">Vali leht</p>
           <ul className="flex flex-wrap gap-2 lg:flex-col lg:gap-0">
             {SEKTSIOONID.map((kirje) => {
               const aktiivne = kirje.id === valitud;
@@ -1531,12 +1753,12 @@ export default function AdminToimeti({
                 <li key={kirje.id} className="lg:border-b lg:border-sage">
                   <button
                     type="button"
-                    onClick={() => setValitud(kirje.id)}
+                    onClick={() => valiSektsioon(kirje.id)}
                     aria-current={aktiivne ? "true" : undefined}
-                    className={`mikro w-full border px-4 py-3 text-left text-[0.7rem] transition-colors lg:border-0 lg:px-0 ${
+                    className={`mikro min-h-11 w-full border px-4 py-3 text-left text-[0.7rem] transition-colors lg:border-0 lg:border-l-2 lg:px-4 ${
                       aktiivne
-                        ? "border-rohe text-rohe"
-                        : "border-sage text-ink-faint hover:text-ink"
+                        ? "border-rohe bg-linen text-rohe"
+                        : "border-sage text-ink-faint hover:border-rohe hover:text-ink"
                     }`}
                   >
                     {kirje.nimi}
@@ -1547,26 +1769,61 @@ export default function AdminToimeti({
           </ul>
         </nav>
 
-        <div className="min-w-0 flex-1 space-y-12">
+        <div className="min-w-0 flex-1">
           {/*
             Uues aknas, mitte samas: admini olek (avatud paneelid, salvestamata
             tekst) peab alles jääma. Aadress käib läbi keeleTee(), nii et
             inglise sisu vaadates avaneb inglise leht.
           */}
-          {sektsioon.leht && (
-            <p className="-mb-6">
+          <div className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-sage pb-5">
+            <div>
+              <p className="mikro text-[0.65rem] text-ink-faint">Muudad lehte</p>
+              <h2 className="kuva mt-1 text-[clamp(1.8rem,3vw,2.5rem)] text-ink">
+                {sektsioon.nimi}
+              </h2>
+            </div>
+            {sektsioon.leht && (
               <a
                 href={keeleTee(keel, sektsioon.leht)}
                 target="_blank"
                 rel="noreferrer"
-                className="mikro text-[0.7rem] text-ink-faint transition-colors hover:text-rohe"
+                className={NUPP_AARIS}
               >
                 Vaata lehel ↗
               </a>
-            </p>
+            )}
+          </div>
+
+          {sektsioon.teed.length > 1 && (
+            <div className="mb-8 border border-sage bg-linen p-4 sm:p-5">
+              <p className="mikro mb-3 text-[0.65rem] text-ink-faint">
+                Vali, millist osa muudad
+              </p>
+              <div className="flex flex-wrap gap-2" aria-label="Lehe sisuosad">
+                {sektsioon.teed.map((tee) => {
+                  const aktiivne = tee === aktiivneSisuTee;
+                  return (
+                    <button
+                      key={tee}
+                      type="button"
+                      onClick={() => setValitudSisuTee(tee)}
+                      aria-pressed={aktiivne}
+                      className={`min-h-11 border px-4 py-2.5 text-left text-[0.85rem] transition-colors ${
+                        aktiivne
+                          ? "border-rohe bg-rohe text-white"
+                          : "border-sage bg-bone text-ink-soft hover:border-rohe hover:text-rohe"
+                      }`}
+                    >
+                      {silt(tee)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           )}
 
-          {sektsioon.teed.map((tee) => {
+          {(() => {
+            const tee = aktiivneSisuTee;
             const viide = VIITED[tee];
             const sihtNimi = viide?.siht
               ? (SEKTSIOONID.find((kirje) => kirje.id === viide.siht)?.nimi ??
@@ -1578,7 +1835,7 @@ export default function AdminToimeti({
                 <div className="flex flex-wrap items-end justify-between gap-4">
                   <h2
                     id={`sektsioon-${tee}`}
-                    className="kuva text-[clamp(1.6rem,3vw,2.25rem)] text-ink"
+                    className="kuva text-[clamp(1.45rem,2.5vw,2rem)] text-ink"
                   >
                     {silt(tee)}
                   </h2>
@@ -1594,18 +1851,23 @@ export default function AdminToimeti({
                 <div className="joon mt-4 mb-6" />
 
                 {viide && (
-                  <p className="mb-6 border border-sage bg-linen px-4 py-3 text-[0.85rem] leading-relaxed text-ink-soft">
-                    {viide.tekst}
-                    {sihtNimi && (
-                      <button
-                        type="button"
-                        onClick={() => setValitud(viide.siht)}
-                        className={`${NUPP_TEKST} ml-2`}
-                      >
-                        {`Ava „${sihtNimi}”`}
-                      </button>
-                    )}
-                  </p>
+                  <details className="mb-6 border border-sage bg-linen">
+                    <summary className="mikro cursor-pointer px-4 py-3 text-[0.68rem] text-ink-faint transition-colors hover:text-rohe">
+                      Kus neid tekste kasutatakse?
+                    </summary>
+                    <p className="border-t border-sage px-4 py-3 text-[0.85rem] leading-relaxed text-ink-soft">
+                      {viide.tekst}
+                      {sihtNimi && (
+                        <button
+                          type="button"
+                          onClick={() => valiSektsioon(viide.siht)}
+                          className={`${NUPP_TEKST} ml-2`}
+                        >
+                          {`Ava „${sihtNimi}”`}
+                        </button>
+                      )}
+                    </p>
+                  </details>
                 )}
 
                 <div className="space-y-5">
@@ -1633,17 +1895,16 @@ export default function AdminToimeti({
                       muuda={(uus) => muuda([tee], uus)}
                     />
                   ) : (
-                    <Valjad
+                    <KompaktneValjad
                       vaartus={sisu[tee]}
                       tee={[tee]}
                       muuda={muuda}
-                      sugavus={0}
                     />
                   )}
                 </div>
               </section>
             );
-          })}
+          })()}
         </div>
       </div>
 
@@ -1651,24 +1912,32 @@ export default function AdminToimeti({
         Salvestusriba on lehe all ja jääb kerimisel nähtavale. Alla, mitte
         üles: lehe oma päis on juba sticky top-0 ja kaks riba kaklekisid seal.
       */}
-      <div className="sticky bottom-0 z-30 -mx-6 mt-12 border-t border-sage bg-bone/95 px-6 py-4 backdrop-blur lg:-mx-10 lg:px-10">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-4">
+      <div className="sticky bottom-0 z-30 -mx-6 mt-12 border-t border-sage bg-bone/95 px-6 py-3 backdrop-blur sm:py-4 lg:-mx-10 lg:px-10">
+        <div className="flex items-center justify-between gap-3 sm:gap-4">
+          <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
             {muudetud ? (
               <span className="border border-gold-deep px-3 py-1 text-[0.8rem] text-gold-deep">
                 Salvestamata muudatused
               </span>
             ) : (
               <span className="text-[0.8rem] text-ink-faint">
-                Kõik muudatused on salvestatud
+                <span className="sm:hidden">Salvestatud</span>
+                <span className="hidden sm:inline">
+                  Kõik muudatused on salvestatud
+                </span>
               </span>
             )}
             {/* Millal see keel viimati faili kirjutati — vastab küsimusele
                 „kas minu eelmine salvestus üldse jõudis kohale” */}
             {salvestatud && (
-              <span className="text-[0.8rem] text-ink-faint">
-                Viimati salvestatud {vormindaAeg(salvestatud)}
-              </span>
+              <>
+                <span className="text-[0.75rem] text-ink-faint sm:hidden">
+                  Salv. {vormindaAegLuhike(salvestatud)}
+                </span>
+                <span className="hidden text-[0.8rem] text-ink-faint sm:inline">
+                  Viimati salvestatud {vormindaAeg(salvestatud)}
+                </span>
+              </>
             )}
             <p
               aria-live="polite"
