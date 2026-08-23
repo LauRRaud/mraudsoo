@@ -6,8 +6,9 @@ import Ilmub from "@/components/Ilmub";
 import { KATTE_VARV } from "@/components/ui";
 import { fotograafiaPildiAadress } from "@/sisu/fotograafiaGalerii";
 
-const AUTOMAATSE_LIIKUMISE_KIIRUS = 0.075;
+const AUTOMAATSE_LIIKUMISE_KIIRUS = 0.06;
 const KASUTAJA_PAUS_MS = 1200;
+const NOOLEVAJUTUSE_PAUS_MS = 7000;
 
 function Pildirida({ pildid, peidetud = false }) {
   return (
@@ -55,8 +56,8 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti, galerii }) {
   const silmusePausKuniRef = useRef(0);
   const kerimisAsukohtRef = useRef(null);
 
-  const peataAjutiselt = useCallback(() => {
-    pausKuniRef.current = performance.now() + KASUTAJA_PAUS_MS;
+  const peataAjutiselt = useCallback((pausMs = KASUTAJA_PAUS_MS) => {
+    pausKuniRef.current = performance.now() + pausMs;
   }, []);
 
   const keriFoto = useCallback(
@@ -87,7 +88,7 @@ export default function FotograafiaPortfoolio({ keel, taustaVoti, galerii }) {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      peataAjutiselt();
+      peataAjutiselt(NOOLEVAJUTUSE_PAUS_MS);
       silmusePausKuniRef.current = performance.now() + 900;
 
       galerii.scrollBy({
