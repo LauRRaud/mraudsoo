@@ -12,7 +12,6 @@
     AdminToimeti     — sisu muutmise vaade (vaikimisi eksport)
 */
 
-import Link from "next/link";
 import {
   createContext,
   useActionState,
@@ -22,11 +21,11 @@ import {
   useState,
 } from "react";
 import {
-  lahtestaTegevus,
+  lahtestaKakskeelneTegevus,
   loguSisseTegevus,
-  salvestaTegevus,
+  salvestaKakskeelneTegevus,
 } from "@/app/admin/tegevused";
-import { KEELED, VAIKEKEEL, tee as keeleTee } from "@/sisu/keeled";
+import { tee as keeleTee } from "@/sisu/keeled";
 import {
   SUURUSE_MAX,
   SUURUSE_MIN,
@@ -257,6 +256,21 @@ const PIKAD_VOTMED = new Set([
 const TEHNILISED = new Set(["slug", "toon"]);
 const AINULT_LOETAV = new Set(["toon"]);
 
+/* Väärtused, mis on mõlemas keeles tehniliselt samad, mitte tõlked. */
+const YHISED_VALJAD = new Set([
+  "slug",
+  "tee",
+  "toon",
+  "kuupaev",
+  "email",
+  "instagram",
+  "instagramNimi",
+  "facebook",
+  "substack",
+  "fail",
+  "kuvasuhe",
+]);
+
 /*
   Mallid tühjade massiivide jaoks. Kui massiiv on juba täidetud, võtame malli
   esimesest elemendist (tekstid tühjaks). Tühja massiivi puhul seda võimalust
@@ -353,6 +367,10 @@ function asendaTeel(juur, tee, uusVaartus) {
   return { ...juur, [voti]: asendaTeel(juur[voti], jaak, uusVaartus) };
 }
 
+function loeTeel(juur, tee) {
+  return tee.reduce((vaartus, voti) => vaartus?.[voti], juur);
+}
+
 /* Näidisest tühi mall: kogu tekst tühjaks, kuju alles */
 function tyhjendaMall(naidis) {
   if (typeof naidis === "string") return "";
@@ -417,26 +435,23 @@ const NUPP_VAIKE =
 const NUPP_TEKST =
   "mikro text-[0.65rem] text-ink-faint underline underline-offset-4 transition-colors hover:text-rohe";
 
-const MUSTANDI_VERSIOON = 1;
+const MUSTANDI_VERSIOON = 2;
+const MUSTANDI_VOTI = "marta-admin-mustand:kakskeelne";
 
-function mustandiVoti(keel) {
-  return `marta-admin-mustand:${keel}`;
-}
-
-function loeMustand(keel) {
+function loeMustand() {
   try {
-    const toores = window.sessionStorage.getItem(mustandiVoti(keel));
+    const toores = window.sessionStorage.getItem(MUSTANDI_VOTI);
     if (!toores) return null;
 
     const mustand = JSON.parse(toores);
     if (
       mustand?.versioon !== MUSTANDI_VERSIOON ||
-      typeof mustand?.tunnus !== "string" ||
-      typeof mustand?.sisu !== "object" ||
-      mustand.sisu === null ||
-      Array.isArray(mustand.sisu)
+      typeof mustand?.tunnusEt !== "string" ||
+      typeof mustand?.tunnusEn !== "string" ||
+      !onObjekt(mustand?.sisuEt) ||
+      !onObjekt(mustand?.sisuEn)
     ) {
-      window.sessionStorage.removeItem(mustandiVoti(keel));
+      window.sessionStorage.removeItem(MUSTANDI_VOTI);
       return null;
     }
 
@@ -471,6 +486,7 @@ function vormindaAegLuhike(iso) {
   „Salvesta” nupuga.
 */
 const KujuKontekst = createContext(null);
+const TolkeKontekst = createContext(null);
 
 /* Uue värvi lähtepunkt on lehe kuld — tavalisim esiletõst */
 const VAIKE_ESILETOST = "#8a6f20";
@@ -857,12 +873,21 @@ function KasvavTekstiala({ id, vaartus, muuda, readOnly }) {
   loomisel — muidu vahetuks element keset kirjutamist ja fookus kaoks.
 */
 function Tekstivali({ id, voti, vaartus, muuda, siltTekst, tee }) {
+  const tolge = useContext(TolkeKontekst);
+  const ingliseVaartus = loeTeel(tolge?.sisuEn, tee);
+  const ingliseTekst =
+    typeof ingliseVaartus === "string" ? ingliseVaartus : "";
   const [pikk] = useState(
     () =>
-      PIKAD_VOTMED.has(voti) || vaartus.length > 90 || vaartus.includes("\n"),
+      PIKAD_VOTMED.has(voti) ||
+      vaartus.length > 90 ||
+      vaartus.includes("\n") ||
+      ingliseTekst.length > 90 ||
+      ingliseTekst.includes("\n"),
   );
   const tehniline = TEHNILISED.has(voti);
   const readOnly = AINULT_LOETAV.has(voti);
+  const yhine = readOnly || YHISED_VALJAD.has(voti);
 
   /*
     Kujupaneel ilmub ainult nendele väljadele, mis on lehel päriselt kujuga
@@ -877,36 +902,74 @@ function Tekstivali({ id, voti, vaartus, muuda, siltTekst, tee }) {
     kujuTee !== null &&
     onKujundatav(kujuTee);
 
+  function sisend(sisendiId, tekst, muudaTeksti) {
+    return pikk ? (
+      <KasvavTekstiala
+        id={sisendiId}
+        vaartus={tekst}
+        muuda={muudaTeksti}
+        readOnly={readOnly}
+      />
+    ) : (
+      <input
+        id={sisendiId}
+        type="text"
+        value={tekst}
+        readOnly={readOnly}
+        onChange={(sundmus) => muudaTeksti(sundmus.target.value)}
+        className={VALI_KLASS}
+      />
+    );
+  }
+
   return (
-    <div>
-      <label htmlFor={id} className="mikro block text-[0.7rem] text-ink-faint">
+    <div className="min-w-0 border-l-2 border-sage bg-linen/45 px-3 py-3 sm:px-4">
+      <p className="mikro text-[0.7rem] text-ink-faint">
         {siltTekst ?? silt(voti)}
         {tehniline && (
           <span className="ml-2 normal-case tracking-normal text-gold-deep">
             tehniline väli
           </span>
         )}
-      </label>
+      </p>
 
-      <div className="mt-2">
-        {pikk ? (
-          <KasvavTekstiala
-            id={id}
-            vaartus={vaartus}
-            muuda={muuda}
-            readOnly={readOnly}
-          />
-        ) : (
-          <input
-            id={id}
-            type="text"
-            value={vaartus}
-            readOnly={readOnly}
-            onChange={(sundmus) => muuda(sundmus.target.value)}
-            className={VALI_KLASS}
-          />
-        )}
-      </div>
+      {yhine ? (
+        <div className="mt-2">
+          <label
+            htmlFor={id}
+            className="mb-1.5 block text-[0.76rem] font-medium text-rohe"
+          >
+            Ühine mõlemale keelele
+          </label>
+          {sisend(id, vaartus, (uus) => {
+            if (tolge) tolge.muudaMolemas(tee, uus);
+            else muuda(uus);
+          })}
+        </div>
+      ) : (
+        <div className="mt-2 grid min-w-0 gap-3 lg:grid-cols-2">
+          <div className="min-w-0">
+            <label
+              htmlFor={`${id}-et`}
+              className="mb-1.5 block text-[0.76rem] font-medium text-rohe"
+            >
+              Eesti tekst
+            </label>
+            {sisend(`${id}-et`, vaartus, muuda)}
+          </div>
+          <div className="min-w-0 border-l-2 border-gold/50 pl-3 lg:border-l lg:pl-4">
+            <label
+              htmlFor={`${id}-en`}
+              className="mb-1.5 block text-[0.76rem] font-medium text-gold-deep"
+            >
+              Inglise tõlge
+            </label>
+            {sisend(`${id}-en`, ingliseTekst, (uus) =>
+              tolge?.muudaEn(tee, uus),
+            )}
+          </div>
+        </div>
+      )}
 
       {voti === "slug" && (
         <p className="mt-1 text-[0.8rem] text-ink-faint">
@@ -981,6 +1044,9 @@ function MassiiviNupud({ indeks, pikkus, liiguta, eemalda, nimetus }) {
 }
 
 function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
+  const tolge = useContext(TolkeKontekst);
+  const ingliseVaartus = loeTeel(tolge?.sisuEn, tee);
+  const ingliseMassiiv = Array.isArray(ingliseVaartus) ? ingliseVaartus : [];
   const id = tee.join("-");
   const [valitudIndeks, setValitudIndeks] = useState(0);
   const teenuseNimekirjaRead =
@@ -1001,6 +1067,10 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
 
   function lisa() {
     muuda(tee, [...vaartus, uusElement(vaartus, voti)]);
+    tolge?.muudaEn(tee, [
+      ...ingliseMassiiv,
+      uusElement(ingliseMassiiv.length > 0 ? ingliseMassiiv : vaartus, voti),
+    ]);
     setValitudIndeks(vaartus.length);
   }
 
@@ -1008,6 +1078,10 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
     muuda(
       tee,
       vaartus.filter((_, jrk) => jrk !== indeks),
+    );
+    tolge?.muudaEn(
+      tee,
+      ingliseMassiiv.filter((_, jrk) => jrk !== indeks),
     );
     setValitudIndeks((eelmine) => {
       if (eelmine > indeks) return eelmine - 1;
@@ -1022,6 +1096,12 @@ function Massiiv({ voti, vaartus, tee, muuda, sugavus }) {
     const koopia = vaartus.slice();
     [koopia[indeks], koopia[uusIndeks]] = [koopia[uusIndeks], koopia[indeks]];
     muuda(tee, koopia);
+    const ingliseKoopia = ingliseMassiiv.slice();
+    [ingliseKoopia[indeks], ingliseKoopia[uusIndeks]] = [
+      ingliseKoopia[uusIndeks],
+      ingliseKoopia[indeks],
+    ];
+    tolge?.muudaEn(tee, ingliseKoopia);
     setValitudIndeks((eelmine) => {
       if (eelmine === indeks) return uusIndeks;
       if (eelmine === uusIndeks) return indeks;
@@ -1397,12 +1477,14 @@ function KompaktneValjad({ vaartus, tee, muuda }) {
 /* ------------------------------------------------------------------ */
 
 export default function AdminToimeti({
-  keel = VAIKEKEEL,
-  algsisu,
-  algtunnus,
+  algsisuEt,
+  algsisuEn,
+  algtunnusEt,
+  algtunnusEn,
   algsaeg = null,
 }) {
-  const [sisu, setSisu] = useState(algsisu);
+  const [sisuEt, setSisuEt] = useState(algsisuEt);
+  const [sisuEn, setSisuEn] = useState(algsisuEn);
   const [muudetud, setMuudetud] = useState(false);
   const [valitud, setValitud] = useState(SEKTSIOONID[0].id);
   const [valitudSisuTee, setValitudSisuTee] = useState(
@@ -1415,9 +1497,10 @@ export default function AdminToimeti({
     salvestusega kaasa; server keeldub, kui fail on vahepeal mujal muutunud.
     Õnnestunud salvestus annab uue tunnuse tagasi.
   */
-  const [tunnus, setTunnus] = useState(algtunnus);
+  const [tunnusEt, setTunnusEt] = useState(algtunnusEt);
+  const [tunnusEn, setTunnusEn] = useState(algtunnusEn);
   const [konflikt, setKonflikt] = useState(false);
-  /* Millal see keel viimati faili kirjutati — päises, et seis oleks näha */
+  /* Uusim aeg kahe keele ja ühise kujunduse failidest. */
   const [salvestatud, setSalvestatud] = useState(algsaeg);
   const [mustand, setMustand] = useState(null);
   const mustandLoetud = useRef(false);
@@ -1458,11 +1541,11 @@ export default function AdminToimeti({
   useEffect(() => {
     const taimer = window.setTimeout(() => {
       mustandLoetud.current = true;
-      setMustand(loeMustand(keel));
+      setMustand(loeMustand());
     }, 0);
 
     return () => window.clearTimeout(taimer);
-  }, [keel]);
+  }, []);
 
   useEffect(() => {
     try {
@@ -1470,33 +1553,48 @@ export default function AdminToimeti({
       if (!muudetud) {
         /* Nähtav taastamisvalik ei ole veel otsus mustandit kustutada. */
         if (mustand) return;
-        window.sessionStorage.removeItem(mustandiVoti(keel));
+        window.sessionStorage.removeItem(MUSTANDI_VOTI);
         return;
       }
 
       window.sessionStorage.setItem(
-        mustandiVoti(keel),
+        MUSTANDI_VOTI,
         JSON.stringify({
           versioon: MUSTANDI_VERSIOON,
-          tunnus,
-          sisu,
+          tunnusEt,
+          tunnusEn,
+          sisuEt,
+          sisuEn,
           aeg: new Date().toISOString(),
         }),
       );
     } catch {
       /* Mustand on lisakaitse; brauseri keelatud salvestus ei tohi toimetit rikkuda. */
     }
-  }, [keel, muudetud, sisu, tunnus, mustand]);
+  }, [muudetud, sisuEt, sisuEn, tunnusEt, tunnusEn, mustand]);
 
-  function muuda(tee, uusVaartus) {
-    setSisu((eelmine) => asendaTeel(eelmine, tee, uusVaartus));
+  function muudaEt(tee, uusVaartus) {
+    setSisuEt((eelmine) => asendaTeel(eelmine, tee, uusVaartus));
+    setMuudetud(true);
+    setTeade(null);
+  }
+
+  function muudaEn(tee, uusVaartus) {
+    setSisuEn((eelmine) => asendaTeel(eelmine, tee, uusVaartus));
+    setMuudetud(true);
+    setTeade(null);
+  }
+
+  function muudaMolemas(tee, uusVaartus) {
+    setSisuEt((eelmine) => asendaTeel(eelmine, tee, uusVaartus));
+    setSisuEn((eelmine) => asendaTeel(eelmine, tee, uusVaartus));
     setMuudetud(true);
     setTeade(null);
   }
 
   function loobuMustandist() {
     try {
-      window.sessionStorage.removeItem(mustandiVoti(keel));
+      window.sessionStorage.removeItem(MUSTANDI_VOTI);
     } catch {
       /* Eemaldamine on parim pingutus, nagu mustandi kirjutaminegi. */
     }
@@ -1506,12 +1604,13 @@ export default function AdminToimeti({
   function taastaMustand() {
     if (!mustand) return;
 
-    setSisu(mustand.sisu);
+    setSisuEt(mustand.sisuEt);
+    setSisuEn(mustand.sisuEn);
     setMuudetud(true);
     setTeade({
       liik: "ok",
       tekst:
-        mustand.tunnus === algtunnus
+        mustand.tunnusEt === algtunnusEt && mustand.tunnusEn === algtunnusEn
           ? "Salvestamata mustand taastati."
           : "Mustand taastati. Serveris on vahepeal muudatusi — enne salvestamist kontrolli tekst üle.",
     });
@@ -1524,7 +1623,7 @@ export default function AdminToimeti({
     kaardile ei koguneks tühje kirjeid.
   */
   function muudaKuju(tee, uusKuju) {
-    setSisu((eelmine) => {
+    setSisuEt((eelmine) => {
       const kaart = { ...(eelmine[TEKSTIKUJUDE_VOTI] ?? {}) };
 
       /* undefined-väärtused välja: need tähendavad „vaikimisi” */
@@ -1569,8 +1668,10 @@ export default function AdminToimeti({
   */
   function votaVastus(vastus, vaikeViga) {
     if (vastus?.ok) {
-      if (vastus.sisu) setSisu(vastus.sisu);
-      if (vastus.tunnus) setTunnus(vastus.tunnus);
+      if (vastus.sisuEt) setSisuEt(vastus.sisuEt);
+      if (vastus.sisuEn) setSisuEn(vastus.sisuEn);
+      if (vastus.tunnusEt) setTunnusEt(vastus.tunnusEt);
+      if (vastus.tunnusEn) setTunnusEn(vastus.tunnusEn);
       if (vastus.aeg) setSalvestatud(vastus.aeg);
       setKonflikt(false);
       setMuudetud(false);
@@ -1586,7 +1687,12 @@ export default function AdminToimeti({
     setTootab(true);
     setTeade(null);
     try {
-      const vastus = await salvestaTegevus(keel, sisu, tunnus);
+      const vastus = await salvestaKakskeelneTegevus(
+        sisuEt,
+        sisuEn,
+        tunnusEt,
+        tunnusEn,
+      );
       votaVastus(vastus, "Salvestamine ebaõnnestus.");
     } catch {
       setTeade({
@@ -1599,12 +1705,10 @@ export default function AdminToimeti({
   }
 
   async function lahtesta(tee) {
-    const keeleNimi = KEELED.find((k) => k.kood === keel)?.silt ?? keel;
     const kinnitus = window.confirm(
       `Kas lähtestada „${silt(tee)}” vaikimisi tekstidele?\n\n` +
-        `Tekstid lähtestatakse ainult keeles ${keeleNimi}.\n` +
-        "Selle sektsiooni tekstide KUJU (värv, suurus, font) on aga keelte " +
-        "peale ühine ja läheb maha mõlemas keeles.\n\n" +
+        "Eesti tekstid, inglise tõlked ja selle sektsiooni ühine kujundus " +
+        "lähtestatakse korraga.\n\n" +
         "Lähtestamine salvestab kohe. Kõik salvestamata muudatused lähevad kaotsi.",
     );
     if (!kinnitus) return;
@@ -1612,7 +1716,11 @@ export default function AdminToimeti({
     setTootab(true);
     setTeade(null);
     try {
-      const vastus = await lahtestaTegevus(keel, tee, tunnus);
+      const vastus = await lahtestaKakskeelneTegevus(
+        tee,
+        tunnusEt,
+        tunnusEn,
+      );
       votaVastus(vastus, "Lähtestamine ebaõnnestus.");
     } catch {
       setTeade({
@@ -1625,56 +1733,17 @@ export default function AdminToimeti({
   }
 
   return (
-    <KujuKontekst.Provider
-      value={{ kujud: sisu[TEKSTIKUJUDE_VOTI] ?? {}, muudaKuju }}
-    >
+    <TolkeKontekst.Provider value={{ sisuEn, muudaEn, muudaMolemas }}>
+      <KujuKontekst.Provider
+        value={{ kujud: sisuEt[TEKSTIKUJUDE_VOTI] ?? {}, muudaKuju }}
+      >
     <div className="mx-auto w-full max-w-[1360px] px-6 py-10 lg:px-10">
-      {/*
-        KEELEVALIK.
-
-        Keel elab aadressis (/admin?keel=en), mitte seisundis: nii saab lingi
-        järjehoidjasse panna ja lehe värskendamine ei viska teist keelt maha.
-        Salvestamata muudatuste korral küsime kinnitust — Link teeb
-        kliendipoolse navigeerimise ja brauseri oma „kas lahkuda” hoiatus
-        (beforeunload) siis ei käivitu.
-      */}
-      <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-3 border border-sage bg-bone px-4 py-3">
-        <span className="mikro text-[0.7rem] text-ink-faint">Keel</span>
-        <div className="flex flex-wrap items-center gap-2">
-          {KEELED.map((k) => {
-            const aktiivne = k.kood === keel;
-            const aadress =
-              k.kood === VAIKEKEEL ? "/admin" : `/admin?keel=${k.kood}`;
-
-            return (
-              <Link
-                key={k.kood}
-                href={aadress}
-                aria-current={aktiivne ? "true" : undefined}
-                onClick={(sundmus) => {
-                  if (aktiivne || !muudetud) return;
-                  const kinnitus = window.confirm(
-                    "Sul on salvestamata muudatusi. Hoian need selles brauseris " +
-                      "mustandina alles, kuid enne salvestamist pead need teises " +
-                      "keeles uuesti üle vaatama. Kas jätkata?",
-                  );
-                  if (!kinnitus) sundmus.preventDefault();
-                }}
-                className={`mikro border px-4 py-2 text-[0.7rem] transition-colors ${
-                  aktiivne
-                    ? "border-rohe bg-rohe text-white"
-                    : "border-sage text-ink-faint hover:border-rohe hover:text-rohe"
-                }`}
-              >
-                {k.silt}
-              </Link>
-            );
-          })}
-        </div>
-        <p className="text-[0.85rem] leading-relaxed text-ink-soft">
-          Tekstid on kummalgi keelel omad. Tekstide KUJU — värv, suurus, font,
-          joondus — on mõlemal keelel ühine: kujunda korra, muutub mõlemal
-          pool.
+      <div className="mb-8 border-l-2 border-rohe bg-linen px-5 py-4 sm:px-6">
+        <p className="kuva text-xl text-ink">Üks sisu, kaks keelt</p>
+        <p className="mt-2 max-w-[76ch] text-[0.9rem] leading-relaxed text-ink-soft">
+          Iga eestikeelse teksti kõrval on inglise tõlge. Kujundus — värv,
+          suurus, font ja joondus — määratakse ühe korra ning kehtib mõlemas
+          keeles.
         </p>
       </div>
 
@@ -1687,7 +1756,7 @@ export default function AdminToimeti({
             <div>
               <p className="kuva text-xl text-ink">Salvestamata mustand on alles</p>
               <p className="mt-2 max-w-[70ch] text-[0.9rem] leading-relaxed text-ink-soft">
-                See on selle brauseri eelmise adminivaate tekst. {mustand.tunnus === algtunnus
+                See on selle brauseri eelmise adminivaate tekst. {mustand.tunnusEt === algtunnusEt && mustand.tunnusEn === algtunnusEn
                   ? "Serveri seis ei ole muutunud; taastamine on ohutu."
                   : "Serveri seis on vahepeal muutunud; pärast taastamist vaata tekst enne salvestamist üle."}
               </p>
@@ -1770,11 +1839,7 @@ export default function AdminToimeti({
         </nav>
 
         <div className="min-w-0 flex-1">
-          {/*
-            Uues aknas, mitte samas: admini olek (avatud paneelid, salvestamata
-            tekst) peab alles jääma. Aadress käib läbi keeleTee(), nii et
-            inglise sisu vaadates avaneb inglise leht.
-          */}
+          {/* Mõlema keele eelvaated avanevad uues aknas, admini olek jääb alles. */}
           <div className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-sage pb-5">
             <div>
               <p className="mikro text-[0.65rem] text-ink-faint">Muudad lehte</p>
@@ -1783,14 +1848,24 @@ export default function AdminToimeti({
               </h2>
             </div>
             {sektsioon.leht && (
-              <a
-                href={keeleTee(keel, sektsioon.leht)}
-                target="_blank"
-                rel="noreferrer"
-                className={NUPP_AARIS}
-              >
-                Vaata lehel ↗
-              </a>
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href={keeleTee("et", sektsioon.leht)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={NUPP_AARIS}
+                >
+                  Eesti leht ↗
+                </a>
+                <a
+                  href={keeleTee("en", sektsioon.leht)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={NUPP_AARIS}
+                >
+                  Inglise leht ↗
+                </a>
+              </div>
             )}
           </div>
 
@@ -1873,32 +1948,33 @@ export default function AdminToimeti({
                 <div className="space-y-5">
                   {tee === "fotograafiaGalerii" ? (
                     <FotograafiaGaleriiHaldus
-                      keel={keel}
-                      galerii={sisu[tee]}
-                      muuda={(uus) => muuda([tee], uus)}
+                      galerii={sisuEt[tee]}
+                      galeriiEn={sisuEn[tee]}
+                      muuda={(uus) => muudaEt([tee], uus)}
+                      muudaEn={(uus) => muudaEn([tee], uus)}
                       keelatud={tootab}
                     />
-                  ) : Array.isArray(sisu[tee]) ? (
+                  ) : Array.isArray(sisuEt[tee]) ? (
                     <Massiiv
                       voti={tee}
-                      vaartus={sisu[tee]}
+                      vaartus={sisuEt[tee]}
                       tee={[tee]}
-                      muuda={muuda}
+                      muuda={muudaEt}
                       sugavus={0}
                     />
-                  ) : typeof sisu[tee] === "string" ? (
+                  ) : typeof sisuEt[tee] === "string" ? (
                     <Tekstivali
                       id={tee}
                       voti={tee}
                       tee={[tee]}
-                      vaartus={sisu[tee]}
-                      muuda={(uus) => muuda([tee], uus)}
+                      vaartus={sisuEt[tee]}
+                      muuda={(uus) => muudaEt([tee], uus)}
                     />
                   ) : (
                     <KompaktneValjad
-                      vaartus={sisu[tee]}
+                      vaartus={sisuEt[tee]}
                       tee={[tee]}
-                      muuda={muuda}
+                      muuda={muudaEt}
                     />
                   )}
                 </div>
@@ -1960,6 +2036,7 @@ export default function AdminToimeti({
         </div>
       </div>
     </div>
-    </KujuKontekst.Provider>
+      </KujuKontekst.Provider>
+    </TolkeKontekst.Provider>
   );
 }

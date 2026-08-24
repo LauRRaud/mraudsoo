@@ -15,13 +15,12 @@ import {
   laeSisu,
   puhasta,
   salvestaKujud,
-  salvestaSisu,
   salvestaTekstid,
   sisuFailid,
   sisuTunnus,
   vaikimisiSisu,
 } from "@/sisu/lae";
-import { KEELED, keeleks, onKeel } from "@/sisu/keeled";
+import { KEELED, onKeel } from "@/sisu/keeled";
 import { kontrolliTunnust } from "@/sisu/lukk";
 import { loeVarukoopia, logi } from "@/sisu/ajalugu";
 import { TEKSTIKUJUDE_VOTI, eemaldaHaru } from "@/sisu/tekstikujud";
@@ -82,148 +81,186 @@ export async function loguValjaTegevus() {
   redirect("/admin");
 }
 
-/*
-  SALVESTAMINE.
-  Kogu sisupuu tuleb korraga: valideerime kuju, kirjutame faili ja värskendame
-  kõik lehed korraga (revalidatePath juurpaigutuse peal puhastab kliendipuhvri).
+const SISU_KEELED = ["et", "en"];
 
-  KEEL otsustab, millisesse faili kirjutatakse (data/sisu.<keel>.json) ja
-  millise vaikimisi puu vastu kuju valideeritakse. Tekstikujud lahutatakse
-  välja ja lähevad keelte peale ühisesse faili — vt src/sisu/lae.js.
-*/
-export async function salvestaTegevus(keel, uusSisu, tunnus) {
-  const keeld = await noudaSessiooni();
-  if (keeld) return keeld;
+async function kakskeelneKonflikt(tunnusEt, tunnusEn, liik, sektsioon) {
+  const [etKonflikt, enKonflikt] = await Promise.all([
+    kontrolliTunnust(sisuFailid("et"), tunnusEt),
+    kontrolliTunnust(sisuFailid("en"), tunnusEn),
+  ]);
+  const konflikt = etKonflikt ?? enKonflikt;
+  if (!konflikt) return null;
 
-  const kood = keeleks(keel);
-
-  if (!onObjekt(uusSisu)) {
-    return { ok: false, viga: "Salvestamine ebaõnnestus: sisu kuju on vigane." };
-  }
-
-  /* Lukk ENNE puhastamist: konflikti korral ei tee me tarbetut tööd */
-  const konflikt = await kontrolliTunnust(sisuFailid(kood), tunnus);
-  if (konflikt) {
-    await logi({
-      liik: "sisu",
-      keel: kood,
-      konflikt: true,
-      oodatud: tunnus ?? null,
-      tegelik: konflikt.tunnus,
-    });
-    return konflikt;
-  }
-
-  let puhastatud;
-  try {
-    puhastatud = puhasta(vaikimisiSisu(kood), uusSisu);
-  } catch (viga) {
-    return { ok: false, viga: `Salvestamine ebaõnnestus: ${viga.message}` };
-  }
-
-  try {
-    await salvestaSisu(kood, puhastatud);
-  } catch {
-    return {
-      ok: false,
-      viga: `Salvestamine ebaõnnestus: faili data/sisu.${kood}.json ei õnnestunud kirjutada.`,
-    };
-  }
-
-  const uusTunnus = await sisuTunnus(kood);
   await logi({
-    liik: "sisu",
-    keel: kood,
-    baite: JSON.stringify(puhastatud).length,
-    tunnus: uusTunnus,
-    konflikt: false,
+    liik,
+    sektsioon: sektsioon ?? null,
+    keeled: SISU_KEELED,
+    konflikt: true,
+    oodatudEt: tunnusEt ?? null,
+    oodatudEn: tunnusEn ?? null,
   });
+  return konflikt;
+}
 
-  revalidatePath("/", "layout");
+function eraldaTekstid(sisu) {
+  const { [TEKSTIKUJUDE_VOTI]: _kujud, ...tekstid } = sisu;
+  return tekstid;
+}
 
+async function kirjutaKakskeelne(sisuEt, sisuEn) {
+  const kujud = sisuEt[TEKSTIKUJUDE_VOTI] ?? {};
+  await salvestaTekstid("et", eraldaTekstid(sisuEt));
+  await salvestaTekstid("en", eraldaTekstid(sisuEn));
+  await salvestaKujud(kujud);
+}
+
+async function kakskeelneVastus(sisuEt, sisuEn, sonum) {
+  const [tunnusEt, tunnusEn] = await Promise.all([
+    sisuTunnus("et"),
+    sisuTunnus("en"),
+  ]);
   return {
     ok: true,
-    sonum: "Salvestatud.",
-    sisu: puhastatud,
-    tunnus: uusTunnus,
+    sonum,
+    sisuEt,
+    sisuEn,
+    tunnusEt,
+    tunnusEn,
     aeg: new Date().toISOString(),
   };
 }
 
 /*
-  ÜHE SEKTSIOONI LÄHTESTAMINE.
-  tee = sisupuu ülemise taseme võti (nt "avaleht", "teenused", "hinnakiri").
-  Ülejäänud sisu jääb puutumata. Lähtestamine käib ÜHE KEELE kaupa: teine
-  keel jääb puutumata.
+  ÜKS SALVESTUS MÕLEMALE KEELELE.
 
-  ERAND: tekstikujud on keelte peale ühised, seega sektsiooni kujud kaovad
-  mõlemast keelest korraga. Admin ütleb selle kinnitusdialoogis välja.
+  Admin saadab eesti teksti, samade väljade inglise tõlked ja ühe ühise
+  kujunduskaardi. Mõlema keele optimistlik lukk kontrollitakse enne esimestki
+  kirjutust. Kujundus võetakse ainult eesti põhipuust ja salvestatakse korra.
 */
-export async function lahtestaTegevus(keel, tee, tunnus) {
+export async function salvestaKakskeelneTegevus(
+  uusEt,
+  uusEn,
+  tunnusEt,
+  tunnusEn,
+) {
   const keeld = await noudaSessiooni();
   if (keeld) return keeld;
 
-  const kood = keeleks(keel);
-  const vaikimisi = vaikimisiSisu(kood);
-
-  if (typeof tee !== "string" || !Object.hasOwn(vaikimisi, tee)) {
-    return { ok: false, viga: "Tundmatu sektsioon — lähtestamine katkestati." };
+  if (!onObjekt(uusEt) || !onObjekt(uusEn)) {
+    return { ok: false, viga: "Salvestamine ebaõnnestus: sisu kuju on vigane." };
   }
 
-  /* Sama lukk mis salvestusel: lähtestamine kirjutab samuti terve faili üle */
-  const konflikt = await kontrolliTunnust(sisuFailid(kood), tunnus);
-  if (konflikt) {
-    await logi({
-      liik: "lahtesta",
-      keel: kood,
-      sektsioon: tee,
-      konflikt: true,
-      oodatud: tunnus ?? null,
-      tegelik: konflikt.tunnus,
+  const konflikt = await kakskeelneKonflikt(
+    tunnusEt,
+    tunnusEn,
+    "sisu-kakskeelne",
+  );
+  if (konflikt) return konflikt;
+
+  let sisuEt;
+  let sisuEn;
+  try {
+    sisuEt = puhasta(vaikimisiSisu("et"), uusEt);
+    sisuEn = puhasta(vaikimisiSisu("en"), {
+      ...uusEn,
+      [TEKSTIKUJUDE_VOTI]: sisuEt[TEKSTIKUJUDE_VOTI],
     });
-    return konflikt;
+  } catch (viga) {
+    return { ok: false, viga: `Salvestamine ebaõnnestus: ${viga.message}` };
   }
-
-  const praegune = await laeSisu(kood);
-  const uusSisu = puhasta(vaikimisi, {
-    ...praegune,
-    [tee]: structuredClone(vaikimisi[tee]),
-    /*
-      Sektsiooni tekstikujud lähevad koos tekstidega. Muidu jääks kaardile
-      kirje teksti kohta, mida enam ei ole, ja järgmine sama teega tekst
-      päriks võõra kuju.
-    */
-    [TEKSTIKUJUDE_VOTI]: eemaldaHaru(praegune[TEKSTIKUJUDE_VOTI], tee),
-  });
 
   try {
-    await salvestaSisu(kood, uusSisu);
+    await kirjutaKakskeelne(sisuEt, sisuEn);
   } catch {
     return {
       ok: false,
-      viga: `Lähtestamine ebaõnnestus: faili data/sisu.${kood}.json ei õnnestunud kirjutada.`,
+      viga: "Salvestamine ebaõnnestus: kakskeelseid sisufaile ei õnnestunud kirjutada.",
     };
   }
 
-  const uusTunnus = await sisuTunnus(kood);
+  const vastus = await kakskeelneVastus(sisuEt, sisuEn, "Mõlemad keeled on salvestatud.");
   await logi({
-    liik: "lahtesta",
-    keel: kood,
-    sektsioon: tee,
-    baite: JSON.stringify(uusSisu).length,
-    tunnus: uusTunnus,
+    liik: "sisu-kakskeelne",
+    keeled: SISU_KEELED,
+    baiteEt: JSON.stringify(sisuEt).length,
+    baiteEn: JSON.stringify(sisuEn).length,
+    tunnusEt: vastus.tunnusEt,
+    tunnusEn: vastus.tunnusEn,
     konflikt: false,
   });
 
   revalidatePath("/", "layout");
+  return vastus;
+}
 
-  return {
-    ok: true,
-    sonum: "Sektsioon on lähtestatud.",
-    sisu: uusSisu,
-    tunnus: uusTunnus,
-    aeg: new Date().toISOString(),
-  };
+/* Ühe sektsiooni tekstid ja kujundus lähtestatakse mõlemas keeles korraga. */
+export async function lahtestaKakskeelneTegevus(
+  tee,
+  tunnusEt,
+  tunnusEn,
+) {
+  const keeld = await noudaSessiooni();
+  if (keeld) return keeld;
+
+  const vaikeEt = vaikimisiSisu("et");
+  const vaikeEn = vaikimisiSisu("en");
+  if (
+    typeof tee !== "string" ||
+    !Object.hasOwn(vaikeEt, tee) ||
+    !Object.hasOwn(vaikeEn, tee)
+  ) {
+    return { ok: false, viga: "Tundmatu sektsioon — lähtestamine katkestati." };
+  }
+
+  const konflikt = await kakskeelneKonflikt(
+    tunnusEt,
+    tunnusEn,
+    "lahtesta-kakskeelne",
+    tee,
+  );
+  if (konflikt) return konflikt;
+
+  const [praeguneEt, praeguneEn] = await Promise.all([
+    laeSisu("et"),
+    laeSisu("en"),
+  ]);
+  const kujud = eemaldaHaru(praeguneEt[TEKSTIKUJUDE_VOTI], tee);
+  const sisuEt = puhasta(vaikeEt, {
+    ...praeguneEt,
+    [tee]: structuredClone(vaikeEt[tee]),
+    [TEKSTIKUJUDE_VOTI]: kujud,
+  });
+  const sisuEn = puhasta(vaikeEn, {
+    ...praeguneEn,
+    [tee]: structuredClone(vaikeEn[tee]),
+    [TEKSTIKUJUDE_VOTI]: kujud,
+  });
+
+  try {
+    await kirjutaKakskeelne(sisuEt, sisuEn);
+  } catch {
+    return {
+      ok: false,
+      viga: "Lähtestamine ebaõnnestus: kakskeelseid sisufaile ei õnnestunud kirjutada.",
+    };
+  }
+
+  const vastus = await kakskeelneVastus(
+    sisuEt,
+    sisuEn,
+    "Sektsioon lähtestati mõlemas keeles.",
+  );
+  await logi({
+    liik: "lahtesta-kakskeelne",
+    sektsioon: tee,
+    keeled: SISU_KEELED,
+    tunnusEt: vastus.tunnusEt,
+    tunnusEn: vastus.tunnusEn,
+    konflikt: false,
+  });
+
+  revalidatePath("/", "layout");
+  return vastus;
 }
 
 /*

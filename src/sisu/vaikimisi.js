@@ -389,7 +389,7 @@ export const vaikimisiSisu = {
     {
       "slug": "STIILISELGUS",
       "nimi": "STIILISELGUS",
-      "alapealkiri": "STIIL JA KOHALOLU",
+      "alapealkiri": "Stiil ja kohalolu",
       "luhike": "",
       "sissejuhatus": "Esimene samm sinu stiili, garderoobi ja teadlikumate valikute suunas.",
       "loigud": [
@@ -436,7 +436,7 @@ export const vaikimisiSisu = {
     {
       "slug": "garderoobi-korrastus",
       "nimi": "GARDEROOBI INVENTUUR",
-      "alapealkiri": "KORD JA SELGUS",
+      "alapealkiri": "Kord ja selgus",
       "luhike": "",
       "sissejuhatus": "Garderoobi inventuur ei ole ainult sorteerimine, vaid võimalus märgata, kas garderoob peegeldab seda, kes sa täna oled.",
       "loigud": [
@@ -461,8 +461,8 @@ export const vaikimisiSisu = {
     },
     {
       "slug": "teadlik-ostlemine",
-      "nimi": "TEADLIK OSTLEMINE",
-      "alapealkiri": "TEADLIKUD VALIKUD",
+      "nimi": "OSTLEMINE",
+      "alapealkiri": "Teadlikud valikud",
       "luhike": "",
       "sissejuhatus": "Teadlik ostlemine on kogemus, mis toetab teha läbimõeldud valikuid, mis lähtuvad vajadusest, mitte survest või emotsioonist. \n\nKui garderoob on üle vaadatud, saab ostlemine muutuda palju teadlikumaks.",
       "loigud": [],

@@ -12,12 +12,14 @@ const NUPP =
 const SUURIM_PILT = 8 * 1024 * 1024;
 
 export default function FotograafiaGaleriiHaldus({
-  keel,
   galerii,
+  galeriiEn,
   muuda,
+  muudaEn,
   keelatud = false,
 }) {
   const pildid = Array.isArray(galerii?.pildid) ? galerii.pildid : [];
+  const pildidEn = Array.isArray(galeriiEn?.pildid) ? galeriiEn.pildid : [];
   const failiValija = useRef(null);
   const vahetatav = useRef(null);
   const [laeb, alustaLaadimist] = useTransition();
@@ -29,8 +31,13 @@ export default function FotograafiaGaleriiHaldus({
     muuda({ ...galerii, [voti]: vaartus });
   }
 
-  function muudaPilte(uued) {
+  function muudaValjaEn(voti, vaartus) {
+    muudaEn({ ...galeriiEn, [voti]: vaartus });
+  }
+
+  function muudaPilte(uued, uuedEn = pildidEn) {
     muuda({ ...galerii, pildid: uued });
+    muudaEn({ ...galeriiEn, pildid: uuedEn });
     setTeade(null);
   }
 
@@ -42,12 +49,23 @@ export default function FotograafiaGaleriiHaldus({
     );
   }
 
+  function muudaPiltiEn(indeks, muudatus) {
+    muudaPilte(
+      pildid,
+      pildidEn.map((pilt, jrk) =>
+        jrk === indeks ? { ...pilt, ...muudatus } : pilt,
+      ),
+    );
+  }
+
   function liiguta(indeks, suund) {
     const siht = indeks + suund;
     if (siht < 0 || siht >= pildid.length) return;
     const koopia = pildid.slice();
     [koopia[indeks], koopia[siht]] = [koopia[siht], koopia[indeks]];
-    muudaPilte(koopia);
+    const koopiaEn = pildidEn.slice();
+    [koopiaEn[indeks], koopiaEn[siht]] = [koopiaEn[siht], koopiaEn[indeks]];
+    muudaPilte(koopia, koopiaEn);
   }
 
   function valiFail(indeks = null) {
@@ -84,20 +102,21 @@ export default function FotograafiaGaleriiHaldus({
           pildid.map((pilt, jrk) =>
             jrk === indeks ? { ...pilt, fail: vastus.nimi } : pilt,
           ),
+          pildidEn.map((pilt, jrk) =>
+            jrk === indeks ? { ...pilt, fail: vastus.nimi } : pilt,
+          ),
         );
         setTeade({
           ok: true,
           tekst: "Foto on vahetatud. Avalikul lehel jõustub see pärast „Salvesta” vajutamist.",
         });
       } else {
-        muudaPilte([
-          ...pildid,
-          {
-            fail: vastus.nimi,
-            alt: "",
-            kuvasuhe: "pustine",
-          },
-        ]);
+        const uusPilt = {
+          fail: vastus.nimi,
+          alt: "",
+          kuvasuhe: "pustine",
+        };
+        muudaPilte([...pildid, uusPilt], [...pildidEn, { ...uusPilt }]);
         setTeade({
           ok: true,
           tekst: "Foto on lisatud. Kirjuta sellele kirjeldus ja vajuta siis „Salvesta”.",
@@ -118,39 +137,81 @@ export default function FotograafiaGaleriiHaldus({
       </div>
 
       <div className="space-y-5">
-        <div>
-          <label
-            htmlFor={`fotograafia-pealkiri-${keel}`}
-            className="mikro block text-[0.7rem] text-ink-faint"
+        {[
+          { voti: "pealkiri", nimi: "Pealkiri", pikk: false },
+          { voti: "kirjeldus", nimi: "Kirjeldus", pikk: true },
+        ].map((vali) => (
+          <div
+            key={vali.voti}
+            className="border-l-2 border-sage bg-linen/45 px-3 py-3 sm:px-4"
           >
-            Pealkiri
-          </label>
-          <input
-            id={`fotograafia-pealkiri-${keel}`}
-            type="text"
-            value={galerii?.pealkiri ?? ""}
-            disabled={keelatud}
-            onChange={(sundmus) => muudaValja("pealkiri", sundmus.target.value)}
-            className={`${VALI} mt-2`}
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor={`fotograafia-kirjeldus-${keel}`}
-            className="mikro block text-[0.7rem] text-ink-faint"
-          >
-            Kirjeldus
-          </label>
-          <textarea
-            id={`fotograafia-kirjeldus-${keel}`}
-            rows={3}
-            value={galerii?.kirjeldus ?? ""}
-            disabled={keelatud}
-            onChange={(sundmus) => muudaValja("kirjeldus", sundmus.target.value)}
-            className={`${VALI} mt-2 resize-y`}
-          />
-        </div>
+            <p className="mikro text-[0.7rem] text-ink-faint">{vali.nimi}</p>
+            <div className="mt-2 grid gap-3 lg:grid-cols-2">
+              <div>
+                <label
+                  htmlFor={`fotograafia-${vali.voti}-et`}
+                  className="mb-1.5 block text-[0.76rem] font-medium text-rohe"
+                >
+                  Eesti tekst
+                </label>
+                {vali.pikk ? (
+                  <textarea
+                    id={`fotograafia-${vali.voti}-et`}
+                    rows={3}
+                    value={galerii?.[vali.voti] ?? ""}
+                    disabled={keelatud}
+                    onChange={(sundmus) =>
+                      muudaValja(vali.voti, sundmus.target.value)
+                    }
+                    className={`${VALI} resize-y`}
+                  />
+                ) : (
+                  <input
+                    id={`fotograafia-${vali.voti}-et`}
+                    type="text"
+                    value={galerii?.[vali.voti] ?? ""}
+                    disabled={keelatud}
+                    onChange={(sundmus) =>
+                      muudaValja(vali.voti, sundmus.target.value)
+                    }
+                    className={VALI}
+                  />
+                )}
+              </div>
+              <div className="border-l-2 border-gold/50 pl-3 lg:border-l lg:pl-4">
+                <label
+                  htmlFor={`fotograafia-${vali.voti}-en`}
+                  className="mb-1.5 block text-[0.76rem] font-medium text-gold-deep"
+                >
+                  Inglise tõlge
+                </label>
+                {vali.pikk ? (
+                  <textarea
+                    id={`fotograafia-${vali.voti}-en`}
+                    rows={3}
+                    value={galeriiEn?.[vali.voti] ?? ""}
+                    disabled={keelatud}
+                    onChange={(sundmus) =>
+                      muudaValjaEn(vali.voti, sundmus.target.value)
+                    }
+                    className={`${VALI} resize-y`}
+                  />
+                ) : (
+                  <input
+                    id={`fotograafia-${vali.voti}-en`}
+                    type="text"
+                    value={galeriiEn?.[vali.voti] ?? ""}
+                    disabled={keelatud}
+                    onChange={(sundmus) =>
+                      muudaValjaEn(vali.voti, sundmus.target.value)
+                    }
+                    className={VALI}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="border border-sage p-4 sm:p-5">
@@ -214,38 +275,71 @@ export default function FotograafiaGaleriiHaldus({
 
                   <div className="mt-4 space-y-4">
                     <div>
-                      <label
-                        htmlFor={`fotograafia-alt-${keel}-${indeks}`}
-                        className="mikro block text-[0.65rem] text-ink-faint"
-                      >
+                      <p className="mikro text-[0.65rem] text-ink-faint">
                         Pildi kirjeldus
-                      </label>
-                      <input
-                        id={`fotograafia-alt-${keel}-${indeks}`}
-                        type="text"
-                        value={pilt?.alt ?? ""}
-                        disabled={keelatud}
-                        onChange={(sundmus) =>
-                          muudaPilti(indeks, { alt: sundmus.target.value })
-                        }
-                        className={`${VALI} mt-2`}
-                      />
+                      </p>
+                      <div className="mt-2 grid gap-3">
+                        <div>
+                          <label
+                            htmlFor={`fotograafia-alt-et-${indeks}`}
+                            className="mb-1 block text-xs font-medium text-rohe"
+                          >
+                            Eesti tekst
+                          </label>
+                          <input
+                            id={`fotograafia-alt-et-${indeks}`}
+                            type="text"
+                            value={pilt?.alt ?? ""}
+                            disabled={keelatud}
+                            onChange={(sundmus) =>
+                              muudaPilti(indeks, { alt: sundmus.target.value })
+                            }
+                            className={VALI}
+                          />
+                        </div>
+                        <div className="border-l-2 border-gold/50 pl-3">
+                          <label
+                            htmlFor={`fotograafia-alt-en-${indeks}`}
+                            className="mb-1 block text-xs font-medium text-gold-deep"
+                          >
+                            Inglise tõlge
+                          </label>
+                          <input
+                            id={`fotograafia-alt-en-${indeks}`}
+                            type="text"
+                            value={pildidEn[indeks]?.alt ?? ""}
+                            disabled={keelatud}
+                            onChange={(sundmus) =>
+                              muudaPiltiEn(indeks, { alt: sundmus.target.value })
+                            }
+                            className={VALI}
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     <div>
                       <label
-                        htmlFor={`fotograafia-kuvasuhe-${keel}-${indeks}`}
+                        htmlFor={`fotograafia-kuvasuhe-${indeks}`}
                         className="mikro block text-[0.65rem] text-ink-faint"
                       >
                         Kaadri kuju
                       </label>
                       <select
-                        id={`fotograafia-kuvasuhe-${keel}-${indeks}`}
+                        id={`fotograafia-kuvasuhe-${indeks}`}
                         value={pilt?.kuvasuhe === "lai" ? "lai" : "pustine"}
                         disabled={keelatud}
-                        onChange={(sundmus) =>
-                          muudaPilti(indeks, { kuvasuhe: sundmus.target.value })
-                        }
+                        onChange={(sundmus) => {
+                          const kuvasuhe = sundmus.target.value;
+                          muudaPilte(
+                            pildid.map((kirje, jrk) =>
+                              jrk === indeks ? { ...kirje, kuvasuhe } : kirje,
+                            ),
+                            pildidEn.map((kirje, jrk) =>
+                              jrk === indeks ? { ...kirje, kuvasuhe } : kirje,
+                            ),
+                          );
+                        }}
                         className={`${VALI} mt-2`}
                       >
                         <option value="pustine">Püstine</option>
@@ -283,7 +377,12 @@ export default function FotograafiaGaleriiHaldus({
                     </button>
                     <button
                       type="button"
-                      onClick={() => muudaPilte(pildid.filter((_, jrk) => jrk !== indeks))}
+                      onClick={() =>
+                        muudaPilte(
+                          pildid.filter((_, jrk) => jrk !== indeks),
+                          pildidEn.filter((_, jrk) => jrk !== indeks),
+                        )
+                      }
                       disabled={eiTohiMuuta}
                       className={NUPP}
                     >

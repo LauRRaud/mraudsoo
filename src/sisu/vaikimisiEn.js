@@ -389,7 +389,7 @@ export const vaikimisiSisuEn = {
     {
       "slug": "stiiliselgus",
       "nimi": "STYLE CLARITY",
-      "alapealkiri": "STYLE AND PRESENCE",
+      "alapealkiri": "Style and presence",
       "luhike": "",
       "sissejuhatus": "The first step towards your style, wardrobe and more conscious choices.",
       "loigud": [
@@ -436,7 +436,7 @@ export const vaikimisiSisuEn = {
     {
       "slug": "garderoobi-korrastus",
       "nimi": "WARDROBE INVENTORY",
-      "alapealkiri": "ORDER AND CLARITY",
+      "alapealkiri": "Order and clarity",
       "luhike": "",
       "sissejuhatus": "A wardrobe inventory is not only about sorting. It is an opportunity to notice whether your wardrobe reflects who you are today.",
       "loigud": [
@@ -461,8 +461,8 @@ export const vaikimisiSisuEn = {
     },
     {
       "slug": "teadlik-ostlemine",
-      "nimi": "CONSCIOUS SHOPPING",
-      "alapealkiri": "CONSCIOUS CHOICES",
+      "nimi": "SHOPPING",
+      "alapealkiri": "Conscious choices",
       "luhike": "",
       "sissejuhatus": "Conscious shopping is an experience that supports you in making considered choices guided by need, rather than pressure or emotion.\n\nOnce the wardrobe has been reviewed, shopping can become far more conscious.",
       "loigud": [],
