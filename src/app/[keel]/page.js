@@ -453,7 +453,7 @@ export default async function Avaleht({ params }) {
       >
         <Ilmub>
           <div aria-hidden="true" className="pystjoon" />
-          <p className="silt mt-7" style={v("kutse.silt")}>
+          <p className="silt silt-kutse mt-7" style={v("kutse.silt")}>
             {s("kutse.silt", kutse.silt)}
           </p>
           <blockquote

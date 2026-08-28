@@ -261,6 +261,11 @@
     color: var(--color-gold-deep);
   }
 
+  /* Avalehe pikk tsitaadisilt vajab lühematest sektsioonisiltidest tihedamat rütmi. */
+  .silt-kutse {
+    letter-spacing: calc(var(--silt-vahe) * 0.58);
+  }
+
   /*
     LEHE PÄISE SILT — suurem kui tavaline sektsioonisilt.
 
