@@ -152,18 +152,19 @@ Broneerimissoov **salvestatakse alati** faili `data/broneeringud.json` ja on
 nähtav admin-lehel `/admin/broneeringud`. E-kiri on lisaks — kui allolevad
 muutujad puuduvad, jääb saatmine lihtsalt vahele ja midagi ei lähe kaotsi.
 
-Majutuspaketis e-posti ei ole, seega kasutame Marta Gmaili.
-Selleks on vaja **rakenduse parooli** (mitte tavalist Google'i parooli).
-Selle saab luua Google'i konto turvaseadetes, kui kaheastmeline kinnitamine on
-sisse lülitatud: Google'i konto → Turvalisus → Rakenduste paroolid.
+Majutuspaketis e-posti ei ole. Soovituslik saatja on eraldi SMTP-teenus, et
+veebiserver ei vajaks ligipääsu Marta Gmaili kontole. Resendi kasutamisel tuleb
+kinnitada domeen `martaraudsoo.com` ja luua piiratud õigustega API-võti.
 
 Serveris `/home/ubuntu/apps/mraudsoo/.env.local`:
 
 ```bash
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_KASUTAJA=martaraudsoo@gmail.com
-SMTP_PAROOL=<16-kohaline rakenduse parool>
+SMTP_HOST=smtp.resend.com
+SMTP_PORT=465
+SMTP_KASUTAJA=resend
+SMTP_PAROOL=<Resendi API-võti>
+SMTP_SAATJA=broneeringud@martaraudsoo.com
+SMTP_SAAJA=martaraudsoo@gmail.com
 ```
 
 Seejärel:
@@ -173,5 +174,7 @@ pm2 restart mraudsoo --update-env
 ```
 
 `SMTP_SAAJA` on valikuline — vaikimisi saadetakse kiri sisu all olevale
-kontaktaadressile. Kirja vastamisaadressiks pannakse külastaja e-post, nii saab
-Marta lihtsalt „Vasta” vajutada.
+kontaktaadressile. `SMTP_SAATJA` on nähtav saatja; see võib puududa ainult siis,
+kui SMTP kasutajanimi ise on saatmiseks sobiv e-posti aadress. Kirja
+vastamisaadressiks pannakse külastaja e-post, nii saab Marta lihtsalt „Vasta”
+vajutada.

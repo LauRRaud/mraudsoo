@@ -69,7 +69,10 @@ export async function markiLoetuks(id, loetud) {
 /* Kas e-posti saatmine on seadistatud */
 export function onPostSeadistatud() {
   return Boolean(
-    process.env.SMTP_HOST && process.env.SMTP_KASUTAJA && process.env.SMTP_PAROOL,
+    process.env.SMTP_HOST &&
+      process.env.SMTP_KASUTAJA &&
+      process.env.SMTP_PAROOL &&
+      (process.env.SMTP_SAATJA || process.env.SMTP_KASUTAJA),
   );
 }
 
@@ -115,7 +118,7 @@ export async function saadaTeavitus(kirje, saaja) {
   ].filter((rida) => rida !== null);
 
   await transport.sendMail({
-    from: `"martaraudsoo.com" <${process.env.SMTP_KASUTAJA}>`,
+    from: `"martaraudsoo.com" <${process.env.SMTP_SAATJA || process.env.SMTP_KASUTAJA}>`,
     to: saaja || process.env.SMTP_SAAJA || process.env.SMTP_KASUTAJA,
     replyTo: kirje.epost,
     subject: kirje.teenus
