@@ -266,6 +266,13 @@
     letter-spacing: calc(var(--silt-vahe) * 0.58);
   }
 
+  @media (min-width: 640px) {
+    .silt-kutse {
+      max-width: 32.5rem;
+      margin-inline: auto;
+    }
+  }
+
   /*
     LEHE PÄISE SILT — suurem kui tavaline sektsioonisilt.
 
