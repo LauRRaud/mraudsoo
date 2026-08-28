@@ -268,7 +268,8 @@
 
   @media (min-width: 640px) {
     .silt-kutse {
-      max-width: 32.5rem;
+      font-size: 1.7rem;
+      max-width: 36.875rem;
       margin-inline: auto;
     }
   }
