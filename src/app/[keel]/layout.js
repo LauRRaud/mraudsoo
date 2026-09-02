@@ -1,4 +1,5 @@
 import { cache } from "react";
+import Script from "next/script";
 import "../globals.css";
 import Pais from "@/components/Pais";
 import Jalus from "@/components/Jalus";
@@ -131,6 +132,12 @@ export default async function RootLayout({ children, params }) {
           tutvustus={sisu.jalus.tutvustus}
         />
       </body>
+      <Script
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        strategy="afterInteractive"
+        type="module"
+        data-cf-beacon='{"token":"02ea22a81b08489bbb4722c55ce824a9"}'
+      />
     </html>
   );
 }

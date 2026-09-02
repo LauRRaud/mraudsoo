@@ -48,7 +48,7 @@ const SONAD = {
     saada: "Saada soov",
     saadab: "Saadan …",
     aitah:
-      "Aitäh — sinu soov on Martani jõudnud. Ta vastab ise ja võimalikult kiiresti.",
+      "Aitäh — sinu soov on minuni jõudnud.",
     hommik: "Hommik",
     parastlouna: "Pärastlõuna",
     ohtu: "Õhtu",
@@ -120,7 +120,7 @@ const SONAD = {
     saada: "Send your request",
     saadab: "Sending …",
     aitah:
-      "Thank you — your request has reached Marta. She answers herself and as quickly as she can.",
+      "Thank you — I’ve received your request.",
     hommik: "Morning",
     parastlouna: "Afternoon",
     ohtu: "Evening",
