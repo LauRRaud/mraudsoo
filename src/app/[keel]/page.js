@@ -62,14 +62,14 @@ export default async function Avaleht({ params }) {
 
   return (
     <>
-      {/* Hero — usuline alus kohe ja selgelt, foto kirikuakna kaares */}
+      {/* Avalehe tutvustus koos nuppude ja kaarja portreefotoga. */}
       <section
         className="overflow-hidden bg-bone"
         data-taust="avaleht.hero"
         style={{ "--kate-varv": KATTE_VARV.bone }}
       >
         <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-6 pb-16 pt-10 sm:pt-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
-          <div>
+          <div className="lg:relative lg:-top-12">
             <p className="sisene silt silt-suur" style={v("hero.silt")}>
               {s("hero.silt", hero.silt)}
             </p>
