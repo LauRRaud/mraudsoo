@@ -33,7 +33,7 @@ export default async function KujunduseLeht() {
 
       <p className="mt-4 max-w-[60ch] text-lg leading-relaxed text-ink-soft">
         Siin muudad kogu lehe kirjatüüpe, värve ja tekstisuurusi. Muudatus
-        kehtib kohe kõigil lehtedel.
+        kehtib pärast salvestamist kõigil lehtedel.
       </p>
 
       <div className="mt-10">

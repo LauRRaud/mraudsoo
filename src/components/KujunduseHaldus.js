@@ -12,6 +12,7 @@ import {
   VARVI_RUHMAD,
 } from "@/kujundus/vaikimisi";
 import { ASETUSE_NIMED, TAUSTA_SEKTSIOONID } from "@/kujundus/sektsioonid";
+import { PUNASED, punaseIndeks } from "@/kujundus/punased";
 
 /*
   ADMIN — KUJUNDUS.
@@ -83,6 +84,18 @@ export default function KujunduseHaldus({
   const pildiValija = useRef(null);
 
   const muutunud = JSON.stringify(kujundus) !== JSON.stringify(algseis);
+  const punane = punaseIndeks(kujundus.varvid);
+
+  function prooviPunast() {
+    setTeade(null);
+    setKujundus((eelmine) => {
+      const jargmine = (punaseIndeks(eelmine.varvid) + 1) % PUNASED.length;
+      return {
+        ...eelmine,
+        varvid: { ...eelmine.varvid, ...PUNASED[jargmine].varvid },
+      };
+    });
+  }
 
   function muudaVarv(votme, vaartus) {
     setTeade(null);
@@ -212,6 +225,48 @@ export default function KujunduseHaldus({
 
   return (
     <div className="max-w-3xl">
+      <section aria-labelledby="punase-valik" className="mb-14 border border-sage p-5 sm:p-6">
+        <h2 id="punase-valik" className="kuva text-2xl text-ink">Proovi kolme punast</h2>
+        <p className="mt-2 text-base leading-relaxed text-ink-soft">
+          Iga vajutus vahetab nuppude, „Liikumise” ploki ja jaluse punast.
+          Näidis muutub kohe. Kodulehel rakendamiseks vajuta all „Salvesta”.
+        </p>
+        <div className="mt-5 flex flex-wrap items-center gap-4">
+          <button
+            type="button"
+            onClick={prooviPunast}
+            disabled={salvestab}
+            className="mikro border border-rohe px-5 py-3 text-rohe transition-colors hover:bg-rohe hover:text-white disabled:opacity-50"
+          >
+            Proovi järgmist punast
+          </button>
+          <p role="status" className="text-base text-ink">
+            {punane >= 0 ? `${punane + 1}/3 · ${PUNASED[punane].nimi}` : "Kohandatud toon"}
+            {" · "}{kujundus.varvid.rohe.toUpperCase()}
+          </p>
+        </div>
+        <div className="mt-6 overflow-hidden border border-sage" aria-label="Punase värvi eelvaade">
+          <div className="p-6" style={{ backgroundColor: kujundus.varvid.bone }}>
+            <span
+              className="mikro inline-block px-6 py-3 text-white"
+              style={{ backgroundColor: kujundus.varvid.rohe }}
+            >
+              Broneeri aeg →
+            </span>
+          </div>
+          <div className="px-6 py-8" style={{ backgroundColor: kujundus.varvid.mets }}>
+            <p className="mikro" style={{ color: kujundus.varvid.kuldHele }}>Liikumine</p>
+            <p className="kuva mt-3 text-2xl" style={{ color: kujundus.varvid.luu }}>
+              Selgus, kergus, tasakaal, rahu, rõõm ja vabadus.
+            </p>
+          </div>
+          <div className="px-6 py-5" style={{ backgroundColor: kujundus.varvid.metsSyva, color: kujundus.varvid.luu }}>
+            <p className="kuva text-2xl">Marta Raudsoo</p>
+            <p className="mt-1 text-sm">Jaluse värvi näidis</p>
+          </div>
+        </div>
+      </section>
+
       {/* Fondid */}
       <section>
         <h2 className="kuva text-2xl text-ink">Kirjatüübid</h2>
