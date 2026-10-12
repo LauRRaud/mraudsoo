@@ -469,24 +469,28 @@ export const vaikimisiSisu = {
   "hinnakiri": [
     {
       "nimi": "1:1 Püha Ruum | Kohalolu",
+      "tee": "/teenused/puha-ruum",
       "kestus": "1 tund",
       "hind": "60 €",
       "kirjeldus": " · Selguse ruum"
     },
     {
       "nimi": "1:1 Teekond",
+      "tee": "/teenused/uks-uhele-teekond",
       "kestus": "Üks kuu, kord nädalas",
       "hind": "250 €",
       "kirjeldus": " · Selgus · Korrastumine · Sammud "
     },
     {
       "nimi": "1:1 Praktiline Teekond",
+      "tee": "/hinnakiri#stiiliteekond",
       "kestus": "Kolm füüsilist kohtumist",
       "hind": "300 €",
       "kirjeldus": " · Stiiliselgus · Garderoobi korrastus \n· Teadlik ostlemine"
     },
     {
       "nimi": "Fotograafia",
+      "tee": "/teenused/fotograafia",
       "kestus": "- 2,5 tundi",
       "hind": "al. 150 €",
       "kirjeldus": " · Kohalolu | Ettevalmistus \n · Portreesessioon Õues | Stuudios\n · Töödeldud mustvalged pildid"

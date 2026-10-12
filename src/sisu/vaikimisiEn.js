@@ -469,24 +469,28 @@ export const vaikimisiSisuEn = {
   "hinnakiri": [
     {
       "nimi": "1:1 Sacred Space | Presence",
+      "tee": "/teenused/puha-ruum",
       "kestus": "1 hour",
       "hind": "60 €",
       "kirjeldus": "Space for clarity"
     },
     {
       "nimi": "1:1 Journey",
+      "tee": "/teenused/uks-uhele-teekond",
       "kestus": "One month, once a week",
       "hind": "250 €",
       "kirjeldus": "Clarity · Alignment  · Next Steps"
     },
     {
       "nimi": "A PRACTICAL 1:1 JOURNEY",
+      "tee": "/hinnakiri#stiiliteekond",
       "kestus": "Three in-person meetings",
       "hind": "300 €",
       "kirjeldus": "Style Clarity · Wardrobe Organization · Conscious Shopping"
     },
     {
       "nimi": "Photography",
+      "tee": "/teenused/fotograafia",
       "kestus": "- 2.5 hours",
       "hind": "from 150 €",
       "kirjeldus": " · Presence | Preparation  · A portrait session  in the studio or | outside  · Edited black-and-white photographs"

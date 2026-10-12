@@ -90,7 +90,12 @@ export default async function Hinnakiri({ params }) {
           */}
           <Ilmub ruhm as="ul" className="mt-10">
             {hinnakiri.map((rida, jrk) => {
-              const teenus = teenused[jrk];
+              /* Hinnarea link ei sõltu teenuste arvust ega järjekorrast. */
+              const lingiTee =
+                rida.tee === "/hinnakiri#stiiliteekond" ||
+                teenused.some((teenus) => rida.tee === `/teenused/${teenus.slug}`)
+                  ? rida.tee
+                  : null;
               const reaSisu = (
                 <>
                   <div className="pr-8 sm:pr-0">
@@ -127,9 +132,9 @@ export default async function Hinnakiri({ params }) {
 
               return (
                 <li key={rida.nimi} className="border-t border-gold/25">
-                  {teenus?.slug ? (
+                  {lingiTee ? (
                     <Link
-                      href={t(`/teenused/${teenus.slug}`)}
+                      href={t(lingiTee)}
                       className="group relative grid grid-cols-1 gap-x-10 gap-y-3 py-8 transition-colors duration-300 hover:bg-bone/40 focus-visible:bg-bone/40 active:bg-bone/60 sm:grid-cols-[1fr_13rem] sm:py-10 lg:grid-cols-[1fr_16rem]"
                     >
                       {reaSisu}
@@ -154,7 +159,12 @@ export default async function Hinnakiri({ params }) {
       </section>
 
       {/* Stiiliteekond — kolm sammu koos, lehe tume esiletõst */}
-      <Sektsioon taust="mets" taustaVoti="hinnakiri.teekond">
+      <Sektsioon
+        id="stiiliteekond"
+        taust="mets"
+        taustaVoti="hinnakiri.teekond"
+        className="scroll-mt-28"
+      >
         <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24">
           <Ilmub>
             <p className="silt silt-tume" style={vTume("teekondSilt")}>
