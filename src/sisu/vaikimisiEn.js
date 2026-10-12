@@ -49,7 +49,7 @@ export const vaikimisiSisuEn = {
   "avaleht": {
     "hero": {
       "silt": "",
-      "pealkiri": "",
+      "pealkiri": "ABOUT ME",
       "alapealkiri": "",
       "tekst": "I help you find clarity, recognize your worth, and express who you truly are — through your life, choices, and personal style.",
       "nuppEsmane": "Book a time",
