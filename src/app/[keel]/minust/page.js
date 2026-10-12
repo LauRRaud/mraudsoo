@@ -154,6 +154,7 @@ export default async function Minust({ params }) {
       </Sektsioon>
 
       {/* Kirjakoht — kogu lehe vaikseim hetk */}
+      {kirjakoht?.tekst && (
       <Sektsioon taust="sage" laius="kitsas" taustaVoti="minust.kirjakoht">
         <Ilmub>
           <Salm
@@ -169,6 +170,7 @@ export default async function Minust({ params }) {
           />
         </Ilmub>
       </Sektsioon>
+      )}
 
       {/*
         Pöördumine — Marta usu- ja pöördumislugu. Lehe kõige isiklikum osa
@@ -176,6 +178,7 @@ export default async function Minust({ params }) {
         Viimane lõik on kutsumuse kokkuvõte ja seisab kuvakirjas heledas
         kullas, et lugu lõppeks kõlaga, mitte poolel sõnal.
       */}
+      {pooordumine.loigud.length > 0 && (
       <Sektsioon taust="mets" taustaVoti="minust.poordumine">
         <Ilmub className="mx-auto max-w-3xl text-center">
           <div aria-hidden="true" className="pystjoon pystjoon-tume" />
@@ -223,11 +226,13 @@ export default async function Minust({ params }) {
           </Ilmub>
         )}
       </Sektsioon>
+      )}
 
       {/*
         Loo juurde kuuluvad kirjakohad — iga salm oma vaikse hetkena.
         Mõne salmi juures pildil selgitust ei olnud, siis jääb see lihtsalt ära.
       */}
+      {pooordumine.kirjakohad.length > 0 && (
       <Sektsioon taust="linen" laius="kitsas" taustaVoti="minust.salmid">
         <div className="space-y-20 sm:space-y-24">
           {pooordumine.kirjakohad.map((koht, jrk) => (
@@ -247,6 +252,7 @@ export default async function Minust({ params }) {
           ))}
         </div>
       </Sektsioon>
+      )}
 
       {/* Annid */}
       <Sektsioon taust="bone" taustaVoti="minust.annid">
@@ -305,6 +311,7 @@ export default async function Minust({ params }) {
               sizes="(max-width: 1024px) 100vw, 1000px"
             />
 
+            {tsitaat.tekst && (
             <Ilmub viive={150}>
               <blockquote
                 className="kuva mt-12 max-w-4xl text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.4] text-gold-deep"
@@ -313,6 +320,7 @@ export default async function Minust({ params }) {
                 {s("tsitaat.tekst", tsitaat.tekst)}
               </blockquote>
             </Ilmub>
+            )}
           </div>
         </div>
       </section>
