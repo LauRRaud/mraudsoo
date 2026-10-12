@@ -40,12 +40,12 @@ export const vaikimisiKujundus = {
       valge kohale nähtava astmena seisma. Päis kannab lehe põhitausta (bone).
     */
     menyy: "#f7f4ec",
-    rohe: "#315348",
-    roheHele: "#42685b",
+    rohe: "#b83a2d",
+    roheHele: "#a02e23",
     gold: "#a6862f",
     goldDeep: "#8a6f20",
-    mets: "#29483f",
-    metsSyva: "#20382f",
+    mets: "#912f26",
+    metsSyva: "#842d26",
     kuldHele: "#dcc27a",
     luu: "#f4f1e8",
     ink: "#161613",
@@ -134,9 +134,9 @@ export const VARVI_RUHMAD = [
     ],
   },
   {
-    nimi: "Tume pühamu",
+    nimi: "Tumedad punased pinnad",
     selgitus:
-      "Lehe kõige isiklikumad kohad seisavad sügaval eukalüptirohelisel. Nendel pindadel vahetuvad ka tekstivärvid (vt „Kiri tumedal pinnal”).",
+      "Lehe kõige isiklikumad kohad seisavad sügaval soojal punasel. Nendel pindadel vahetuvad ka tekstivärvid (vt „Kiri tumedal pinnal”).",
     varvid: [
       { votme: "mets", nimi: "Tume sektsioon", kus: "Liikumine avalehel, pöördumislugu, Stiiliteekond" },
       { votme: "metsSyva", nimi: "Jalus ja teenuse päis", kus: "Lehe lõpp ja teenuse alamlehe päis" },
@@ -157,7 +157,7 @@ export const VARVI_RUHMAD = [
     varvid: [
       { votme: "gold", nimi: "Kuld — suured pealkirjad", kus: "Kuvakirjas read, jooned, püstjooned" },
       { votme: "goldDeep", nimi: "Kuld — sildid ja lingid", kus: "SUURTÄHTEDES sildid sektsioonide kohal" },
-      { votme: "kuldHele", nimi: "Kuld tumedal pinnal", kus: "Sildid ja jooned rohelistel sektsioonidel" },
+      { votme: "kuldHele", nimi: "Kuld tumedal pinnal", kus: "Sildid ja jooned tumedatel sektsioonidel" },
     ],
   },
   {
@@ -167,7 +167,7 @@ export const VARVI_RUHMAD = [
       { votme: "ink", nimi: "Pealkirjad", kus: "Suured pealkirjad ja tsitaadid" },
       { votme: "inkSoft", nimi: "Põhitekst", kus: "Tavalised lõigud" },
       { votme: "inkFaint", nimi: "Kõrvaline tekst", kus: "Kuupäevad, märkused, vaiksem info" },
-      { votme: "luu", nimi: "Kiri tumedal pinnal", kus: "Kogu tekst rohelistel sektsioonidel ja jaluses" },
+      { votme: "luu", nimi: "Kiri tumedal pinnal", kus: "Kogu tekst tumedatel sektsioonidel ja jaluses" },
     ],
   },
 ];

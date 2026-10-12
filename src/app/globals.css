@@ -4,7 +4,7 @@
   Marta Raudsoo — disainisüsteem „Püha Ruum”
 
   Keel: vaikne selgus. Soe pärgament, tint ja kuld; lisaks üks
-  eukalüptirohelise perekond, mis kannab nii nuppe kui lehe kõige isiklikumaid
+  Jaapani punase perekond, mis kannab nii nuppe kui lehe kõige isiklikumaid
   hetki. Marta enda fotod on peamine visuaalne materjal; jooned on juuspeened
   ja liikumine aeglane ning väärikas.
 
@@ -48,21 +48,21 @@
   --color-menyy: #f7f4ec;
 
   /*
-    Nupuvärv — sügav murtud roheline. Valge tekst annab 7.3:1.
+    Nupuvärv — soe Jaapani punane. Valge teksti kontrast on 5.7:1.
   */
-  --color-rohe: #315348;
-  --color-rohe-hele: #42685b;
+  --color-rohe: #b83a2d;
+  --color-rohe-hele: #a02e23;
 
   /* Kuld — hele suurtele pealkirjadele, tume tekstisuuruses kasutuseks */
   --color-gold: #a6862f;
   --color-gold-deep: #8a6f20;
 
   /*
-    Tume pühamu — sama eukalüptipere sügavamad astmed. Nii ei teki nuppude,
-    sisusektsioonide ja jaluse vahel uut juhuslikku rohelist.
+    Tumedad pinnad — sama sooja punase sügavamad astmed nuppude,
+    sisusektsioonide ja jaluse sidumiseks.
   */
-  --color-mets: #29483f;
-  --color-mets-syva: #20382f;
+  --color-mets: #912f26;
+  --color-mets-syva: #842d26;
   --color-kuld-hele: #dcc27a;
   --color-luu: #f4f1e8;
 
@@ -627,7 +627,7 @@
     opacity: 0.55;
   }
 
-  /* Täidetud roheline — peamine tegevus heledal taustal */
+  /* Täidetud punane — peamine tegevus heledal taustal */
   .nupp-taidetud {
     --nupp-aar: var(--color-rohe);
     --nupp-taust: var(--color-rohe);
