@@ -40,12 +40,12 @@ export const vaikimisiKujundus = {
       valge kohale nähtava astmena seisma. Päis kannab lehe põhitausta (bone).
     */
     menyy: "#f7f4ec",
-    rohe: "#b83a2d",
-    roheHele: "#a02e23",
+    rohe: "#8f1d21",
+    roheHele: "#76181b",
     gold: "#a6862f",
     goldDeep: "#8a6f20",
-    mets: "#912f26",
-    metsSyva: "#842d26",
+    mets: "#8f1d21",
+    metsSyva: "#8f1d21",
     kuldHele: "#dcc27a",
     luu: "#f4f1e8",
     ink: "#161613",

@@ -48,21 +48,21 @@
   --color-menyy: #f7f4ec;
 
   /*
-    Nupuvärv — soe Jaapani punane. Valge teksti kontrast on 5.7:1.
+    Jaapani punane #8F1D21; hiire all veidi tumedam toon.
   */
-  --color-rohe: #b83a2d;
-  --color-rohe-hele: #a02e23;
+  --color-rohe: #8f1d21;
+  --color-rohe-hele: #76181b;
 
   /* Kuld — hele suurtele pealkirjadele, tume tekstisuuruses kasutuseks */
   --color-gold: #a6862f;
   --color-gold-deep: #8a6f20;
 
   /*
-    Tumedad pinnad — sama sooja punase sügavamad astmed nuppude,
+    Tumedad pinnad — ühtne Jaapani punane nuppude,
     sisusektsioonide ja jaluse sidumiseks.
   */
-  --color-mets: #912f26;
-  --color-mets-syva: #842d26;
+  --color-mets: #8f1d21;
+  --color-mets-syva: #8f1d21;
   --color-kuld-hele: #dcc27a;
   --color-luu: #f4f1e8;
 
